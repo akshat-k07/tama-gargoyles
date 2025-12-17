@@ -33,9 +33,17 @@ public class GargoyleController {
     }
 
     @PostMapping("/hunger")
-    public RedirectView decreaseHunger(@RequestParam Integer delta, @RequestParam Long gargoyleId){
+    public RedirectView changeHunger(@RequestParam Integer delta, @RequestParam Long gargoyleId){
         Gargoyle gargoyle = gargoyleRepository.findById(gargoyleId).get();
         gargoyle.setHunger(Math.min(gargoyle.getHunger() + delta, 100));
+        gargoyleRepository.save(gargoyle);
+        return new RedirectView("/game");
+    }
+
+    @PostMapping("/happiness")
+    public RedirectView changeHappiness(@RequestParam Integer delta, @RequestParam Long gargoyleId){
+        Gargoyle gargoyle = gargoyleRepository.findById(gargoyleId).get();
+        gargoyle.setHappiness(Math.min(gargoyle.getHappiness() + delta, 100));
         gargoyleRepository.save(gargoyle);
         return new RedirectView("/game");
     }
