@@ -46,3 +46,6 @@ dependency-reduced-pom.xml
 .env
 **/.DS_Store
 /uploads
+
+src/main/resources/application-dev.properties
+src/main/resources/application-test.properties
