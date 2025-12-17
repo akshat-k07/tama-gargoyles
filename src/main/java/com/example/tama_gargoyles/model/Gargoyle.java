@@ -47,6 +47,10 @@ public class Gargoyle {
     private Float last_played;
     private Float left_at;
 
+    public Gargoyle(){
+
+    }
+
     public Gargoyle(User user, Type type, Status status) {
         this.user = user;
         this.type = Type.CHILD;

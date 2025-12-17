@@ -18,6 +18,10 @@ public class User {
     private Integer bugs;
     private Integer mystery_food;
 
+    public User(){
+
+    }
+
     public User(String email) {
         this.username = "null";
         this.email = email;
