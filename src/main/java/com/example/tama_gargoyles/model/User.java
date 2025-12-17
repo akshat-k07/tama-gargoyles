@@ -3,8 +3,11 @@ package com.example.tama_gargoyles.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Generated;
+import lombok.NoArgsConstructor;
 
+
+import lombok.Generated;
+@NoArgsConstructor
 @Data
 @Entity
 @Table(name = "users")
