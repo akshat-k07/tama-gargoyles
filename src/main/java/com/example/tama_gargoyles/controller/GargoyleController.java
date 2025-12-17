@@ -9,6 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
 public class GargoyleController {
@@ -25,6 +27,14 @@ public class GargoyleController {
         this.gargoyleRepository = gargoyleRepository;
         this.currentUserService = currentUserService;
         this.timeService = timeService;
+    }
+
+    @PostMapping("/hunger")
+    public RedirectView decreaseHunger(@RequestParam Integer delta, @RequestParam Long gargoyleId){
+        Gargoyle gargoyle = gargoyleRepository.findById(gargoyleId).get();
+        gargoyle.setHunger(Math.min(gargoyle.getHunger() + delta, 100));
+        gargoyleRepository.save(gargoyle);
+        return new RedirectView("/game");
     }
 
     @GetMapping("/game")

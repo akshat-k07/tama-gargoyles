@@ -73,6 +73,12 @@
             <button type="submit">Pause (simulate logout)</button>
         </form>
 
+        <form action="/hunger" method="post">
+            <input type="hidden" name="gargoyleId" th:value="${gargoyle.id}"/>
+            <input type="hidden" name="delta" th:value="10"/>
+            <button type="submit">Feed</button>
+        </form>
+
         <p>
             Tip: refresh this page after ~1 minute to see Hunger/Happiness drop
             (only while not paused). If paused, refresh should NOT change them.
