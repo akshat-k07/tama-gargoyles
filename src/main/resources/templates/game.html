@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tama Gargoyles – Game</title>
+</head>
+<body>
+<header>
+    <h1>Tama Gargoyles</h1>
+    <p><strong>Game Screen (MVP)</strong> – virtual time + pause/resume test page</p>
+    <hr />
+</header>
+
+<main>
+    <section>
+        <h2 th:text="${gargoyle.name}">Gargoyle Name</h2>
+
+        <p>
+            <strong>Status:</strong>
+            <span th:text="${gargoyle.status}">ACTIVE</span>
+            |
+            <strong>Type:</strong>
+            <span th:text="${gargoyle.type}">CHILD</span>
+        </p>
+
+        <p>
+            <strong>Paused:</strong>
+            <span th:text="${gargoyle.paused}">false</span>
+        </p>
+
+        <p>
+            <strong>Hunger:</strong>
+            <span th:text="${gargoyle.hunger}">100</span>
+            / 100
+        </p>
+
+        <p>
+            <strong>Happiness:</strong>
+            <span th:text="${gargoyle.happiness}">100</span>
+            / 100
+        </p>
+
+        <p>
+            <strong>Active Minutes (in-game time):</strong>
+            <span th:text="${gargoyle.activeMinutes}">0</span>
+        </p>
+
+        <p>
+            <strong>Age (derived):</strong>
+            Day <span th:text="${gameDaysOld}">0</span>,
+            Minute <span th:text="${minutesIntoDay}">0</span>
+        </p>
+
+        <p>
+            <strong>Last Tick:</strong>
+            <span th:text="${gargoyle.lastTickAt}">-</span>
+        </p>
+
+        <p>
+            <strong>Paused At:</strong>
+            <span th:text="${gargoyle.pausedAt}">-</span>
+        </p>
+    </section>
+
+    <hr />
+
+    <section>
+        <h3>Actions</h3>
+
+        <!-- This pauses the gargoyle (your “logout pause” mechanic) -->
+        <form action="/gargoyles/pause" method="post">
+            <button type="submit">Pause (simulate logout)</button>
+        </form>
+
+        <form action="/hunger" method="post">
+            <input type="hidden" name="gargoyleId" th:value="${gargoyle.id}"/>
+            <input type="hidden" name="delta" th:value="10"/>
+            <button type="submit">Feed</button>
+        </form>
+
+        <p>
+            Tip: refresh this page after ~1 minute to see Hunger/Happiness drop
+            (only while not paused). If paused, refresh should NOT change them.
+        </p>
+
+        <p>
+            Note: visiting <code>/game</code> should resume + tick in that order,
+            so returning here after being “logged out” won’t apply any offline decay.
+        </p>
+    </section>
+</main>
+
+<footer>
+    <hr />
+    <p style="font-size: 0.9em;">
+        MVP debug view for virtual time. Replace with proper UI later.
+    </p>
+</footer>
+</body>
+</html>
