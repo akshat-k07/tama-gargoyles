@@ -30,7 +30,7 @@
     </thead>
     <tbody>
     <tr th:each="gargoyle : ${gargoyles}">
-        <td th:text="${gargoyle.id}"></td>
+        <td><a th:href="@{/game/{id}(id=${gargoyle.id})}" th:text="${gargoyle.id}"></a></td>
         <td th:text="${gargoyle.name}"></td>
         <td th:text="${gargoyle.age}"></td>
         <td th:text="${gargoyle.type}"></td>

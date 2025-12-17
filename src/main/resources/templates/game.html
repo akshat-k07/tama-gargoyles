@@ -69,11 +69,11 @@
         <h3>Actions</h3>
 
         <!-- This pauses the gargoyle (your “logout pause” mechanic) -->
-        <form action="/gargoyles/pause" method="post">
+        <form th:action="@{/game/{id}/pause(id=${gargoyle.id})}" method="post">
             <button type="submit">Pause (simulate logout)</button>
         </form>
 
-        <form action="/hunger" method="post">
+        <form th:action="@{/game/{id}/hunger(id=${gargoyle.id})}" method="post">
             <input type="hidden" name="gargoyleId" th:value="${gargoyle.id}"/>
             <input type="hidden" name="delta" th:value="10"/>
             <button type="submit">Feed</button>
