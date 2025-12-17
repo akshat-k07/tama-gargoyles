@@ -1,0 +1,118 @@
+/* RESET-ish */
+* {
+    box-sizing: border-box;
+    font-family: "Trebuchet MS", Arial, sans-serif;
+}
+
+body {
+    margin: 0;
+    background: linear-gradient(180deg, #2b2f3a, #1b1e27);
+    color: #f0f0f0;
+}
+
+/* HEADER */
+header {
+    text-align: center;
+    padding: 1.5rem;
+    background: #3a3f4f;
+    border-bottom: 4px solid #5a6078;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.2rem;
+    letter-spacing: 2px;
+}
+
+/* MAIN LAYOUT */
+main {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 1rem;
+}
+
+/* CARD SECTIONS */
+section {
+    background: #2e3242;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* GARGOYLE NAME */
+h2 {
+    font-size: 1.8rem;
+    margin-top: 0;
+    text-align: center;
+    color: #d4d9ff;
+}
+
+/* STATS */
+p {
+    margin: 0.4rem 0;
+}
+
+strong {
+    color: #b6bcff;
+}
+
+/* ACTIONS */
+h3 {
+    margin-top: 0;
+    text-align: center;
+    color: #cbd1ff;
+}
+
+form {
+    display: inline-block;
+    margin: 0.3rem;
+}
+
+/* BUTTONS */
+button {
+    background: linear-gradient(180deg, #6b72ff, #4b52d6);
+    color: white;
+    border: none;
+    padding: 0.5rem 0.9rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: transform 0.1s, box-shadow 0.1s, background 0.2s;
+}
+
+button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+    background: linear-gradient(180deg, #7b82ff, #5b62e6);
+}
+
+button:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* LINKS */
+a {
+    display: inline-block;
+    margin-top: 1rem;
+    color: #9aa1ff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* FOOTER */
+footer {
+    text-align: center;
+    color: #aaa;
+    padding-bottom: 1.5rem;
+}
+
+/* TAMAGOTCHI FEEL */
+section:first-of-type {
+    border: 3px solid #6b72ff;
+}

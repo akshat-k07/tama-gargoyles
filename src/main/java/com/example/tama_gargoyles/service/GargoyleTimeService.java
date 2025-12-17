@@ -11,9 +11,9 @@ import java.time.Instant;
 public class GargoyleTimeService {
 
     // Tuning knobs (easy team contribution: balance these later)
-    public static final int MINUTES_PER_GAME_DAY = 10;
+    public static final int MINUTES_PER_GAME_DAY = 15;
     public static final int HUNGER_DECAY_PER_MIN = 2;
-    public static final int HAPPINESS_DECAY_PER_MIN = 1;
+    public static final int HAPPINESS_DECAY_PER_MIN = 3;
 
     private final Clock clock;
 

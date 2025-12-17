@@ -4,7 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tama Gargoyles – Game</title>
+    <link rel="stylesheet" th:href="@{/css/game.css}">
 </head>
+
 <body>
 <header>
     <h1>Tama Gargoyles</h1>
@@ -73,12 +75,30 @@
             <button type="submit">Pause (simulate logout)</button>
         </form>
 
-        <form action="/hunger" method="post">
+        <form action="/hunger-increase" method="post">
             <input type="hidden" name="gargoyleId" th:value="${gargoyle.id}"/>
             <input type="hidden" name="delta" th:value="10"/>
             <button type="submit">Feed</button>
         </form>
 
+        <form action="/entertainment-increase" method="post">
+            <input type="hidden" name="gargoyleId" th:value="${gargoyle.id}"/>
+            <input type="hidden" name="delta" th:value="10"/>
+            <button type="submit">Play</button>
+        </form>
+
+        <form action="/hunger-decrease" method="post">
+            <input type="hidden" name="gargoyleId" th:value="${gargoyle.id}"/>
+            <input type="hidden" name="delta" th:value="10"/>
+            <button type="submit">Un-Feed</button>
+        </form>
+
+        <form action="/entertainment-decrease" method="post">
+            <input type="hidden" name="gargoyleId" th:value="${gargoyle.id}"/>
+            <input type="hidden" name="delta" th:value="10"/>
+            <button type="submit">Un-Play</button>
+        </form>
+        <a th:href="@{/gargoyle/{id}/rename(id=${gargoyle.id})}">Rename</a>
         <p>
             Tip: refresh this page after ~1 minute to see Hunger/Happiness drop
             (only while not paused). If paused, refresh should NOT change them.

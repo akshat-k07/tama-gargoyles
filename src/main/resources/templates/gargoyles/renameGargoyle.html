@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Rename your Gargoyle</title>
+</head>
+<body>
+<h1>Choose a new name for your gargoyle!</h1>
+<form th:action="@{/gargoyle/{id}/rename(id=${gargoyle.id})}"
+      th:object="${gargoyle}"
+      method="post">
+
+    <label for="name">Name:</label><br>
+    <input type="text" th:field="*{name}" /><br><br>
+
+    <button type="submit">Rename</button>
+</form>
+<br><br>
+<a href="/game">Back</a>
+</body>
+</html>
