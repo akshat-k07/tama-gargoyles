@@ -33,6 +33,12 @@ class GargoylesRepository:
         result = self._connection.execute(query, [gargoyle_id])
         return result[0] if result else None
 
+    def update_hunger(self, gargoyle_id, new_hunger):
+        query = 'UPDATE gargoyles SET hunger = %s WHERE id = %s'
+        result = self._connection.execute(query, [new_hunger, gargoyle_id])
+        return result[0] if result else None       
+
+
 
 connection = DatabaseConnection()
 connection.connect()
@@ -47,9 +53,14 @@ gargoylesrepository = GargoylesRepository(connection)
 # gargoylesrepository.delete_gargoyle(8)
 
 # Select Gargoyle by ID
-gargoyle = gargoylesrepository.get_gargoyle_by_id(7)
-gg_id = gargoyle['id']
-gg_name = gargoyle['name']
-print(f"Gargoyle ID: {gg_id} & Gargoyle name: {gg_name}")
+# gargoyle = gargoylesrepository.get_gargoyle_by_id(7)
+# gg_id = gargoyle['id']
+# gg_name = gargoyle['name']
+# print(f"Gargoyle ID: {gg_id} & Gargoyle name: {gg_name}")
+
+
+
+updated_gargoyle = gargoylesrepository.update_hunger(1, 80)
+
 
 
