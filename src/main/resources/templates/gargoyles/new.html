@@ -9,7 +9,7 @@
 <!--form to capture name of new gargoyle-->
 <form th:action="@{'/gargoyles'}" th:object="${gargoyle}" method="post">
     <label th:for="name">Name:</label><br>
-    <input type="text" th:field="*{name}"/> <br><br>
+    <input type="text" th:field="*{name}" required maxlength="30"/> <br><br>
 
 <!--button to create -->
 <button type="submit" name="Create" value="">Create</button>
