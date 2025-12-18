@@ -24,10 +24,14 @@ class GargoylesRepository:
         return result[0]['id'] if result else None
 
     def delete_gargoyle(self, gargoyle_id):
-
         query = 'DELETE FROM gargoyles WHERE id = %s'
         result = self._connection.execute(query, [gargoyle_id])
         return result 
+
+    def get_gargoyle_by_id(self, gargoyle_id):
+        query = 'SELECT * FROM gargoyles WHERE id = %s'
+        result = self._connection.execute(query, [gargoyle_id])
+        return result[0] if result else None
 
 
 connection = DatabaseConnection()
@@ -40,6 +44,12 @@ gargoylesrepository = GargoylesRepository(connection)
 # print(f"Created gargoyle with ID: {gargoyle_id}")
 
 # Delete Gsrgoyle 
-gargoylesrepository.delete_gargoyle(8)
+# gargoylesrepository.delete_gargoyle(8)
+
+# Select Gargoyle by ID
+gargoyle = gargoylesrepository.get_gargoyle_by_id(7)
+gg_id = gargoyle['id']
+gg_name = gargoyle['name']
+print(f"Gargoyle ID: {gg_id} & Gargoyle name: {gg_name}")
 
 
