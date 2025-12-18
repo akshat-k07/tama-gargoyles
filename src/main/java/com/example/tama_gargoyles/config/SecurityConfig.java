@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -15,6 +16,9 @@ public class SecurityConfig {
 
     @Value("${auth0.domain}")
     private String auth0Domain;
+
+    @Value("${CLIENT_DOMAIN}")
+    private String issuer;
 
     @Value("${auth0.client-id}")
     private String clientId;
@@ -40,11 +44,8 @@ public class SecurityConfig {
                 .requestCache(cache -> cache.disable())
 
                 .logout(logout -> logout.logoutSuccessHandler((request, response, authentication) -> {
-                    String returnTo = URLEncoder.encode("http://localhost:8080/", StandardCharsets.UTF_8);
-                    String logoutUrl = "https://" + auth0Domain + "/v2/logout"
-                            + "?client_id=" + clientId
-                            + "&returnTo=" + returnTo;
-                    response.sendRedirect(logoutUrl);
+                    String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+                    response.sendRedirect(issuer + "v2/logout?client_id=" + clientId + "&returnTo=" + baseUrl);
                 }));
 
         return http.build();
