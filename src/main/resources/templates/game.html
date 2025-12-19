@@ -131,6 +131,47 @@
         </form>
 
         </br></br>
+
+
+        <!-- Play - Strength: requires CSRF token -->
+        <form action="/strength-increase" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <input type="hidden" name="gargoyleId" th:value="${gargoyle.id}"/>
+            <input type="hidden" name="strengthDelta" value="10"/>
+            <input type="hidden" name="speedDelta" value="0"/>
+            <input type="hidden" name="intelligenceDelta" value="0"/>
+            <input type="hidden" name="happinessDelta" value="10"/>
+            <button title="Play Strength Game:
+  + Strength" type="submit">Play Strength Game</button>
+        </form>
+
+        <!-- Play - Speed: requires CSRF token -->
+        <form action="/speed-increase" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <input type="hidden" name="gargoyleId" th:value="${gargoyle.id}"/>
+            <input type="hidden" name="strengthDelta" value="0"/>
+            <input type="hidden" name="speedDelta" value="10"/>
+            <input type="hidden" name="intelligenceDelta" value="0"/>
+            <input type="hidden" name="happinessDelta" value="10"/>
+            <button title="Play Speed Game:
+  + Speed" type="submit">Play Speed Game</button>
+        </form>
+
+        <!-- Play - Intelligence: requires CSRF token -->
+        <form action="/intelligence-increase" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <input type="hidden" name="gargoyleId" th:value="${gargoyle.id}"/>
+            <input type="hidden" name="strengthDelta" value="0"/>
+            <input type="hidden" name="speedDelta" value="0"/>
+            <input type="hidden" name="intelligenceDelta" value="10"/>
+            <input type="hidden" name="happinessDelta" value="10"/>
+            <button title="Play Intelligence Game:
+  + Intelligence" type="submit">Play Intelligence Game</button>
+        </form>
+
+
+        </br></br>
+
         <!-- Pause (simulate logout): requires CSRF token -->
         <form th:action="@{/gargoyles/pause}" method="post">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>

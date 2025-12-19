@@ -91,6 +91,43 @@ public class GargoyleController {
         return new RedirectView("/game");
     }
 
+    @PostMapping("/strength-increase")
+    public RedirectView increaseStrength(@RequestParam Integer strengthDelta, @RequestParam Integer speedDelta,
+                                        @RequestParam Integer intelligenceDelta, @RequestParam Integer happinessDelta, @RequestParam Long gargoyleId){
+        Gargoyle gargoyle = gargoyleRepository.findById(gargoyleId).get();
+        gargoyle.setStrength(Math.max(0, Math.min(gargoyle.getStrength() + strengthDelta, 100)));
+        gargoyle.setSpeed(Math.max(0, Math.min(gargoyle.getSpeed() + speedDelta, 100)));
+        gargoyle.setIntelligence(Math.max(0, Math.min(gargoyle.getIntelligence() + intelligenceDelta, 100)));
+        gargoyle.setHappiness(Math.max(0, Math.min(gargoyle.getHappiness() + happinessDelta, 100)));
+        gargoyleRepository.save(gargoyle);
+        return new RedirectView("/game");
+    }
+
+    @PostMapping("/speed-increase")
+    public RedirectView increaseSpeed(@RequestParam Integer strengthDelta, @RequestParam Integer speedDelta,
+                                         @RequestParam Integer intelligenceDelta, @RequestParam Integer happinessDelta, @RequestParam Long gargoyleId){
+        Gargoyle gargoyle = gargoyleRepository.findById(gargoyleId).get();
+        gargoyle.setStrength(Math.max(0, Math.min(gargoyle.getStrength() + strengthDelta, 100)));
+        gargoyle.setSpeed(Math.max(0, Math.min(gargoyle.getSpeed() + speedDelta, 100)));
+        gargoyle.setIntelligence(Math.max(0, Math.min(gargoyle.getIntelligence() + intelligenceDelta, 100)));
+        gargoyle.setHappiness(Math.max(0, Math.min(gargoyle.getHappiness() + happinessDelta, 100)));
+        gargoyleRepository.save(gargoyle);
+        return new RedirectView("/game");
+    }
+
+    @PostMapping("/intelligence-increase")
+    public RedirectView increaseIntelligence(@RequestParam Integer strengthDelta, @RequestParam Integer speedDelta,
+                                         @RequestParam Integer intelligenceDelta, @RequestParam Integer happinessDelta, @RequestParam Long gargoyleId){
+        Gargoyle gargoyle = gargoyleRepository.findById(gargoyleId).get();
+        gargoyle.setStrength(Math.max(0, Math.min(gargoyle.getStrength() + strengthDelta, 100)));
+        gargoyle.setSpeed(Math.max(0, Math.min(gargoyle.getSpeed() + speedDelta, 100)));
+        gargoyle.setIntelligence(Math.max(0, Math.min(gargoyle.getIntelligence() + intelligenceDelta, 100)));
+        gargoyle.setHappiness(Math.max(0, Math.min(gargoyle.getHappiness() + happinessDelta, 100)));
+        gargoyleRepository.save(gargoyle);
+        return new RedirectView("/game");
+    }
+
+
     @PostMapping("/hunger-increase")
     public RedirectView increaseHunger(@RequestParam Integer delta, @RequestParam Long gargoyleId){
         Gargoyle gargoyle = gargoyleRepository.findById(gargoyleId).get();
