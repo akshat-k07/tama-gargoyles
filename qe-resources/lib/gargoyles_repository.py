@@ -64,7 +64,7 @@ gargoylesrepository = GargoylesRepository(connection)
 # gargoyle_id = gargoylesrepository.create_gargoyle('TestGargoyle2', user_id=1)
 # print(f"Created gargoyle with ID: {gargoyle_id}")
 
-# Delete Gsrgoyle 
+# Delete Gargoyle
 # gargoylesrepository.delete_gargoyle(8)
 
 # Select Gargoyle by ID
