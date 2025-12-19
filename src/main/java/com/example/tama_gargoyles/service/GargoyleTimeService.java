@@ -89,4 +89,17 @@ public class GargoyleTimeService {
         if (value > 100) return 100;
         return value;
     }
+
+    public boolean isBattleEligible(Gargoyle g) {
+        return gameDaysOld(g) >= 3; // 5 days old = adult
+    }
+
+    public void maybePromoteToAdult(Gargoyle g) {
+        if (g.getType() != Gargoyle.Type.CHILD) return;
+
+        long daysOld = gameDaysOld(g);
+        if (daysOld >= 3) {
+            g.setType(Gargoyle.Type.GOOD); // or GOOD/BAD based on behaviour
+        }
+    }
 }

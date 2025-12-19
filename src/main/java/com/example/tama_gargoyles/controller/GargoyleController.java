@@ -32,6 +32,8 @@ public class GargoyleController {
     private final CurrentUserService currentUserService;
     private final GargoyleTimeService timeService;
 
+    private static final long ADULT_AT_GAME_DAYS = 3;
+
     public GargoyleController(
             GargoyleRepository gargoyleRepository,
             CurrentUserService currentUserService,
@@ -100,6 +102,16 @@ public class GargoyleController {
         // 2) Then tick (applies only active time)
         timeService.resume(g);
         timeService.tick(g);
+
+        // Promote to adult if old enough, based on how the child was treated
+        long daysOld = timeService.gameDaysOld(g);
+        boolean isOldEnough = daysOld >= 3; // tweak threshold
+
+        if (g.getType() == Gargoyle.Type.CHILD && isOldEnough) {
+            boolean treatedWell = g.getHappiness() >= 60 && g.getHunger() >= 60;
+
+            g.setType(treatedWell ? Gargoyle.Type.GOOD : Gargoyle.Type.BAD);
+        }
 
         gargoyleRepository.save(g);
 
