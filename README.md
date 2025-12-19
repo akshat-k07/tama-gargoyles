@@ -1,3 +1,179 @@
+# 🗿 Tama-Gargoyles
+
+**Tama-Gargoyles** is a virtual-pet web game inspired by Tamagotchi, where players raise a magical gargoyle creature over real time.  
+Players must balance feeding, play, and care decisions to shape how their gargoyle grows, evolves, and ultimately battles.
+
+Built as a **Spring Boot MVC application** with:
+- Virtual time simulation
+- Persistent creatures
+- OAuth2 (Auth0) authentication
+- MVC feature testing
+
+---
+
+## 🎮 Game Rules — Player View
+
+### 🥚 Starting the Game
+- When you start, you receive an **egg**
+- The egg hatches and you **name your Tama-Gargoyle**
+- Once named, it becomes *your responsibility* to care for it
+
+---
+
+### ⏱️ Time & Needs
+- As **time passes**, your Tama-Gargoyle:
+    - Gets **hungrier**
+    - Loses **happiness**
+- If hunger stays too low:
+    - Happiness decreases **faster**
+- If happiness and hunger are neglected:
+    - **Health** will decrease
+- If health reaches **0**:
+    - 💀 Your Tama-Gargoyle dies
+
+---
+
+### 🍎 Feeding
+The food you give your Tama-Gargoyle affects how it evolves:
+
+| Food | Effect |
+|-----|-------|
+| 🪨 Rocks | Increases **Strength**, lowers Speed & Intelligence |
+| 🐛 Bugs | Increases **Speed**, lowers Strength & Intelligence |
+| 🍎 Fruit | Increases **Intelligence**, lowers Strength & Speed |
+| ❓ Mystery Food | Random effects — good *or* bad |
+
+- You have **limited food**, except **Fruit** (infinite)
+
+---
+
+### 🎲 Playing Games
+- Playing increases skills:
+    - 💪 Strength games → Strength
+    - ⚡ Speed games → Speed
+    - 🧠 Intelligence games → Intelligence
+- If you **don’t play enough**, your gargoyle may grow up **bad**
+
+---
+
+### 🧬 Growth & Evolution
+- With good care, your Tama-Gargoyle grows into an **adult**
+- Its **strongest stat** influences its evolution type
+- Adults can be:
+    - **Good** (obedient)
+    - **Bad** (may disobey… sometimes helpfully!)
+
+---
+
+### ⚔️ Battle Mode
+- Adult gargoyles may battle opponents with **unknown stats**
+- Battles are **turn-based**, card-style
+
+#### Battle Rules (Rock-Paper-Scissors Logic):
+- 💪 Strength beats ⚡ Speed
+- ⚡ Speed beats 🧠 Intelligence
+- 🧠 Intelligence beats 💪 Strength
+
+If both players choose the same type:
+- The **higher stat wins**
+
+#### Battle Outcomes:
+- Win → 🎁 10 random **special foods**
+- Lose → ❤️ Health drops by 20%, receive **2 special foods**
+
+---
+
+## 🧑‍💻 Game Rules — Developer View
+
+### 🕒 Virtual Time System
+- The game uses **real-world time**
+- Creatures age only while **active**
+- Time does **not progress while logged out**
+
+Key rules:
+1. Resume the creature on login
+2. Apply time decay only after resume
+3. Prevent “offline punishment”
+
+---
+
+### 🧬 Stat Evolution (Developer Logic)
+
+| Action | Effect |
+|------|-------|
+| Rocks | +Strength, −Speed |
+| Bugs | +Speed, −Strength & Intelligence |
+| Fruit | +Intelligence & Speed, −Strength |
+| Mystery Food | +2 stats (random), −1 stat (random) |
+
+---
+
+### ⚔️ Battle Logic
+- Turn-based
+- Rock-Paper-Scissors stat comparison
+- “Bad” gargoyles may **ignore commands**
+- Health reaches 0 → battle ends
+
+---
+
+## 🧪 Testing Strategy
+
+The project uses **MVC feature tests** to verify game flow:
+
+### Covered Behaviours
+- Redirect when user has no gargoyles
+- Correct gargoyle selection (Child > others)
+- Time logic order: `resume → tick`
+- Model attributes rendered correctly
+
+### Example
+```java
+@WebMvcTest(GargoyleController.class)
+class GameFlowFeatureTest {
+    // verifies game flow without hitting database
+}
+```
+These tests:
+- Mock repositories & services
+- Verify **behaviour**, not implementation
+- Prevent regressions in time logic
+
+## 🔐 Authentication
+- OAuth2 login via **Auth0**
+- Users are created automatically on first login
+- Logout fully clears both local session and Auth0 session
+
+## 🛠 Tech Stack
+- Java 21
+- Spring Boot (MVC, Security, JPA)
+- Thymeleaf
+- PostgreSQL
+- Auth0 (OAuth2)
+- JUnit 5, Mockito, MockMvc
+
+## 👥 Team & QA Notes
+This project is designed to support:
+- Feature-based branching
+- Isolated testing per controller/service
+- Clear behaviour-driven acceptance criteria
+QA students may focus on:
+- Time-based edge cases
+- Stat boundaries (0–100)
+- Battle outcome fairness
+- Login/logout transitions
+
+## 🚀 Future Ideas
+- Battle UI
+- Multiple gargoyles per user
+- Trading food items
+- Visual evolution paths
+- Leaderboards
+
+**Good luck raising your Tama-Gargoyle!** 🗿
+
+
+
+
 # 🧪 Controller Testing with Spring Security & Auth0
 (Student Guide – read this if your tests suddenly start redirecting or crashing)
 This project uses Spring Security + Auth0 + Thymeleaf.
