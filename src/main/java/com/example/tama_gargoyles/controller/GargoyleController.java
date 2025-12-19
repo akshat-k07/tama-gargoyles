@@ -42,6 +42,55 @@ public class GargoyleController {
         this.timeService = timeService;
     }
 
+    @PostMapping("/rocks-increase")
+    public RedirectView increaseRocks(@RequestParam Integer strengthDelta, @RequestParam Integer speedDelta,
+                                      @RequestParam Integer intelligenceDelta, @RequestParam Integer hungerDelta, @RequestParam Long gargoyleId){
+        Gargoyle gargoyle = gargoyleRepository.findById(gargoyleId).get();
+        gargoyle.setStrength(Math.min(gargoyle.getStrength() + strengthDelta, 100));
+        gargoyle.setSpeed(Math.min(gargoyle.getSpeed() + speedDelta, 100));
+        gargoyle.setIntelligence(Math.min(gargoyle.getIntelligence() + intelligenceDelta, 100));
+        gargoyle.setHunger(Math.min(gargoyle.getHunger() + hungerDelta, 100));
+        gargoyleRepository.save(gargoyle);
+        return new RedirectView("/game");
+    }
+
+    @PostMapping("/bugs-increase")
+    public RedirectView increaseBugs(@RequestParam Integer strengthDelta, @RequestParam Integer speedDelta,
+                                      @RequestParam Integer intelligenceDelta, @RequestParam Integer hungerDelta, @RequestParam Long gargoyleId){
+        Gargoyle gargoyle = gargoyleRepository.findById(gargoyleId).get();
+        gargoyle.setStrength(Math.min(gargoyle.getStrength() + strengthDelta, 100));
+        gargoyle.setSpeed(Math.min(gargoyle.getSpeed() + speedDelta, 100));
+        gargoyle.setIntelligence(Math.min(gargoyle.getIntelligence() + intelligenceDelta, 100));
+        gargoyle.setHunger(Math.min(gargoyle.getHunger() + hungerDelta, 100));
+        gargoyleRepository.save(gargoyle);
+        return new RedirectView("/game");
+    }
+
+    @PostMapping("/fruits-increase")
+    public RedirectView increaseFruits(@RequestParam Integer strengthDelta, @RequestParam Integer speedDelta,
+                                      @RequestParam Integer intelligenceDelta, @RequestParam Integer hungerDelta, @RequestParam Long gargoyleId){
+        Gargoyle gargoyle = gargoyleRepository.findById(gargoyleId).get();
+        gargoyle.setStrength(Math.min(gargoyle.getStrength() + strengthDelta, 100));
+        gargoyle.setSpeed(Math.min(gargoyle.getSpeed() + speedDelta, 100));
+        gargoyle.setIntelligence(Math.min(gargoyle.getIntelligence() + intelligenceDelta, 100));
+        gargoyle.setHunger(Math.min(gargoyle.getHunger() + hungerDelta, 100));
+        gargoyleRepository.save(gargoyle);
+        return new RedirectView("/game");
+    }
+
+    // Currently thymeleaf just gives zero values, need to program for randomisation
+    @PostMapping("/mystery-increase")
+    public RedirectView increaseMystery(@RequestParam Integer strengthDelta, @RequestParam Integer speedDelta,
+                                       @RequestParam Integer intelligenceDelta, @RequestParam Integer hungerDelta, @RequestParam Long gargoyleId){
+        Gargoyle gargoyle = gargoyleRepository.findById(gargoyleId).get();
+        gargoyle.setStrength(Math.min(gargoyle.getStrength() + strengthDelta, 100));
+        gargoyle.setSpeed(Math.min(gargoyle.getSpeed() + speedDelta, 100));
+        gargoyle.setIntelligence(Math.min(gargoyle.getIntelligence() + intelligenceDelta, 100));
+        gargoyle.setHunger(Math.min(gargoyle.getHunger() + hungerDelta, 100));
+        gargoyleRepository.save(gargoyle);
+        return new RedirectView("/game");
+    }
+
     @PostMapping("/hunger-increase")
     public RedirectView increaseHunger(@RequestParam Integer delta, @RequestParam Long gargoyleId){
         Gargoyle gargoyle = gargoyleRepository.findById(gargoyleId).get();
