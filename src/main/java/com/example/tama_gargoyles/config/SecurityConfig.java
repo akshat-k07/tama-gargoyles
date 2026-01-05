@@ -32,7 +32,7 @@ public class SecurityConfig {
                                 "/favicon.ico",
                                 "/apple-touch-icon.png",
                                 "/apple-touch-icon-precomposed.png",
-                                "/css/**", "/js/**", "/images/**"
+                                "/css/**", "/js/**", "/images/**", "/games/memoryGame/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

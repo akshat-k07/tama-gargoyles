@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Memory Game</title>
+    <style>
+        body { font-family: sans-serif; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 100px);
+            grid-gap: 10px;
+            margin: 20px auto;
+        }
+        .cell {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            font-size: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #444;
+            cursor: pointer;
+            user-select: none;
+        }
+        .cell.matched {
+            background-color: #eee;
+        }
+        .key-label {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            font-size: 16px;
+            color: #555;
+        }
+        .controls { text-align: center; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+<h1 style="text-align:center">Memory Game</h1>
+
+<div class="grid" id="gameGrid"></div>
+
+<div class="controls">
+    <span id="message"></span>
+</div>
+
+<script>
+    const keyMap = [
+        '1','2','3','4',
+        'q','w','e','r',
+        'a','s','d','f',
+        'z','x','c','v'
+    ];
+
+    const emojiList = ['🍎','🍌','🍇','🍉','🍒','🥝','🍑','🍍'];
+    let emojis = [...emojiList, ...emojiList];
+
+    let firstPick = null;
+    let secondPick = null;
+    let matched = [];
+    let clickable = true;
+
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    function createGrid() {
+        const grid = document.getElementById('gameGrid');
+        grid.innerHTML = '';
+        shuffle(emojis);
+
+        emojis.forEach((emoji, i) => {
+            const cell = document.createElement('div');
+            cell.className = 'cell';
+            cell.dataset.index = i;
+
+            const keyLabel = document.createElement('span');
+            keyLabel.className = 'key-label';
+            keyLabel.textContent = keyMap[i];
+            cell.appendChild(keyLabel);
+
+            cell.addEventListener('click', () => handlePick(i));
+            grid.appendChild(cell);
+        });
+    }
+
+    function handlePick(i) {
+        if (!clickable || matched.includes(i)) return;
+
+        const cell = document.querySelector(`.cell[data-index='${i}']`);
+
+        // ✅ FIX: explicit null check (index 0 is valid!)
+        if (firstPick === null) {
+            firstPick = i;
+            cell.textContent = emojis[i];
+
+            const keyLabel = document.createElement('span');
+            keyLabel.className = 'key-label';
+            keyLabel.textContent = keyMap[i];
+            cell.appendChild(keyLabel);
+        }
+        else if (firstPick !== i && secondPick === null) {
+            secondPick = i;
+            cell.textContent = emojis[i];
+
+            const keyLabel = document.createElement('span');
+            keyLabel.className = 'key-label';
+            keyLabel.textContent = keyMap[i];
+            cell.appendChild(keyLabel);
+
+            clickable = false;
+            setTimeout(checkMatch, 500);
+        }
+    }
+
+    function checkMatch() {
+        const cell1 = document.querySelector(`.cell[data-index='${firstPick}']`);
+        const cell2 = document.querySelector(`.cell[data-index='${secondPick}']`);
+
+        if (emojis[firstPick] === emojis[secondPick]) {
+            matched.push(firstPick, secondPick);
+            cell1.classList.add('matched');
+            cell2.classList.add('matched');
+        } else {
+            cell1.textContent = '';
+            cell2.textContent = '';
+
+            const k1 = document.createElement('span');
+            k1.className = 'key-label';
+            k1.textContent = keyMap[firstPick];
+            cell1.appendChild(k1);
+
+            const k2 = document.createElement('span');
+            k2.className = 'key-label';
+            k2.textContent = keyMap[secondPick];
+            cell2.appendChild(k2);
+        }
+
+        firstPick = null;
+        secondPick = null;
+        clickable = true;
+
+        if (matched.length === emojis.length) {
+            document.getElementById('message').textContent =
+                'You matched all pairs!';
+        }
+    }
+
+    document.addEventListener('keydown', (e) => {
+        const index = keyMap.indexOf(e.key.toLowerCase());
+        if (index !== -1) handlePick(index);
+    });
+
+    createGrid();
+</script>
+
+</body>
+</html>
