@@ -17,6 +17,7 @@ public class User {
     private String email;
     private Integer rocks;
     private Integer bugs;
+    private Integer fruits;
     private Integer mystery_food;
 
 //    public User() {}
@@ -26,6 +27,7 @@ public class User {
         this.email = email;
         this.rocks = 0;
         this.bugs = 0;
+        this.fruits = 0;
         this.mystery_food = 0;
     }
 }
