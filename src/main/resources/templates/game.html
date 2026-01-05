@@ -23,6 +23,16 @@
     <section>
         <h2 th:text="${gargoyle.name}">Gargoyle Name</h2>
 
+        <div class="hourglass">
+            <div class="glass top">
+                <div class="sand sand-top"></div>
+            </div>
+            <div class="neck"></div>
+            <div class="glass bottom">
+                <div class="sand sand-bottom"></div>
+            </div>
+        </div>
+
         <p>
             <strong>Status:</strong>
             <span th:text="${gargoyle.status}">ACTIVE</span>
