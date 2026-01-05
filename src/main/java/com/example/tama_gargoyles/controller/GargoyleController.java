@@ -10,20 +10,14 @@ import jakarta.persistence.GeneratedValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.Authentication;
 
 
-
-import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 @Controller
 public class GargoyleController {
@@ -308,6 +302,41 @@ public class GargoyleController {
         return new RedirectView("/game/" + saved.getId());
     }
 
+//    This is all for refreshing the stats in the game window
+
+    @GetMapping("/game/stats/{id}")
+    @ResponseBody
+    public Map<String, Object> getLiveStats(
+            @PathVariable Long id,
+            Authentication authentication
+    ) {
+        User user = currentUserService.getCurrentUser(authentication);
+
+        Gargoyle g = gargoyleRepository.findById(id)
+                .orElseThrow();
+
+        // Safety: ensure ownership
+        if (!g.getUser().getId().equals(user.getId())) {
+            throw new RuntimeException("Unauthorized");
+        }
+
+        // Advance time
+        timeService.resume(g);
+        timeService.tick(g);
+        gargoyleRepository.save(g);
+
+        Map<String, Object> stats = new HashMap<>();
+        stats.put("activeSeconds", g.getActiveMinutes() * 60);
+        stats.put("hunger", g.getHunger());
+        stats.put("happiness", g.getHappiness());
+        stats.put("health", g.getHealth());
+        stats.put("activeMinutes", g.getActiveMinutes());
+        stats.put("gameDaysOld", timeService.gameDaysOld(g));
+        stats.put("minutesIntoDay", timeService.minutesIntoCurrentDay(g));
+        stats.put("paused", g.isPaused());
+
+        return stats;
+    }
 
 
 }

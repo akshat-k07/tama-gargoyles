@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!--    This refreshes the page every 30 seconds-->
+<!--    <meta http-equiv="refresh" content="30">-->
     <title>Tama Gargoyles – Game</title>
     <link rel="stylesheet" th:href="@{/css/game.css}">
 </head>
@@ -13,6 +15,9 @@
     <p><strong>Game Screen (MVP)</strong> – virtual time + pause/resume test page</p>
     <hr />
 </header>
+
+<!--This adds a time indicator-->
+<!--<div class="time-indicator"></div>-->
 
 <main>
     <section>
@@ -28,36 +33,36 @@
 
         <p>
             <strong>Paused:</strong>
-            <span th:text="${gargoyle.paused}">false</span>
+            <span id="paused" th:text="${gargoyle.paused}">false</span>
         </p>
 
         <p>
             <strong>Hunger:</strong>
-            <span th:text="${gargoyle.hunger}">100</span>
+            <span id="hunger" th:text="${gargoyle.hunger}"></span>
             / 100
         </p>
 
         <p>
             <strong>Happiness:</strong>
-            <span th:text="${gargoyle.happiness}">100</span>
+            <span id="happiness" th:text="${gargoyle.happiness}"></span>
             / 100
         </p>
 
         <p>
             <strong>Health:</strong>
-            <span th:text="${gargoyle.health}">100</span>
+            <span id="health" th:text="${gargoyle.health}"></span>
             / 100
         </p>
 
         <p>
             <strong>Active Minutes (in-game time):</strong>
-            <span th:text="${gargoyle.activeMinutes}">0</span>
+            <span id="activeMinutes" th:text="${gargoyle.activeMinutes}"></span>
         </p>
 
         <p>
             <strong>Age (derived):</strong>
-            Day <span th:text="${gameDaysOld}">0</span>,
-            Minute <span th:text="${minutesIntoDay}">0</span>
+            Day <span id="gameDaysOld" th:text="${gameDaysOld}"></span>,
+            Minute <span id="minutesIntoDay" th:text="${minutesIntoDay}"></span>
         </p>
 
         <p>
@@ -224,5 +229,27 @@
         MVP debug view for virtual time. Replace with proper UI later.
     </p>
 </footer>
+<script th:inline="javascript">
+    const gargoyleId = [[${gargoyle.id}]];
+
+    function updateStats() {
+        fetch(`/game/stats/${gargoyleId}`)
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById("hunger").textContent = data.hunger;
+                document.getElementById("happiness").textContent = data.happiness;
+                document.getElementById("health").textContent = data.health;
+                document.getElementById("activeMinutes").textContent = data.activeMinutes;
+                document.getElementById("gameDaysOld").textContent = data.gameDaysOld;
+                document.getElementById("minutesIntoDay").textContent = data.minutesIntoDay;
+                document.getElementById("paused").textContent = data.paused;
+            })
+            .catch(err => console.error("Stat update failed", err));
+    }
+
+    // Poll every 5 seconds
+    setInterval(updateStats, 5000);
+</script>
+
 </body>
 </html>
