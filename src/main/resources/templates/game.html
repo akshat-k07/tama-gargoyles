@@ -26,18 +26,19 @@
 
         <div class="hud-top__right">
             <div class="meta">
-        <span>
-          <strong>Age:</strong>
-          Day <span th:text="${gameDaysOld}">0</span>,
-          Min <span th:text="${minutesIntoDay}">0</span>
-        </span>
+                <span>
+                    <strong>Age:</strong>
+                    Day <span th:text="${gameDaysOld}">0</span>,
+                    Min <span th:text="${minutesIntoDay}">0</span>
+                </span>
 
                 <span class="chip"
                       th:classappend="${gargoyle.paused} ? ' chip--warn' : ' chip--ok'">
-          <span th:text="${gargoyle.paused} ? 'PAUSED' : 'RUNNING'">RUNNING</span>
-        </span>
+                    <span th:text="${gargoyle.paused} ? 'PAUSED' : 'RUNNING'">RUNNING</span>
+                </span>
             </div>
 
+            <!-- TOP NAV: Rename / Battle / Pause & Exit / Testing mode-->
             <nav class="hud-links" aria-label="Game links">
                 <a th:href="@{/gargoyle/{id}/rename(id=${gargoyle.id})}">Rename</a>
 
@@ -45,7 +46,31 @@
                    th:href="@{/battle}">
                     Battle
                 </a>
+
+                <form th:action="@{/testing-mode/toggle}" method="post" class="hud-links__form">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    <button type="submit"
+                            class="btn btn--chip"
+                            th:classappend="${testingMode} ? ' btn--chip-on' : ' btn--chip-off'"
+                            th:attr="aria-pressed=${testingMode}">
+                        <span th:text="${testingMode} ? '🧪 Testing: ON' : '🧪 Testing: OFF'">🧪 Testing: OFF</span>
+                    </button>
+                </form>
+
+
+                <!-- Pause & Exit moved to top -->
+                <form class="hud-form" th:action="@{/gargoyles/pause}" method="post">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    <button class="nav-btn nav-btn--primary" type="submit" title="Pause the game and return">
+                        Pause &amp; Exit
+                    </button>
+                </form>
             </nav>
+
+            <!-- Optional note stays subtle -->
+            <p class="hint hint--top" th:if="${gargoyle.type.name() == 'CHILD'}">
+                🔒 Battle unlocks when you evolve.
+            </p>
         </div>
     </header>
 
@@ -54,12 +79,10 @@
         <h2 id="creature-area-title" class="sr-only">Creature</h2>
 
         <div class="creature-frame">
-            <!-- Replace later with a real image: <img class="creature-sprite bob" ...> -->
             <div class="creature-placeholder bob" aria-hidden="true">
                 <span th:text="${gargoyle.type}">CHILD</span>
             </div>
 
-            <!-- Optional overlays -->
             <p class="overlay overlay--left" th:if="${gargoyle.hunger < 50}">
                 ⚠ Hungry soon
             </p>
@@ -81,17 +104,13 @@
                 <span class="stat__value" th:text="${gargoyle.health} + '%'">90%</span>
             </div>
 
-            <!-- Single th:class to avoid duplicate attribute parsing errors -->
-            <div th:class="'meter'
-                    + (${gargoyle.health lt 25} ? ' meter--danger'
-                    : (${gargoyle.health lt 50} ? ' meter--warn' : ''))">
+            <div class="meter"
+                 th:classappend="${gargoyle.health < 25} ? ' meter--danger' : (${gargoyle.health < 50} ? ' meter--warn' : '')">
                 <div class="meter__fill" th:style="'width:' + ${gargoyle.health} + '%'"></div>
             </div>
 
             <span class="sr-only"
-                  th:text="${gargoyle.health < 25 ? 'Critical' : (gargoyle.health < 50 ? 'Warning' : 'OK')}">
-                OK
-            </span>
+                  th:text="${gargoyle.health < 25 ? 'Critical' : (gargoyle.health < 50 ? 'Warning' : 'OK')}">OK</span>
         </div>
 
         <!-- Hunger -->
@@ -101,16 +120,13 @@
                 <span class="stat__value" th:text="${gargoyle.hunger} + '%'">62%</span>
             </div>
 
-            <div th:class="'meter'
-                    + (${gargoyle.hunger lt 25} ? ' meter--danger'
-                    : (${gargoyle.hunger lt 50} ? ' meter--warn' : ''))">
+            <div class="meter"
+                 th:classappend="${gargoyle.hunger < 25} ? ' meter--danger' : (${gargoyle.hunger < 50} ? ' meter--warn' : '')">
                 <div class="meter__fill" th:style="'width:' + ${gargoyle.hunger} + '%'"></div>
             </div>
 
             <span class="sr-only"
-                  th:text="${gargoyle.hunger < 25 ? 'Critical' : (gargoyle.hunger < 50 ? 'Warning' : 'OK')}">
-                OK
-            </span>
+                  th:text="${gargoyle.hunger < 25 ? 'Critical' : (gargoyle.hunger < 50 ? 'Warning' : 'OK')}">OK</span>
         </div>
 
         <!-- Happiness -->
@@ -120,25 +136,25 @@
                 <span class="stat__value" th:text="${gargoyle.happiness} + '%'">80%</span>
             </div>
 
-            <div th:class="'meter'
-                    + (${gargoyle.happiness lt 25} ? ' meter--danger'
-                    : (${gargoyle.happiness lt 50} ? ' meter--warn' : ''))">
+            <div class="meter"
+                 th:classappend="${gargoyle.happiness < 25} ? ' meter--danger' : (${gargoyle.happiness < 50} ? ' meter--warn' : '')">
                 <div class="meter__fill" th:style="'width:' + ${gargoyle.happiness} + '%'"></div>
             </div>
 
             <span class="sr-only"
-                  th:text="${gargoyle.happiness < 25 ? 'Critical' : (gargoyle.happiness < 50 ? 'Warning' : 'OK')}">
-                OK
-            </span>
+                  th:text="${gargoyle.happiness < 25 ? 'Critical' : (gargoyle.happiness < 50 ? 'Warning' : 'OK')}">OK</span>
         </div>
     </section>
 
     <!-- ROW 4: ACTIONS -->
     <section class="actions" aria-label="Actions">
 
-        <div class="actions__group" aria-labelledby="feed-title">
+        <!-- FEED -->
+        <div class="actions__group actions__group--feed" aria-labelledby="feed-title">
             <h3 id="feed-title">Feed</h3>
-            <div class="actions__grid">
+            <p class="actions__sub">Pick a snack to shape your gargoyle’s growth ✨</p>
+
+            <div class="actions__icons" role="group" aria-label="Feed options">
 
                 <form action="/rocks-increase" method="post">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
@@ -147,7 +163,11 @@
                     <input type="hidden" name="speedDelta" value="-5"/>
                     <input type="hidden" name="intelligenceDelta" value="-5"/>
                     <input type="hidden" name="hungerDelta" value="10"/>
-                    <button class="btn" type="submit" title="Feed Rocks: +Strength, -Speed, -Intelligence">Feed Rocks</button>
+                    <button class="icon-btn icon-btn--feed" type="submit" title="Feed Rocks: +Strength, -Speed, -Intelligence" aria-label="Feed Rocks">
+                        <span class="icon" aria-hidden="true">🪨</span>
+                        <span class="sr-only">Feed Rocks</span>
+                    </button>
+                    <div class="icon-label" aria-hidden="true">Rocks</div>
                 </form>
 
                 <form action="/bugs-increase" method="post">
@@ -157,7 +177,11 @@
                     <input type="hidden" name="speedDelta" value="10"/>
                     <input type="hidden" name="intelligenceDelta" value="-5"/>
                     <input type="hidden" name="hungerDelta" value="10"/>
-                    <button class="btn" type="submit" title="Feed Bugs: +Speed, -Strength, -Intelligence">Feed Bugs</button>
+                    <button class="icon-btn icon-btn--feed" type="submit" title="Feed Bugs: +Speed, -Strength, -Intelligence" aria-label="Feed Bugs">
+                        <span class="icon" aria-hidden="true">🐛</span>
+                        <span class="sr-only">Feed Bugs</span>
+                    </button>
+                    <div class="icon-label" aria-hidden="true">Bugs</div>
                 </form>
 
                 <form action="/fruits-increase" method="post">
@@ -167,7 +191,11 @@
                     <input type="hidden" name="speedDelta" value="-5"/>
                     <input type="hidden" name="intelligenceDelta" value="10"/>
                     <input type="hidden" name="hungerDelta" value="10"/>
-                    <button class="btn" type="submit" title="Feed Fruit: +Intelligence, -Strength, -Speed">Feed Fruit</button>
+                    <button class="icon-btn icon-btn--feed" type="submit" title="Feed Fruit: +Intelligence, -Strength, -Speed" aria-label="Feed Fruit">
+                        <span class="icon" aria-hidden="true">🍎</span>
+                        <span class="sr-only">Feed Fruit</span>
+                    </button>
+                    <div class="icon-label" aria-hidden="true">Fruit</div>
                 </form>
 
                 <form action="/mystery-increase" method="post">
@@ -177,15 +205,22 @@
                     <input type="hidden" name="speedDelta" value="0"/>
                     <input type="hidden" name="intelligenceDelta" value="0"/>
                     <input type="hidden" name="hungerDelta" value="10"/>
-                    <button class="btn" type="submit" title="Feed Mystery Food: ???">Feed Mystery</button>
+                    <button class="icon-btn icon-btn--mystery" type="submit" title="Feed Mystery Food: ???" aria-label="Feed Mystery">
+                        <span class="icon" aria-hidden="true">❓</span>
+                        <span class="sr-only">Feed Mystery</span>
+                    </button>
+                    <div class="icon-label" aria-hidden="true">Mystery</div>
                 </form>
 
             </div>
         </div>
 
-        <div class="actions__group" aria-labelledby="play-title">
+        <!-- PLAY -->
+        <div class="actions__group actions__group--play" aria-labelledby="play-title">
             <h3 id="play-title">Play</h3>
-            <div class="actions__grid">
+            <p class="actions__sub">Mini-games boost happiness (and sometimes stats!)</p>
+
+            <div class="actions__icons" role="group" aria-label="Play options">
 
                 <form action="/strength-increase" method="post">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
@@ -194,7 +229,11 @@
                     <input type="hidden" name="speedDelta" value="0"/>
                     <input type="hidden" name="intelligenceDelta" value="0"/>
                     <input type="hidden" name="happinessDelta" value="10"/>
-                    <button class="btn" type="submit" title="Play Strength Game: +Strength">Strength</button>
+                    <button class="icon-btn icon-btn--play" type="submit" title="Strength Game: +Strength" aria-label="Play Strength game">
+                        <span class="icon" aria-hidden="true">💪</span>
+                        <span class="sr-only">Strength</span>
+                    </button>
+                    <div class="icon-label" aria-hidden="true">Strength</div>
                 </form>
 
                 <form action="/speed-increase" method="post">
@@ -204,7 +243,11 @@
                     <input type="hidden" name="speedDelta" value="10"/>
                     <input type="hidden" name="intelligenceDelta" value="0"/>
                     <input type="hidden" name="happinessDelta" value="10"/>
-                    <button class="btn" type="submit" title="Play Speed Game: +Speed">Speed</button>
+                    <button class="icon-btn icon-btn--play" type="submit" title="Speed Game: +Speed" aria-label="Play Speed game">
+                        <span class="icon" aria-hidden="true">⚡</span>
+                        <span class="sr-only">Speed</span>
+                    </button>
+                    <div class="icon-label" aria-hidden="true">Speed</div>
                 </form>
 
                 <form action="/intelligence-increase" method="post">
@@ -214,27 +257,27 @@
                     <input type="hidden" name="speedDelta" value="0"/>
                     <input type="hidden" name="intelligenceDelta" value="10"/>
                     <input type="hidden" name="happinessDelta" value="10"/>
-                    <button class="btn" type="submit" title="Play Intelligence Game: +Intelligence">Brains</button>
+                    <button class="icon-btn icon-btn--play" type="submit" title="Brains Game: +Intelligence" aria-label="Play Brains game">
+                        <span class="icon" aria-hidden="true">🧠</span>
+                        <span class="sr-only">Brains</span>
+                    </button>
+                    <div class="icon-label" aria-hidden="true">Brains</div>
                 </form>
 
             </div>
         </div>
 
-        <div class="actions__group" aria-labelledby="time-title">
-            <h3 id="time-title">Time</h3>
-            <form th:action="@{/gargoyles/pause}" method="post">
-                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                <button class="btn btn--primary btn--wide" type="submit">Pause &amp; Exit</button>
-            </form>
-
-            <p class="hint" th:if="${gargoyle.type.name() == 'CHILD'}">
-                🔒 Battle unlocks when you evolve.
+        <!-- RIGHT COLUMN: quick note / future slot -->
+        <aside class="actions__group actions__group--side" aria-label="Tips">
+            <h3>Tip</h3>
+            <p class="hint">
+                Try different combos. Your gargoyle’s vibe will emerge over time ✨
             </p>
-        </div>
+        </aside>
 
     </section>
 
-    <!-- ROW 5: EVENT LOG (internal scroll, page stays fixed) -->
+    <!-- ROW 5: EVENT LOG -->
     <section class="log" aria-label="Event log">
         <h3>Event Log</h3>
 
