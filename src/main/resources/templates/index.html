@@ -1,21 +1,62 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <style>
+        /* Style all buttons consistently */
+        .btn {
+            padding: 0.5rem 1rem;
+            margin: 0.2rem;
+            font-size: 1rem;
+            color: white;
+            background-color: #007BFF; /* Bootstrap blue */
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* Container for inline buttons */
+        .button-group {
+            display: flex;
+            gap: 0.5rem; /* space between buttons */
+            margin-top: 1rem; /* space above the buttons */
+        }
+
+        /* Space below the greeting */
+        .greeting {
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
 <body>
 <h1>Tama Gargoyles</h1>
 
 <div sec:authorize="isAnonymous()">
     <p>You are not logged in.</p>
-    <a href="/oauth2/authorization/auth0">Log in with Auth0</a>
+    <button class="btn" onclick="window.location.href='/oauth2/authorization/auth0'">
+        Log in with Auth0
+    </button>
 </div>
 
 <div sec:authorize="isAuthenticated()">
-    <p>You are logged in.</p>
-    <a href="/game">Go to game</a>
+    <div class="greeting">
+        Hello, you are logged in as <span sec:authentication="principal.attributes['email']"></span>
+    </div>
 
-    <form th:action="@{/logout}" method="post" style="margin-top: 1rem;">
-        <button type="submit">Logout</button>
-    </form>
+    <div class="button-group">
+        <button class="btn" onclick="window.location.href='/game'">
+            Go to game
+        </button>
+        <form th:action="@{/logout}" method="post" style="display: inline;">
+            <button type="submit" class="btn">Logout</button>
+        </form>
+    </div>
 </div>
+
+
 </body>
 </html>
