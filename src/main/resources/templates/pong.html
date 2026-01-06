@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tama Gargoyles – Pong Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            margin-top: 20px;
+        }
+
+        canvas {
+            background: #222;
+            display: block;
+            margin: 20px auto;
+            border: 2px solid #0095DD;
+        }
+
+        #survivalTime {
+            font-size: 1.2em;
+            margin-top: 10px;
+        }
+
+        #instructions {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<h1>Pong Game</h1>
+<p id="survivalTime">Survival Time: 0 seconds</p>
+<canvas id="pongCanvas" width="600" height="400"></canvas>
+<p id="instructions">Use Left & Right arrow keys to move the paddle. Don't let the ball fall!</p>
+
+<script>
+    const canvas = document.getElementById("pongCanvas");
+    const ctx = canvas.getContext("2d");
+    const WIDTH = canvas.width;
+    const HEIGHT = canvas.height;
+
+    // Game Objects
+    const paddleWidth = 10;
+    const paddleHeight = 80;
+    let playerY = (HEIGHT - paddleHeight) / 2;
+    let computerY = (HEIGHT - paddleHeight) / 2;
+    let computerSpeed = 3; // Initial AI speed
+
+    let ballX = WIDTH / 2;
+    let ballY = HEIGHT / 2;
+    let ballSpeedX = 4;
+    let ballSpeedY = 4;
+    const ballRadius = 8;
+
+    const startTime = Date.now();
+    const survivalDisplay = document.getElementById("survivalTime");
+
+    // Controls
+    let upPressed = false;
+    let downPressed = false;
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowUp") upPressed = true;
+        if (e.key === "ArrowDown") downPressed = true;
+    });
+    document.addEventListener("keyup", (e) => {
+        if (e.key === "ArrowUp") upPressed = false;
+        if (e.key === "ArrowDown") downPressed = false;
+    });
+
+    function gameOver() {
+        const survivalTime = Math.floor((Date.now() - startTime) / 1000);
+
+        fetch('/pong/result', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '[[${_csrf.token}]]'
+            },
+            body: JSON.stringify({
+                gargoyleId: [[${gargoyleId}]],
+                survivalTime: survivalTime
+            })
+        }).finally(() => {
+            window.location.href = "/pong/pong-result?time=" + survivalTime;
+        });
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, WIDTH, HEIGHT);
+
+        // Survival Time & Difficulty Scaling
+        const elapsed = Math.floor((Date.now() - startTime) / 1000);
+        survivalDisplay.textContent = "Survival Time: " + elapsed + "s";
+
+        // Increase difficulty every 10 seconds
+        let currentSpeedBoost = 1 + (elapsed / 10);
+
+        // Draw Paddles
+        ctx.fillStyle = "#0095DD";
+        ctx.fillRect(0, playerY, paddleWidth, paddleHeight); // Player (Left)
+        ctx.fillRect(WIDTH - paddleWidth, computerY, paddleWidth, paddleHeight); // AI (Right)
+
+        // Draw Ball
+        ctx.beginPath();
+        ctx.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Ball Movement
+        ballX += ballSpeedX > 0 ? 3 * currentSpeedBoost : -3 * currentSpeedBoost;
+        ballY += ballSpeedY > 0 ? 3 * currentSpeedBoost : -3 * currentSpeedBoost;
+
+        // Wall Bounce (Top/Bottom)
+        if (ballY < 0 || ballY > HEIGHT) ballSpeedY = -ballSpeedY;
+
+        // AI Logic: Follows ball Y coordinate
+        computerY = ballY - (paddleHeight / 2);
+        if (computerY < 0) {
+            computerY = 0;
+        } else if (computerY > HEIGHT - paddleHeight) {
+            computerY = HEIGHT - paddleHeight;
+        }
+
+        // Player Movement
+        if (upPressed && playerY > 0) playerY -= 7;
+        if (downPressed && playerY < HEIGHT - paddleHeight) playerY += 7;
+
+        // Collision Detection
+        if (ballX < paddleWidth) {
+            if (ballY > playerY && ballY < playerY + paddleHeight) ballSpeedX = -ballSpeedX;
+            else gameOver(); // Missed ball
+        }
+        if (ballX > WIDTH - paddleWidth) {
+            if (ballY > computerY && ballY < computerY + paddleHeight) ballSpeedX = -ballSpeedX;
+            else ballSpeedX = -ballSpeedX; // AI missed, just bounce it back to keep game going
+        }
+
+        requestAnimationFrame(draw);
+    }
+    draw();
+</script>
+</body>
+</html>

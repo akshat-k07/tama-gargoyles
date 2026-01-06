@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Pong Result</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: black;
+            color: white;
+            font-family: sans-serif;
+            flex-direction: column;
+        }
+        a {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 20px;
+            color: white;
+            text-decoration: none;
+            background-color: #333;
+            border: none;
+            cursor: pointer;
+        }
+        a:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+<h1>You survived <span th:text="${survivalTime}">0</span> seconds!</h1>
+<a href="/game">Back to Main Game</a>
+</body>
+</html>

@@ -80,10 +80,11 @@
         <form action="/rocks-increase" method="post">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
             <input type="hidden" name="gargoyleId" th:value="${gargoyle.id}"/>
-            <input type="hidden" name="strengthDelta" value="10"/>
-            <input type="hidden" name="speedDelta" value="-5"/>
-            <input type="hidden" name="intelligenceDelta" value="-5"/>
-            <input type="hidden" name="hungerDelta" value="10"/>
+            <input type="hidden" name="strengthDelta" value="4"/>
+            <input type="hidden" name="speedDelta" value="-1"/>
+            <input type="hidden" name="intelligenceDelta" value="-1"/>
+            <input type="hidden" name="hungerDelta" value="12"/>
+            <input type="hidden" name="userId" th:value="${gargoyle.user.id}"/>
             <button title="Feed Rocks:
   + Strength
   - Speed
@@ -94,10 +95,11 @@
         <form action="/bugs-increase" method="post">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
             <input type="hidden" name="gargoyleId" th:value="${gargoyle.id}"/>
-            <input type="hidden" name="strengthDelta" value="-5"/>
-            <input type="hidden" name="speedDelta" value="10"/>
-            <input type="hidden" name="intelligenceDelta" value="-5"/>
-            <input type="hidden" name="hungerDelta" value="10"/>
+            <input type="hidden" name="strengthDelta" value=-1/>
+            <input type="hidden" name="speedDelta" value="4"/>
+            <input type="hidden" name="intelligenceDelta" value="-1"/>
+            <input type="hidden" name="hungerDelta" value="8"/>
+            <input type="hidden" name="userId" th:value="${gargoyle.user.id}"/>
             <button title="Feed Bugs:
   + Speed
   - Strength
@@ -108,10 +110,11 @@
         <form action="/fruits-increase" method="post">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
             <input type="hidden" name="gargoyleId" th:value="${gargoyle.id}"/>
-            <input type="hidden" name="strengthDelta" value="-5"/>
-            <input type="hidden" name="speedDelta" value="-5"/>
-            <input type="hidden" name="intelligenceDelta" value="10"/>
+            <input type="hidden" name="strengthDelta" value="-1"/>
+            <input type="hidden" name="speedDelta" value="-1"/>
+            <input type="hidden" name="intelligenceDelta" value="4"/>
             <input type="hidden" name="hungerDelta" value="10"/>
+            <input type="hidden" name="userId" th:value="${gargoyle.user.id}"/>
             <button title="Feed Fruit:
   + Intelligence
   - Strength
@@ -125,7 +128,8 @@
             <input type="hidden" name="strengthDelta" value="0"/>
             <input type="hidden" name="speedDelta" value="0"/>
             <input type="hidden" name="intelligenceDelta" value="0"/>
-            <input type="hidden" name="hungerDelta" value="10"/>
+            <input type="hidden" name="hungerDelta" value="100"/>
+            <input type="hidden" name="userId" th:value="${gargoyle.user.id}"/>
             <button title="Feed Mystery Food:
   ?????" type="submit">Feed Mystery Food</button>
         </form>
@@ -206,6 +210,7 @@
             <input type="hidden" name="delta" th:value="10"/>
             <button type="submit">Un-Play</button>
         </form>
+        <a th:href="@{/pong/pong(gargoyleId=${gargoyle.id})}" style="button-style">Play Pong</a>
         <a th:href="@{/gargoyle/{id}/rename(id=${gargoyle.id})}">Rename</a>
         <p>
             Tip: refresh this page after ~1 minute to see Hunger/Happiness drop
