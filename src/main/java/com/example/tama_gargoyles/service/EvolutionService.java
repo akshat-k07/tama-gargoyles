@@ -6,6 +6,8 @@ import java.util.Objects;
 
 public class EvolutionService {
 
+    private static final int GOOD_HAPPINESS = 60;
+
     public boolean evolveGargoyle(Gargoyle g){
 
         Gargoyle.Type gType = g.getType();
@@ -50,7 +52,7 @@ public class EvolutionService {
 
     public Gargoyle.Type calculateGargoyleType(Gargoyle g){
 
-        if (g.getHappiness() >= 60){
+        if (g.getHappiness() >= GOOD_HAPPINESS){
             return Gargoyle.Type.GOOD;
         }else{
             return Gargoyle.Type.BAD;

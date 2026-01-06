@@ -7,7 +7,6 @@ import com.example.tama_gargoyles.repository.UserRepository;
 import com.example.tama_gargoyles.service.CurrentUserService;
 import com.example.tama_gargoyles.service.EvolutionService;
 import com.example.tama_gargoyles.service.GargoyleTimeService;
-import jakarta.persistence.GeneratedValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,15 +14,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.Authentication;
 
 
 import java.util.*;
 
-import java.util.Date;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 
 @Controller
 public class GargoyleController {
@@ -32,8 +27,6 @@ public class GargoyleController {
     private final CurrentUserService currentUserService;
     private final GargoyleTimeService timeService;
     private final EvolutionService evolutionService;
-
-    private static final long ADULT_AT_GAME_DAYS = 3;
 
     public GargoyleController(
             GargoyleRepository gargoyleRepository,
