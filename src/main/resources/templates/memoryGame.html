@@ -4,12 +4,17 @@
     <meta charset="UTF-8">
     <title>Tama Gargoyles – Memory Game</title>
     <style>
-        body { font-family: sans-serif; }
+        body {
+            font-family: sans-serif;
+            text-align: center; /* added to center the grid horizontally */
+        }
+
         .grid {
             display: grid;
             grid-template-columns: repeat(4, 100px);
             grid-gap: 10px;
-            margin: 20px auto;
+            width: 430px;      /* added fixed width */
+            margin: 20px auto; /* horizontally center */
         }
         .cell {
             position: relative;
@@ -39,6 +44,10 @@
 <body>
 
 <h1 style="text-align:center">Memory Game</h1>
+<p style="text-align:center; max-width: 400px; margin: 10px auto; color: #333;">
+    Click on the tiles or press the corresponding keys to reveal the emojis.
+    Match all pairs to win the game!
+</p>
 
 <div class="grid" id="gameGrid"></div>
 
