@@ -94,12 +94,15 @@
         <!-- Feed - Bugs: requires CSRF token -->
         <form action="/bugs-increase" method="post">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
             <input type="hidden" name="gargoyleId" th:value="${gargoyle.id}"/>
-            <input type="hidden" name="strengthDelta" value=-1/>
+
+            <input type="hidden" name="userId" th:value="${gargoyle.user.id}"/>
+
+            <input type="hidden" name="strengthDelta" value="-1"/>
             <input type="hidden" name="speedDelta" value="4"/>
             <input type="hidden" name="intelligenceDelta" value="-1"/>
             <input type="hidden" name="hungerDelta" value="8"/>
-            <input type="hidden" name="userId" th:value="${gargoyle.user.id}"/>
             <button title="Feed Bugs:
   + Speed
   - Strength
@@ -134,6 +137,16 @@
   ?????" type="submit">Feed Mystery Food</button>
         </form>
 
+        </br></br>
+        <section>
+            <h3>Inventory</h3>
+            <ul>
+                <li>Rocks: <span th:text="${gargoyle.user.rocks}">0</span></li>
+                <li>Bugs: <span th:text="${gargoyle.user.bugs}">0</span></li>
+                <li>Fruits: <span th:text="${gargoyle.user.fruits}">0</span></li>
+                <li>Mystery Food: <span th:text="${gargoyle.user.mysteryFood}">0</span></li>
+            </ul>
+        </section>
         </br></br>
 
 
