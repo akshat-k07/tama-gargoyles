@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.security.core.Authentication;
+import com.example.tama_gargoyles.repository.UserRepository;
 
 import java.util.List;
 
@@ -38,14 +39,18 @@ public class BattleController {
     private final GargoyleRepository gargoyleRepository;
     private final BattleService battleService;
     private final GargoyleTimeService timeService;
+    private final UserRepository userRepository;
 
     public BattleController(CurrentUserService currentUserService,
                             GargoyleRepository gargoyleRepository,
-                            BattleService battleService, GargoyleTimeService timeService) {
+                            BattleService battleService,
+                            GargoyleTimeService timeService,
+                            UserRepository userRepository) {
         this.currentUserService = currentUserService;
         this.gargoyleRepository = gargoyleRepository;
         this.battleService = battleService;
         this.timeService = timeService;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -101,8 +106,10 @@ public class BattleController {
     }
 
     @PostMapping("/battle/move")
-    public RedirectView playMove(Authentication authentication, @RequestParam("move") String move,
-                                 @ModelAttribute("battleState") BattleState state, RedirectAttributes redirectAttributes) {
+    public RedirectView playMove(Authentication authentication,
+                                 @RequestParam("move") String move,
+                                 @ModelAttribute("battleState") BattleState state,
+                                 RedirectAttributes redirectAttributes) {
 
         // Server-side enforcement again (don't trust UI)
         User user = currentUserService.getCurrentUser(authentication);
@@ -124,8 +131,14 @@ public class BattleController {
         BattleMove userMove = BattleMove.valueOf(move);
         battleService.playTurn(state, userMove);
 
+        // ✅ HARD TRANSITION LIKE PONG
+        if (state.isFinished()) {
+            return new RedirectView("/battle-result");
+        }
+
         return new RedirectView("/battle");
     }
+
 
     @PostMapping("/battle/reset")
     public RedirectView reset(@ModelAttribute("battleState") BattleState state) {
@@ -137,4 +150,69 @@ public class BattleController {
     private boolean isBattleEligible(Gargoyle g) {
         return g.getType() != Gargoyle.Type.CHILD;
     }
+
+    @GetMapping("/battle-result")
+    public String battleResult(Authentication authentication,
+                               @ModelAttribute("battleState") BattleState state,
+                               Model model,
+                               RedirectAttributes redirectAttributes) {
+
+        if (!state.isFinished()) {
+            redirectAttributes.addFlashAttribute(
+                    "battleError",
+                    "Battle is not finished yet."
+            );
+            return "redirect:/battle";
+        }
+
+        User user = currentUserService.getCurrentUser(authentication);
+
+        Gargoyle battler = gargoyleRepository
+                .findAllByUserIdOrderByIdAsc(user.getId())
+                .stream()
+                .filter(this::isBattleEligible)
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("No eligible gargoyle found"));
+
+        boolean userWon = state.getUserScore() >= BattleState.WIN_SCORE;
+
+        String rewardMessage;
+
+        if (userWon) {
+            // 🏆 WIN REWARDS
+            battler.setHappiness(100);          // Full happiness
+            // Health unchanged
+
+            user.setRocks(user.getRocks() + 3);
+            user.setBugs(user.getBugs() + 3);
+            user.setFruits(user.getFruits() + 3);
+            user.setMysteryFood(user.getMysteryFood() + 1);
+
+            rewardMessage = "Victory! Your gargoyle is thrilled and earned rich rewards!";
+        } else {
+            // 💀 LOSS PENALTIES
+            battler.setHealth(Math.max(0, battler.getHealth() - 20));
+
+            user.setRocks(user.getRocks() + 1);
+            user.setBugs(user.getBugs() + 1);
+            user.setFruits(user.getFruits() + 1);
+
+            rewardMessage = "Defeat… your gargoyle is hurt but learned from the battle.";
+        }
+
+        // Persist changes
+        gargoyleRepository.save(battler);
+        userRepository.save(user);
+
+        // UI data
+        model.addAttribute("winnerText", state.winnerText());
+        model.addAttribute("rewardMessage", rewardMessage);
+
+        // ✅ IMPORTANT: reset battle AFTER rewards
+        state.reset();
+
+        return "battle-result";
+    }
+
+
 }

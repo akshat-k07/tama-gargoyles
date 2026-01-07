@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Battle Result</title>
+
+    <!-- Reuse main game styling -->
+    <link rel="stylesheet" th:href="@{/css/battle.css}" />
+</head>
+
+<body>
+
+<main class="screen"
+      style="display:flex; justify-content:center; align-items:center;">
+
+    <section class="panel"
+             style="text-align:center; max-width:560px; padding:2.5rem;">
+
+        <!-- RESULT HEADER -->
+        <h1 class="game-title"
+            th:text="${winnerText}">
+            🎉 USER WINS THE GAME! 🎉
+        </h1>
+
+        <!-- FLAVOR TEXT -->
+        <p class="hint" style="margin-top:1.2rem;"
+           th:text="${rewardMessage}">
+            Reward message
+        </p>
+
+        <!-- ===================== -->
+        <!-- WIN REWARDS -->
+        <!-- ===================== -->
+        <div th:if="${userWon}" style="margin-top:1.8rem;">
+
+            <h3>Rewards Earned</h3>
+
+            <ul class="log__list" style="margin-top:0.8rem;">
+                <li>😊 Happiness restored to <strong>100%</strong></li>
+                <li>🪨 <strong>+3 Rocks</strong></li>
+                <li>🐛 <strong>+3 Bugs</strong></li>
+                <li>🍎 <strong>+3 Fruits</strong></li>
+                <li>❓ <strong>+1 Mystery Food</strong></li>
+            </ul>
+        </div>
+
+        <!-- ===================== -->
+        <!-- LOSS OUTCOME -->
+        <!-- ===================== -->
+        <div th:unless="${userWon}" style="margin-top:1.8rem;">
+
+            <h3>Battle Outcome</h3>
+
+            <ul class="log__list" style="margin-top:0.8rem;">
+                <li>❤️ Health <strong>−20</strong></li>
+                <li>🪨 <strong>+1 Rock</strong></li>
+                <li>🐛 <strong>+1 Bug</strong></li>
+                <li>🍎 <strong>+1 Fruit</strong></li>
+            </ul>
+        </div>
+
+        <!-- BACK BUTTON -->
+        <a href="/game"
+           class="btn nav-btn--primary"
+           style="margin-top:2.5rem; display:inline-block;">
+            Back to Main Game
+        </a>
+
+    </section>
+
+</main>
+
+</body>
+</html>

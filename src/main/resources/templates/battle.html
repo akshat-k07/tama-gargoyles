@@ -1,115 +1,166 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Battle Mode</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Tama Gargoyles — Battle</title>
+
+    <!-- 🔥 Reuse the game UI -->
+    <link rel="stylesheet" th:href="@{/css/game.css}"/>
 </head>
+
 <body>
-<header>
-    <h1>Battle Mode</h1>
-    <p>Turn-based battle (MVP) — first to 3 wins.</p>
-    <hr />
-</header>
 
-<main>
+<main class="screen">
 
-    <!-- YOUR GARGOYLE (from controller) -->
-    <section>
-        <h2 th:text="${gargoyle.name}">Your Gargoyle</h2>
-        <p>
-            <strong>Type:</strong> <span th:text="${gargoyle.type}">CHILD</span>
-            |
-            <strong>Status:</strong> <span th:text="${gargoyle.status}">ACTIVE</span>
-        </p>
-    </section>
-
-    <hr />
-
-    <!-- SCOREBOARD -->
-    <section>
-        <h3>Score</h3>
-        <p>
-            <strong>You:</strong> <span th:text="${state.userScore}">0</span>
-            |
-            <strong>Opponent:</strong> <span th:text="${state.opponentScore}">0</span>
-        </p>
-    </section>
-
-    <!-- LAST TURN -->
-    <section>
-        <h3>Last Turn</h3>
-
-        <div th:if="${state.lastUserMove != null}">
-            <p>
-                <strong>You played:</strong> <span th:text="${state.lastUserMove}">SLAM</span><br/>
-                <strong>Opponent played:</strong> <span th:text="${state.lastOpponentMove}">DASH</span><br/>
-                <strong>Outcome:</strong> <span th:text="${state.lastOutcome}">USER_WINS</span>
-            </p>
+    <!-- TOP HUD -->
+    <header class="hud-top">
+        <div class="hud-top__left">
+            <h1 class="game-title">Battle Mode</h1>
+            <div class="meta">
+                <span>
+                    <strong>Gargoyle:</strong>
+                    <span th:text="${gargoyle.name}">Pebble</span>
+                </span>
+                <span>
+                    <strong>Type:</strong>
+                    <span th:text="${gargoyle.type}">GOOD</span>
+                </span>
+            </div>
         </div>
 
-        <div th:if="${state.lastUserMove == null}">
-            <p>No turns yet — choose an attack!</p>
+        <div class="hud-top__right">
+            <div class="meta">
+                <span class="chip chip--ok">
+                    You <strong th:text="${state.userScore}">0</strong>
+                    :
+                    <strong th:text="${state.opponentScore}">0</strong> Opponent
+                </span>
+            </div>
+
+            <nav class="hud-links">
+                <a th:href="@{/game}">← Back to Game</a>
+            </nav>
         </div>
-    </section>
+    </header>
 
-    <hr />
+    <!-- GRID -->
+    <div class="game-grid">
 
-    <!-- WINNER MESSAGE -->
-    <section th:if="${winnerText != null}">
-        <h2 th:text="${winnerText}">Winner message</h2>
-    </section>
+        <!-- LEFT: RULES -->
+        <section class="panel hud-panel hud-panel--left">
+            <h2 class="panel__title">Rules</h2>
 
-    <!-- ACTIONS -->
-    <section>
-        <h3>Choose Attack</h3>
+            <ul class="log__list">
+                <li><strong>SLAM</strong> beats <strong>DASH</strong></li>
+                <li><strong>DASH</strong> beats <strong>SNEAK</strong></li>
+                <li><strong>SNEAK</strong> beats <strong>SLAM</strong></li>
+                <li>Same move = Draw</li>
+            </ul>
+        </section>
 
-        <!-- Disable buttons if battle finished -->
-        <div th:if="${!state.finished}">
-            <form th:action="@{/battle/move}" method="post" style="display:inline;">
+        <!-- CENTER: BATTLE STAGE -->
+        <section class="panel stage-panel">
+            <div class="stage" aria-label="Battle arena">
+
+                <!-- reuse background layers -->
+                <div class="stage__layer stage__sky"></div>
+                <div class="stage__layer stage__stars"></div>
+                <div class="stage__layer stage__moon"></div>
+                <div class="stage__layer stage__roof"></div>
+
+                <!-- Fighters -->
+                <div class="creature-slot">
+                    <img class="creature-sprite"
+                         th:src="@{/images/gargoyle/gargoyle.png}"
+                         alt="Your Gargoyle"/>
+                </div>
+
+                <p class="overlay overlay--left">
+                    You
+                </p>
+                <p class="overlay overlay--right">
+                    Opponent
+                </p>
+            </div>
+        </section>
+
+        <!-- RIGHT: LAST TURN -->
+        <aside class="panel hud-panel hud-panel--right">
+            <h2 class="panel__title">Last Turn</h2>
+
+            <div th:if="${state.lastUserMove != null}">
+                <p class="hint">
+                    You played <strong th:text="${state.lastUserMove}">SLAM</strong><br/>
+                    Opponent played <strong th:text="${state.lastOpponentMove}">DASH</strong><br/>
+                    Outcome:
+                    <strong th:text="${state.lastOutcome}">USER_WINS</strong>
+                </p>
+            </div>
+
+            <div th:if="${state.lastUserMove == null}">
+                <p class="hint">Choose your first attack ✨</p>
+            </div>
+        </aside>
+
+        <!-- ACTIONS -->
+        <section class="panel actions-panel">
+            <h2 class="panel__title">Choose Attack</h2>
+
+            <div class="actions__icons">
+
+                <form th:action="@{/battle/move}" method="post">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    <input type="hidden" name="move" value="SLAM"/>
+                    <button class="icon-btn icon-btn--play" type="submit"
+                            th:disabled="${state.finished}">
+                        💪
+                    </button>
+                    <div class="icon-label">Slam</div>
+                </form>
+
+                <form th:action="@{/battle/move}" method="post">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    <input type="hidden" name="move" value="SNEAK"/>
+                    <button class="icon-btn icon-btn--play" type="submit"
+                            th:disabled="${state.finished}">
+                        🧠
+                    </button>
+                    <div class="icon-label">Sneak</div>
+                </form>
+
+                <form th:action="@{/battle/move}" method="post">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    <input type="hidden" name="move" value="DASH"/>
+                    <button class="icon-btn icon-btn--play" type="submit"
+                            th:disabled="${state.finished}">
+                        ⚡
+                    </button>
+                    <div class="icon-label">Dash</div>
+                </form>
+
+            </div>
+
+            <form th:action="@{/battle/reset}" method="post" style="margin-top:1rem;">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                <input type="hidden" name="move" value="SLAM"/>
-                <button type="submit">Slam</button>
+                <button class="btn btn--danger btn--wide" type="submit">
+                    Reset Battle
+                </button>
             </form>
+        </section>
 
-            <form th:action="@{/battle/move}" method="post" style="display:inline;">
-                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                <input type="hidden" name="move" value="SNEAK"/>
-                <button type="submit">Sneak Attack</button>
-            </form>
+        <!-- LOG -->
+        <section class="panel log-panel">
+            <h3>Battle Log</h3>
 
-            <form th:action="@{/battle/move}" method="post" style="display:inline;">
-                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                <input type="hidden" name="move" value="DASH"/>
-                <button type="submit">Dash</button>
-            </form>
-        </div>
+            <ul class="log__list">
+                <li th:if="${winnerText}" th:text="${winnerText}">Winner!</li>
+                <li th:unless="${winnerText}">First to 3 wins.</li>
+            </ul>
+        </section>
 
-        <div th:if="${state.finished}">
-            <p><strong>Battle finished.</strong> Reset to play again.</p>
-        </div>
-
-        <form th:action="@{/battle/reset}" method="post" style="margin-top: 1rem;">
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-            <button type="submit">Reset Battle</button>
-        </form>
-
-        <hr />
-
-        <p style="font-size: 0.9em;">
-            <strong>Rules (MVP mapping):</strong><br/>
-            SLAM (Strength) beats DASH (Speed)<br/>
-            DASH (Speed) beats SNEAK (Intelligence)<br/>
-            SNEAK (Intelligence) beats SLAM (Strength)<br/>
-            Same move = draw (we can upgrade to “higher stat wins” later).
-        </p>
-    </section>
-
+    </div>
 </main>
 
-<footer>
-    <hr />
-    <p style="font-size: 0.9em;">Battle MVP page. Styling can be replaced with Tailwind/DaisyUI later.</p>
-</footer>
 </body>
 </html>
