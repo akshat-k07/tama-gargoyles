@@ -15,7 +15,7 @@ public class UserTest {
         assertEquals("null", testUser.getUsername());
         assertEquals(0L, testUser.getBugs().longValue());
         assertEquals(0L, testUser.getRocks().longValue());
-        assertEquals(0L, testUser.getMystery_food().longValue());
+        assertEquals(0L, testUser.getMysteryFood().longValue());
 
     }
 
@@ -25,13 +25,13 @@ public class UserTest {
         User testUser = new User();
         testUser.setBugs(2);
         testUser.setRocks(65);
-        testUser.setMystery_food(1);
+        testUser.setMysteryFood(1);
         testUser.setEmail("test@email.com");
 
         assertEquals("test@email.com", testUser.getEmail());
         assertEquals(2L, testUser.getBugs().longValue());
         assertEquals(65L, testUser.getRocks().longValue());
-        assertEquals(1L, testUser.getMystery_food().longValue());
+        assertEquals(1L, testUser.getMysteryFood().longValue());
 
     }
 

@@ -15,19 +15,13 @@ public class User {
     private Long id;
     private String username;
     private String email;
-    private Integer rocks;
-    private Integer bugs;
-    private Integer fruits;
-    private Integer mystery_food;
-
-//    public User() {}
+    private Integer rocks = 10;
+    private Integer bugs = 10;
+    private Integer fruits = 10;
+    @Column(name = "mystery_food")
+    private Integer mysteryFood = 5;
 
     public User(String email) {
-        this.username = "null";
         this.email = email;
-        this.rocks = 0;
-        this.bugs = 0;
-        this.fruits = 0;
-        this.mystery_food = 0;
     }
 }

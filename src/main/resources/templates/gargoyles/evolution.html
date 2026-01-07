@@ -1,16 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Tama-gargoyles</title>
+    <title>Tama Gargoyles - Evolution</title>
 
+    <!-- Reuse the index.css for consistent styling -->
+    <link rel="stylesheet" th:href="@{/css/general.css}" />
 </head>
 <body>
-    <h1> Your gargoyle has evolved! </h1>
-    <h3>
-        <strong>It has now become:</strong>
+
+<!-- ======================================================
+     TOP HUD
+     ====================================================== -->
+<header class="hud-top">
+    <div class="hud-top__left">
+        <h1 class="game-title">Tama Gargoyles</h1>
+    </div>
+
+    <div class="hud-top__right">
+        <div class="hud-actions">
+            <a href="/game" class="btn">Back to Game</a>
+        </div>
+    </div>
+</header>
+
+<!-- ======================================================
+     EVOLUTION PANEL
+     ====================================================== -->
+<div class="panel">
+
+    <h1>Your gargoyle has evolved!</h1>
+    <hr>
+
+    <!-- Creature Image -->
+    <div class="creature-slot" style="text-align:right;">
+        <img class="creature-sprite bob"
+             th:src="@{/images/gargoyle/gargoyle.png}"
+             alt="Your gargoyle"
+             style="width:150%; max-width:200px;" />
+    </div>
+
+    <h3 style="margin-top:1rem;">
+        <strong>It has now become:</strong><br>
         A <span th:text="${gargoyle.type}"></span> <span th:text="${gargoyle.evolutionType}"></span> gargoyle
     </h3>
-    <a href="/game"> Return </a>
+
+</div>
+
 </body>
 </html>

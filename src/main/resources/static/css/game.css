@@ -897,3 +897,61 @@ body::before{
   overflow:auto;
   color: rgba(241,238,255,0.88);
 }
+
+/* =========================================================
+   MERGE PATCH ✅ (Best of both versions)
+   Put this at the END of game.css
+   - Preserves original richness
+   - Improves usability/layout/space
+   ========================================================= */
+
+/* 1) Make side panels + log behave (scroll within panel, not page chaos) */
+.hud-panel--left,
+.hud-panel--right,
+.log-panel{
+  overflow: auto;
+}
+
+/* 2) Event log: keep it useful but not a screen hog */
+.log-panel{
+  max-height: 200px; /* adjust: 160–240 feels good */
+}
+
+/* Optional: if you want the log to be “less shouty” visually */
+.log-panel{
+  background: rgba(8, 10, 24, 0.52); /* slightly more transparent than panels */
+}
+
+/* 3) Make the game grid more tolerant: stop columns from squeezing content */
+.game-grid{
+  grid-template-columns: minmax(260px, 320px) minmax(0, 1fr) minmax(260px, 320px);
+}
+
+/* 4) Stats: reduce vertical bulk without changing the look */
+.stats-compact,
+.traits-compact{
+  gap: 0.5rem;
+}
+
+.meter{
+  height: 10px;     /* was 12px */
+  margin-top: 0.25rem;
+}
+
+/* 5) Make “actions” feel less cramped on medium widths */
+@media (max-width: 1200px){
+  .actions-wrap{
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* 6) On smaller screens: reduce padding a bit so everything fits */
+@media (max-width: 520px){
+  .screen{ padding: 0.75rem; }
+  .panel, .hud-top{ border-radius: 16px; }
+}
+
+/* 7) Quality-of-life: prevent long lists from smashing the layout */
+.log__list{
+  word-break: break-word;
+}
