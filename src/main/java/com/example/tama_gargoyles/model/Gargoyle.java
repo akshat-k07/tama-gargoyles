@@ -64,7 +64,7 @@ public class Gargoyle {
     private long activeMinutes = 0;
 
     @Column(name = "evolution_type", nullable = false)
-    private String evolutionType = "None";
+    private String evolutionType;
 
     // JPA requires a no-args constructor
 //    public Gargoyle() {}
