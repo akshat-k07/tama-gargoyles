@@ -518,6 +518,10 @@ body::before{
     background-position: center bottom;
     background-size: cover;
     opacity: calc(1 * var(--use-scene-images));
+
+    /* LOCK IT */
+    animation: none;
+    transform: none;
   }
 
   /* If these don’t exist yet, comment them out for now */
