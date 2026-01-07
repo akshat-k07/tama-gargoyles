@@ -1,21 +1,181 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <style>
+        /* Modern button style */
+        .btn {
+            padding: 0.6rem 1.2rem;
+            font-size: 1rem;
+            font-weight: 500;
+            color: white;
+            background-color: #007BFF; /* Primary blue */
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease; /* Smooth hover */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* subtle shadow */
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px) scale(1.03); /* slightly pop up */
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn:active {
+            transform: translateY(0) scale(0.98); /* pressed effect */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Container for inline buttons */
+        .button-group {
+            display: flex;
+            gap: 0.6rem; /* space between buttons */
+            margin-top: 1rem; /* space above the buttons */
+        }
+
+        /* Space below the greeting */
+        .greeting {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+    </style>
+</head>
 <body>
 <h1>Tama Gargoyles</h1>
 
 <div sec:authorize="isAnonymous()">
     <p>You are not logged in.</p>
-    <a href="/oauth2/authorization/auth0">Log in with Auth0</a>
+    <button class="btn" onclick="window.location.href='/oauth2/authorization/auth0'">
+        Log in with Auth0
+    </button>
 </div>
 
 <div sec:authorize="isAuthenticated()">
-    <p>You are logged in.</p>
-    <a href="/game">Go to game</a>
-
-    <form th:action="@{/logout}" method="post" style="margin-top: 1rem;">
-        <button type="submit">Logout</button>
-    </form>
+    <div class="greeting">
+        Hello, you are logged in as <span sec:authentication="principal.attributes['email']"></span>
+    </div>
 </div>
+<div sec:authorize="isAuthenticated()">
+    <div class="button-group">
+        <button class="btn" onclick="window.location.href='/game'">
+            Go to game
+        </button>
+        <form th:action="@{/logout}" method="post" style="display: inline;">
+            <button type="submit" class="btn">Logout</button>
+        </form>
+    </div>
+</div>
+<hr>
+<h3>🎮 Game Rules</h3>
+<hr>
+<h4>🥚 Starting the Game</h4>
+<ul>
+<li>When you start, you receive an <b>egg</b></li>
+<li>The egg hatches and you <b>name your Tama-Gargoyle</b></li>
+    <li>Once named, it becomes <i>your responsibility</i> to care for it</li>
+</ul>
+<hr>
+<h4>⏱️ Time & Needs</h4>
+<ul>
+<li>As <b>time passes</b>, your Tama-Gargoyle:</li>
+    <ul>
+<li>Gets <b>hungrier</b></li>
+<li>Loses <b>happiness</b></li>
+    </ul>
+<li>If hunger stays too low:</li>
+    <ul>
+        <li>Happiness decreases <b>faster</b></li>
+</ul>
+<li>If happiness and hunger are neglected:</li>
+    <ul>
+        <li><b>Health will decrease</b></li>
+    </ul>
+<li>If health reaches 0:
+</li>
+    <ul>
+        <li>💀 Your Tama-Gargoyle dies</li>
+</ul>
+</ul>
+<hr>
+<h4>🍎 Feeding</h4>
+<ul>
+The food you give your Tama-Gargoyle affects how it evolves:
+    <table border="2" cellpadding="5" cellspacing="5">
+        <tr>
+            <th>Food</th>
+            <th>Effect</th>
+        </tr>
+        <tr>
+            <td>🪨 Rocks</td>
+            <td>Increases <b>Strength</b>, lowers Speed & Intelligence</td>
+        </tr>
+
+        <tr>
+            <td>🐛 Bugs</td>
+            <td>Increases <b>Speed</b>, lowers Strength & Intelligence</td>
+        </tr>
+        <tr>
+            <td>🍎 Fruit</td>
+            <td>Increases <b>Intelligence</b>, lowers Strength & Speed</td>
+        </tr>
+        <tr>
+            <td>❓ Mystery Food</td>
+            <td>Random effects — good or bad</td>
+        </tr>
+    </table>
+    </br>
+You have <b>limited food</b>
+</ul>
+<hr>
+<h4>🎲 Playing Games</h4>
+<ul>
+<li>Playing increases skills:</li>
+    <ul>
+<li>💪 Strength games → Strength</li>
+<li>⚡ Speed games → Speed</li>
+<li>🧠 Intelligence games → Intelligence</li>
+</ul>
+<li>If you <b>don’t play enough</b>, your gargoyle may grow up <b>bad</b></li>
+</ul>
+<hr>
+<h4>🧬 Growth & Evolution</h4>
+<ul>
+<li>With good care, your Tama-Gargoyle grows into an <b>adult</b></li>
+<li>Its <b>strongest stat</b> influences its evolution type</li>
+<li>Adults can be:</li>
+    <ul>
+<li><b>Good</b> (obedient)</li>
+<li><b>Bad</b> (may disobey… sometimes helpfully!)</li>
+    </ul>
+</ul>
+<hr>
+<h4>⚔️ Battle Mode</h4>
+<ul>
+<li>Adult gargoyles may battle opponents with <b>unknown stats</b></li>
+<li>Battles are <b>turn-based</b>, card-style</li>
+</ul>
+
+<b>Battle Rules (Rock-Paper-Scissors Logic):</b>
+<ul>
+<li>💪 Strength beats ⚡ Speed</li>
+<li>⚡ Speed beats 🧠 Intelligence</li>
+<li>🧠 Intelligence beats 💪 Strength</li>
+</ul>
+
+If both players choose the same type:
+<ul>
+    <li>The <b>higher stat wins</b></li>
+</ul>
+    <b>Battle Outcomes:</b>
+<ul>
+<li>Win → 🎁 10 random <b>special foods</b></li>
+<li>Lose → ❤️ Health drops by 20%, receive <b>2 special foods</b></li>
+</ul>
+
+<h2>Good Luck!</h2>
+
 </body>
 </html>
