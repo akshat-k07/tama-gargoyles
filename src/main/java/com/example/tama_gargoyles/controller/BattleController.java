@@ -5,6 +5,7 @@ import com.example.tama_gargoyles.battle.BattleState;
 import com.example.tama_gargoyles.model.Gargoyle;
 import com.example.tama_gargoyles.model.User;
 import com.example.tama_gargoyles.repository.GargoyleRepository;
+import com.example.tama_gargoyles.repository.UserRepository;
 import com.example.tama_gargoyles.service.BattleService;
 import com.example.tama_gargoyles.service.CurrentUserService;
 import com.example.tama_gargoyles.service.GargoyleTimeService;
@@ -14,25 +15,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.security.core.Authentication;
-import com.example.tama_gargoyles.repository.UserRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
-/**
- * WHAT IT DOES:
- * - GET  /battle        -> render battle page
- * - POST /battle/move   -> user clicks a move button (slam/sneak/dash)
- * - POST /battle/reset  -> reset the battle
- *
- * IMPORTANT:
- * - Uses @SessionAttributes so BattleState persists across requests.
- * - Uses your CurrentUserService + GargoyleRepository to get the user's creature.
- */
 @Controller
 @SessionAttributes("battleState")
 public class BattleController {
 
-    // ---- TUNING KNOB: decide adulthood here ----
     private static final long ADULT_AT_GAME_DAYS = 3;
 
     private final CurrentUserService currentUserService;
@@ -53,9 +43,6 @@ public class BattleController {
         this.userRepository = userRepository;
     }
 
-    /**
-     * Creates the session-scoped state object the first time /battle is visited.
-     */
     @ModelAttribute("battleState")
     public BattleState battleState() {
         return new BattleState();
@@ -72,24 +59,22 @@ public class BattleController {
         List<Gargoyle> gargoyles = gargoyleRepository.findAllByUserIdOrderByIdAsc(user.getId());
         if (gargoyles.isEmpty()) {
             redirectAttributes.addFlashAttribute("battleError", "You don't have a gargoyle yet.");
-            return "redirect:/game"; // or "/" depending on your flow
+            return "redirect:/game";
         }
 
-        // Pick an adult-eligible gargoyle (derived from virtual time)
         Gargoyle battler = gargoyles.stream()
                 .filter(this::isBattleEligible)
                 .findFirst()
                 .orElse(null);
 
-        // Enforce adult-only rule
         if (battler == null) {
             redirectAttributes.addFlashAttribute(
                     "battleError",
-                    "Your gargoyle must an adult to enter battle. Keep playing to grow up!"
+                    "Your gargoyle must be an adult to enter battle. Keep playing to grow up!"
             );
             return "redirect:/game";
         }
-        // keep time consistent when entering battle (prevents offline gap)
+
         timeService.resume(battler);
         timeService.tick(battler);
         gargoyleRepository.save(battler);
@@ -97,8 +82,6 @@ public class BattleController {
         model.addAttribute("gargoyle", battler);
         model.addAttribute("state", state);
         model.addAttribute("winnerText", state.winnerText());
-
-        // Helpful UI facts
         model.addAttribute("gameDaysOld", timeService.gameDaysOld(battler));
         model.addAttribute("adultAtDays", ADULT_AT_GAME_DAYS);
 
@@ -111,7 +94,6 @@ public class BattleController {
                                  @ModelAttribute("battleState") BattleState state,
                                  RedirectAttributes redirectAttributes) {
 
-        // Server-side enforcement again (don't trust UI)
         User user = currentUserService.getCurrentUser(authentication);
 
         List<Gargoyle> gargoyles = gargoyleRepository.findAllByUserIdOrderByIdAsc(user.getId());
@@ -131,7 +113,6 @@ public class BattleController {
         BattleMove userMove = BattleMove.valueOf(move);
         battleService.playTurn(state, userMove);
 
-        // ✅ HARD TRANSITION LIKE PONG
         if (state.isFinished()) {
             return new RedirectView("/battle-result");
         }
@@ -139,14 +120,12 @@ public class BattleController {
         return new RedirectView("/battle");
     }
 
-
     @PostMapping("/battle/reset")
     public RedirectView reset(@ModelAttribute("battleState") BattleState state) {
         state.reset();
         return new RedirectView("/battle");
     }
 
-    // ---- Helper: adulthood derived from vertual time ----
     private boolean isBattleEligible(Gargoyle g) {
         return g.getType() != Gargoyle.Type.CHILD;
     }
@@ -176,43 +155,59 @@ public class BattleController {
 
         boolean userWon = state.getUserScore() >= BattleState.WIN_SCORE;
 
-        String rewardMessage;
+        // List to hold rewards for the UI
+        List<String> rewards = new ArrayList<>();
 
-        if (userWon) {
-            // 🏆 WIN REWARDS
-            battler.setHappiness(100);          // Full happiness
-            // Health unchanged
+        if (!state.rewardsApplied()) {
+            if (userWon) {
+                battler.setHappiness(100);
+                rewards.add("😊 Happiness 100%");
 
-            user.setRocks(user.getRocks() + 3);
-            user.setBugs(user.getBugs() + 3);
-            user.setFruits(user.getFruits() + 3);
-            user.setMysteryFood(user.getMysteryFood() + 1);
+                user.setRocks(user.getRocks() + 3);
+                rewards.add("🪨 3 Rocks");
 
-            rewardMessage = "Victory! Your gargoyle is thrilled and earned rich rewards!";
-        } else {
-            // 💀 LOSS PENALTIES
-            battler.setHealth(Math.max(0, battler.getHealth() - 20));
+                user.setBugs(user.getBugs() + 3);
+                rewards.add("🐛 3 Bugs");
 
-            user.setRocks(user.getRocks() + 1);
-            user.setBugs(user.getBugs() + 1);
-            user.setFruits(user.getFruits() + 1);
+                user.setFruits(user.getFruits() + 3);
+                rewards.add("🍎 3 Fruit");
 
-            rewardMessage = "Defeat… your gargoyle is hurt but learned from the battle.";
+                user.setMysteryFood(user.getMysteryFood() + 1);
+                rewards.add("❓ 1 Mystery Food");
+
+            } else {
+                battler.setHealth(Math.max(0, battler.getHealth() - 20));
+                rewards.add("❤️ -20% Health");
+
+                user.setRocks(user.getRocks() + 1);
+                rewards.add("🪨 1 Rock");
+
+                user.setBugs(user.getBugs() + 1);
+                rewards.add("🐛 1 Bug");
+
+                user.setFruits(user.getFruits() + 1);
+                rewards.add("🍎 1 Fruit");
+            }
+
+            gargoyleRepository.save(battler);
+            userRepository.save(user);
+
+            state.markRewardsApplied();
         }
 
-        // Persist changes
-        gargoyleRepository.save(battler);
-        userRepository.save(user);
-
-        // UI data
         model.addAttribute("winnerText", state.winnerText());
-        model.addAttribute("rewardMessage", rewardMessage);
+        model.addAttribute("rewards", rewards);
+        model.addAttribute("userWon", userWon);
 
-        // ✅ IMPORTANT: reset battle AFTER rewards
-        state.reset();
+        state.reset(); // reset after showing result
 
         return "battle-result";
     }
 
 
+    @GetMapping("/battle/reset-and-exit")
+    public String resetAndExit(@ModelAttribute("battleState") BattleState state) {
+        state.reset();
+        return "redirect:/game";
+    }
 }

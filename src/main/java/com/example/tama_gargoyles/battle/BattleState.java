@@ -2,18 +2,6 @@ package com.example.tama_gargoyles.battle;
 
 import java.io.Serializable;
 
-/**
- * WHAT IT DOES:
- * - Stores the current battle state between requests (in the user's session).
- *
- * WHY SESSION?
- * - MVP-friendly: no database tables needed.
- * - Each logged-in user gets their own battle state.
- *
- * WHAT IT STORES:
- * - Scores (first to 3 wins)
- * - Last moves + last result (for UI display)
- */
 public class BattleState implements Serializable {
 
     public static final int WIN_SCORE = 3;
@@ -24,6 +12,8 @@ public class BattleState implements Serializable {
     private BattleMove lastUserMove;
     private BattleMove lastOpponentMove;
     private RoundOutcome lastOutcome;
+
+    private boolean rewardsApplied = false;
 
     public int getUserScore() { return userScore; }
     public int getOpponentScore() { return opponentScore; }
@@ -38,7 +28,7 @@ public class BattleState implements Serializable {
 
     public String winnerText() {
         if (!isFinished()) return null;
-        return (userScore >= WIN_SCORE) ? "🎉 USER WINS THE GAME! 🎉" : "💻 OPPONENT WINS THE GAME 💻";
+        return (userScore >= WIN_SCORE) ? "🎉 YOU WIN THE GAME! 🎉" : "💻 OPPONENT WINS THE GAME 💻";
     }
 
     public void applyRound(BattleMove userMove, BattleMove opponentMove, RoundOutcome outcome) {
@@ -50,11 +40,20 @@ public class BattleState implements Serializable {
         if (outcome == RoundOutcome.OPPONENT_WINS) opponentScore++;
     }
 
+    public boolean rewardsApplied() {
+        return rewardsApplied;
+    }
+
+    public void markRewardsApplied() {
+        this.rewardsApplied = true;
+    }
+
     public void reset() {
         userScore = 0;
         opponentScore = 0;
         lastUserMove = null;
         lastOpponentMove = null;
         lastOutcome = null;
+        rewardsApplied = false;
     }
 }

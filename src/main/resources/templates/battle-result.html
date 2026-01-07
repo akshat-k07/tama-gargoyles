@@ -3,72 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <title>Battle Result</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: black;
+            color: white;
+            font-family: sans-serif;
+            flex-direction: column;
+        }
 
-    <!-- Reuse main game styling -->
-    <link rel="stylesheet" th:href="@{/css/battle.css}" />
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        ul.rewards {
+            list-style: none; /* remove bullets */
+            padding: 0;
+            margin: 0 0 20px 0;
+        }
+
+        ul.rewards li {
+            margin: 8px 0; /* stacked spacing */
+            font-size: 20px;
+        }
+
+        a {
+            padding: 10px 20px;
+            font-size: 20px;
+            color: white;
+            text-decoration: none; /* remove underline */
+            background-color: #333;
+            border: none;
+            cursor: pointer;
+        }
+
+        a:hover {
+            background-color: #555;
+        }
+    </style>
 </head>
-
 <body>
 
-<main class="screen"
-      style="display:flex; justify-content:center; align-items:center;">
+<h1 th:text="${winnerText}">Battle Result</h1>
 
-    <section class="panel"
-             style="text-align:center; max-width:560px; padding:2.5rem;">
+<!-- Rewards list -->
+<ul class="rewards">
+    <li th:each="reward : ${rewards}" th:text="${reward}">Reward</li>
+</ul>
 
-        <!-- RESULT HEADER -->
-        <h1 class="game-title"
-            th:text="${winnerText}">
-            🎉 USER WINS THE GAME! 🎉
-        </h1>
-
-        <!-- FLAVOR TEXT -->
-        <p class="hint" style="margin-top:1.2rem;"
-           th:text="${rewardMessage}">
-            Reward message
-        </p>
-
-        <!-- ===================== -->
-        <!-- WIN REWARDS -->
-        <!-- ===================== -->
-        <div th:if="${userWon}" style="margin-top:1.8rem;">
-
-            <h3>Rewards Earned</h3>
-
-            <ul class="log__list" style="margin-top:0.8rem;">
-                <li>😊 Happiness restored to <strong>100%</strong></li>
-                <li>🪨 <strong>+3 Rocks</strong></li>
-                <li>🐛 <strong>+3 Bugs</strong></li>
-                <li>🍎 <strong>+3 Fruits</strong></li>
-                <li>❓ <strong>+1 Mystery Food</strong></li>
-            </ul>
-        </div>
-
-        <!-- ===================== -->
-        <!-- LOSS OUTCOME -->
-        <!-- ===================== -->
-        <div th:unless="${userWon}" style="margin-top:1.8rem;">
-
-            <h3>Battle Outcome</h3>
-
-            <ul class="log__list" style="margin-top:0.8rem;">
-                <li>❤️ Health <strong>−20</strong></li>
-                <li>🪨 <strong>+1 Rock</strong></li>
-                <li>🐛 <strong>+1 Bug</strong></li>
-                <li>🍎 <strong>+1 Fruit</strong></li>
-            </ul>
-        </div>
-
-        <!-- BACK BUTTON -->
-        <a href="/game"
-           class="btn nav-btn--primary"
-           style="margin-top:2.5rem; display:inline-block;">
-            Back to Main Game
-        </a>
-
-    </section>
-
-</main>
+<a href="/game">Return to Game</a>
 
 </body>
 </html>
