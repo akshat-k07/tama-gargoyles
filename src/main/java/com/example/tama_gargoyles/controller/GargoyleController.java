@@ -243,6 +243,7 @@ public class GargoyleController {
 
     @PostMapping("/gargoyles/pause")
     public String pause(Authentication authentication) {
+        System.out.println("pausing gargoyle");
         User user = currentUserService.getCurrentUser(authentication);
 
         var gargoyles = gargoyleRepository.findAllByUserIdOrderByIdAsc(user.getId());

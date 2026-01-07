@@ -9,11 +9,10 @@
     <title>Tama Gargoyles - Game</title>
 
     <link rel="stylesheet" th:href="@{/css/game.css}" />
+
 </head>
 
 <body>
-
-
 <main id="main" class="screen">
 
     <!-- TOP HUD -->
@@ -81,7 +80,6 @@
         </span>
                     </button>
                 </form>
-
 
                 <!-- Pause & Exit -->
                 <form class="hud-form" th:action="@{/gargoyles/pause}" method="post">
@@ -225,7 +223,9 @@
                 <h4 class="testing-title">🧪 Testing Tools</h4>
                 <p class="testing-sub">Use these to simulate mistakes safely.</p>
 
+                <!-- Support both class names -->
                 <div class="testing-buttons testing-actions">
+
                     <form action="/hunger-decrease" method="post">
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                         <input type="hidden" name="gargoyleId" th:value="${gargoyle.id}"/>
@@ -243,6 +243,7 @@
                             ↩️ Un-Play
                         </button>
                     </form>
+
                 </div>
 
                 <hr class="testing-divider"/>
@@ -277,6 +278,8 @@
                     <p class="actions__sub">Pick a snack to shape your gargoyle’s growth ✨</p>
 
                     <div class="actions__icons" role="group" aria-label="Feed options">
+
+                        <!-- Rocks -->
                         <form action="/rocks-increase" method="post">
                             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                             <input type="hidden" name="gargoyleId" th:value="${gargoyle.id}"/>
@@ -292,6 +295,7 @@
                             <div class="icon-label" aria-hidden="true">Rocks</div>
                         </form>
 
+                        <!-- Bugs -->
                         <form action="/bugs-increase" method="post">
                             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                             <input type="hidden" name="gargoyleId" th:value="${gargoyle.id}"/>
@@ -307,6 +311,7 @@
                             <div class="icon-label" aria-hidden="true">Bugs</div>
                         </form>
 
+                        <!-- Fruit -->
                         <form action="/fruits-increase" method="post">
                             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                             <input type="hidden" name="gargoyleId" th:value="${gargoyle.id}"/>
@@ -322,6 +327,7 @@
                             <div class="icon-label" aria-hidden="true">Fruit</div>
                         </form>
 
+                        <!-- Mystery -->
                         <form action="/mystery-increase" method="post">
                             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                             <input type="hidden" name="gargoyleId" th:value="${gargoyle.id}"/>
@@ -333,6 +339,7 @@
                             </button>
                             <div class="icon-label" aria-hidden="true">Mystery</div>
                         </form>
+
                     </div>
                 </div>
 
@@ -342,6 +349,7 @@
                     <p class="actions__sub">Mini-games boost happiness (and sometimes stats!)</p>
 
                     <div class="actions__icons" role="group" aria-label="Play options">
+
                         <form action="/strength-increase" method="post">
                             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                             <input type="hidden" name="gargoyleId" th:value="${gargoyle.id}"/>
@@ -381,9 +389,11 @@
                             </button>
                             <div class="icon-label" aria-hidden="true">Brains</div>
                         </form>
+
                     </div>
                 </div>
 
+                <!-- Optional small “side” card -->
                 <div class="actions__group actions__group--side" aria-label="Quick tip">
                     <h3>Quick Tip</h3>
                     <p class="hint">Try feeding + playing in different orders ✨</p>
@@ -414,7 +424,6 @@
     </div>
 
 </main>
-
 <script>
     // ==========================================================
     // Tama Gargoyles UI: Phase 1 (AJAX actions) + Phase 2 (polling)
@@ -429,6 +438,7 @@
 
     let pollTimer = null;
     let pollInFlight = false;
+    let lastPollAt = 0;
 
     function extractAndPatch(htmlText) {
       const parser = new DOMParser();
@@ -443,14 +453,17 @@
       const oldLeft = document.querySelector(".hud-panel--left");
       if (newLeft && oldLeft) oldLeft.replaceWith(newLeft);
 
+      // Right panel (tip + testing tools can change with testingMode)
       const newRight = doc.querySelector(".hud-panel--right");
       const oldRight = document.querySelector(".hud-panel--right");
       if (newRight && oldRight) oldRight.replaceWith(newRight);
 
+      // Event log
       const newLog = doc.querySelector(".log-panel");
       const oldLog = document.querySelector(".log-panel");
       if (newLog && oldLog) oldLog.replaceWith(newLog);
 
+      // Overlays only (don’t replace the stage)
       const newStage = doc.querySelector(".stage");
       const oldStage = document.querySelector(".stage");
       if (newStage && oldStage) {
@@ -458,14 +471,18 @@
         newStage.querySelectorAll(".overlay").forEach(o => oldStage.appendChild(o));
       }
 
+      // Re-bind action forms because we replaced panels that contain forms
       ajaxify();
     }
 
     async function fetchAndPatch() {
+      // Don’t spam; don’t overlap requests; don’t run when tab hidden
       if (pollInFlight) return;
       if (document.hidden) return;
 
       pollInFlight = true;
+      lastPollAt = Date.now();
+
       try {
         const res = await fetch(window.location.href, {
           headers: { "X-Requested-With": "fetch" }
@@ -505,6 +522,7 @@
           try {
             const formData = new FormData(form);
 
+            // POST the action
             const postRes = await fetch(form.action, {
               method: (form.method || "POST").toUpperCase(),
               body: formData,
@@ -513,27 +531,35 @@
 
             if (!postRes.ok) throw new Error("POST failed");
 
+            // Immediately sync UI from server HTML (single source of truth)
             await fetchAndPatch();
+
           } catch (err) {
+            // Safe fallback
             window.location.reload();
           }
         });
       });
     }
 
+    // Pause polling when user isn’t looking, resume when they return
     document.addEventListener("visibilitychange", () => {
       if (document.hidden) {
         stopPolling();
       } else {
+        // Refresh once immediately on return so UI catches up fast
         fetchAndPatch();
         startPolling();
       }
     });
 
+    // Boot
     ajaxify();
+    // Do one immediate sync, then start the loop
     fetchAndPatch();
     startPolling();
 </script>
+
 
 </body>
 </html>
