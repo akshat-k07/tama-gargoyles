@@ -237,6 +237,12 @@ public class GargoyleController {
         model.addAttribute("gameDaysOld", timeService.gameDaysOld(g));
         model.addAttribute("minutesIntoDay", timeService.minutesIntoCurrentDay(g));
 
+        // ---- Inventory counts ----
+        model.addAttribute("rocksCount", user.getRocks());
+        model.addAttribute("bugsCount", user.getBugs());
+        model.addAttribute("fruitsCount", user.getFruits());
+        model.addAttribute("mysteryCount", user.getMysteryFood());
+
         if (evolved) return "gargoyles/evolution";
         return "game";
     }

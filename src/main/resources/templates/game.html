@@ -285,11 +285,13 @@
                             <input type="hidden" name="intelligenceDelta" value="-1"/>
                             <input type="hidden" name="hungerDelta" value="12"/>
                             <input type="hidden" name="userId" th:value="${gargoyle.user.id}"/>
-                            <button class="icon-btn icon-btn--feed" type="submit" title="Feed Rocks: +Strength, -Speed, -Intelligence" aria-label="Feed Rocks">
+                            <button class="icon-btn icon-btn--feed" type="submit" title="Feed Rocks: Adds Strength, minus Speed, minus Intelligence" aria-label="Feed Rocks">
                                 <span class="icon" aria-hidden="true">🪨</span>
                                 <span class="sr-only">Feed Rocks</span>
                             </button>
-                            <div class="icon-label" aria-hidden="true">Rocks</div>
+                            <div class="icon-label" aria-hidden="true">
+                                Rocks <span class="count" th:text="${rocksCount}">0</span>
+                            </div>
                         </form>
 
                         <form action="/bugs-increase" method="post">
@@ -300,11 +302,13 @@
                             <input type="hidden" name="intelligenceDelta" value="-1"/>
                             <input type="hidden" name="hungerDelta" value="5"/>
                             <input type="hidden" name="userId" th:value="${gargoyle.user.id}"/>
-                            <button class="icon-btn icon-btn--feed" type="submit" title="Feed Bugs: +Speed, -Strength, -Intelligence" aria-label="Feed Bugs">
+                            <button class="icon-btn icon-btn--feed" type="submit" title="Feed Bugs: Adds Speed, minus Strength, minus Intelligence" aria-label="Feed Bugs">
                                 <span class="icon" aria-hidden="true">🐛</span>
                                 <span class="sr-only">Feed Bugs</span>
                             </button>
-                            <div class="icon-label" aria-hidden="true">Bugs</div>
+                            <div class="icon-label" aria-hidden="true">
+                                Bugs <span class="count" th:text="${bugsCount}">0</span>
+                            </div>
                         </form>
 
                         <form action="/fruits-increase" method="post">
@@ -315,11 +319,13 @@
                             <input type="hidden" name="intelligenceDelta" value="4"/>
                             <input type="hidden" name="hungerDelta" value="9"/>
                             <input type="hidden" name="userId" th:value="${gargoyle.user.id}"/>
-                            <button class="icon-btn icon-btn--feed" type="submit" title="Feed Fruit: +Intelligence, -Strength, -Speed" aria-label="Feed Fruit">
+                            <button class="icon-btn icon-btn--feed" type="submit" title="Feed Fruit: Adds Intelligence, minus Strength, minus Speed" aria-label="Feed Fruit">
                                 <span class="icon" aria-hidden="true">🍎</span>
                                 <span class="sr-only">Feed Fruit</span>
                             </button>
-                            <div class="icon-label" aria-hidden="true">Fruit</div>
+                            <div class="icon-label" aria-hidden="true">
+                                Fruit <span class="count" th:text="${fruitsCount}">0</span>
+                            </div>
                         </form>
 
                         <form action="/mystery-increase" method="post">
@@ -331,10 +337,13 @@
                                 <span class="icon" aria-hidden="true">❓</span>
                                 <span class="sr-only">Feed Mystery</span>
                             </button>
-                            <div class="icon-label" aria-hidden="true">Mystery</div>
+                            <div class="icon-label" aria-hidden="true">
+                                Mystery <span class="count" th:text="${mysteryCount}">0</span>
+                            </div>
                         </form>
                     </div>
                 </div>
+
 
                 <!-- PLAY -->
                 <div class="actions__group actions__group--play" aria-labelledby="play-title">
@@ -534,6 +543,6 @@
     fetchAndPatch();
     startPolling();
 </script>
-
+<script th:src="@{/js/inventory-live.js}"></script>
 </body>
 </html>
