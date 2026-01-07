@@ -1,36 +1,33 @@
-/* src/main/resources/static/css/game.css */
+/* BUILD: game.css 2026-01-07-STABLE */
+/* Path: src/main/resources/static/css/game.css */
 
 /* =========================================================
-   TAMA GARGOYLES — SCAFFOLD-FIRST UI (SAFE COPY-PASTE)
+   TAMA GARGOYLES — GAME UI (STABLE + TEAM VERSION)
    ---------------------------------------------------------
-   ✅ Works immediately with NO assets.
-   ✅ Aligned to current game.html classes:
-      .screen, .hud-top, .game-grid, .panel,
-      .stage, .stage__layer, .stage__sky, .stage__stars,
-      .stage__moon, .stage__roof, .stage__fx,
-      .creature-slot, .creature-placeholder, .creature-sprite
+   Intent:
+   - Keep the proven scene implementation for sky/roof (DO NOT TOUCH section 9)
+   - Improve responsiveness + scrolling without breaking scene compositing
+   - Avoid fragile CSS tricks (no contain/isolation/pseudo-layer hacks)
 
-   =========================================================
-   🚧 WORKING RULES (READ THIS)
-   ---------------------------------------------------------
-   1) ONLY edit inside sections marked:
-      "WORK HERE ✅"
-   2) DO NOT edit inside sections marked:
-      "DO NOT TOUCH 🚫" (unless we do it together)
-   3) If you want to enable image assets, you will change ONE line:
-      --use-scene-images: 0  -> 1
+   Assets (Spring Boot static):
+   /static/images/scene/sky.png   → /images/scene/sky.png
+   /static/images/scene/roof.png  → /images/scene/roof.png
+   /static/images/gargoyle/*.png  → /images/gargoyle/*.png
+
+   Templates expect:
+   .screen, .hud-top, .game-grid, .panel,
+   .stage, .stage__layer, .stage__sky, .stage__stars,
+   .stage__moon, .stage__roof, .stage__fx,
+   .creature-slot, .creature-placeholder, .creature-sprite
    ========================================================= */
 
 
 /* =========================================================
    WORK HERE ✅ 1) THEME VARIABLES
-   - You can tweak these safely (colours, transparency)
    ========================================================= */
 
 :root{
-
-  /* Toggle: 0 = no images (fallback gradients)
-            1 = use /images/scene/*.png if present */
+  /* Toggle: 0 = gradients only, 1 = use /images/scene/*.png if present */
   --use-scene-images: 1;
 
   /* Deep midnight base */
@@ -38,7 +35,7 @@
   --bg-1:#070a1a;
   --bg-2:#070312;
 
-  /* Panels (semi-transparent to let the scene show) */
+  /* Panels */
   --panel: rgba(8, 10, 24, 0.62);
   --panel-2: rgba(12, 14, 34, 0.68);
 
@@ -46,7 +43,7 @@
   --text:#f1eeff;
   --muted:rgba(241,238,255,0.72);
 
-  /* Accents (subtle purple at edges, cyan primary) */
+  /* Accents */
   --accent:#24d6ff;      /* cyan */
   --accent-2:#9b5cff;    /* purple */
   --accent-3:#ff3df2;    /* pink */
@@ -89,16 +86,18 @@ html, body{ height:100%; }
 
 /* =========================================================
    WORK HERE ✅ 3) PAGE BACKGROUND
-   - Safe to tweak background colours and star density
    ========================================================= */
 
 body{
   margin:0;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   color: var(--text);
-  overflow:auto;
 
-  /* Midnight base with subtle purple edges */
+  /* IMPORTANT:
+     We let the page scroll naturally. Panels handle internal scroll. */
+  overflow-x: hidden;
+  overflow-y: auto;
+
   background:
     radial-gradient(1100px 650px at 15% 15%, rgba(155,92,255,0.10), transparent 60%),
     radial-gradient(1000px 620px at 85% 20%, rgba(255,61,242,0.06), transparent 62%),
@@ -115,7 +114,6 @@ body::before{
   opacity:0.85;
   mix-blend-mode: screen;
 
-  /* Bigger bright stars */
   background:
     radial-gradient(circle at 10% 18%, rgba(255,255,255,0.95) 0 1.6px, transparent 2.8px),
     radial-gradient(circle at 22% 52%, rgba(255,255,255,0.55) 0 1.1px, transparent 2.3px),
@@ -140,7 +138,7 @@ body::before{
 
 
 /* =========================================================
-   DO NOT TOUCH 🚫 4) CONTAINER + SCANLINES
+   DO NOT TOUCH 🚫 4) APP CONTAINER + SCANLINES
    ========================================================= */
 
 .screen{
@@ -148,13 +146,20 @@ body::before{
   display:grid;
   gap: var(--grid-gap);
   padding: 1rem;
+
+  /* IMPORTANT: keep centred, but never exceed viewport */
+  width: 100%;
   max-width: 1320px;
   margin: 0 auto;
+
   position: relative;
   z-index: 1;
+
+  /* Prevent tiny overflows becoming page-level sideways scrollbars */
+  overflow-x: hidden;
 }
 
-/* Subtle scanlines (kept on .screen so we don't clash with body::before stars) */
+/* Scanlines overlay */
 .screen::after{
   content:"";
   position:fixed;
@@ -352,13 +357,16 @@ body::before{
 
 
 /* =========================================================
-   DO NOT TOUCH 🚫 8) GRID LAYOUT
+   WORK HERE ✅ 8) GRID LAYOUT (RESPONSIVE + NO OVERFLOW)
    ========================================================= */
 
 .game-grid{
   display:grid;
   gap: var(--grid-gap);
-  grid-template-columns: 320px 1fr 320px;
+
+  /* Tolerant columns (prevents squeeze/overflow) */
+  grid-template-columns: minmax(260px, 320px) minmax(0, 1fr) minmax(260px, 320px);
+
   grid-template-areas:
     "left stage right"
     "actions actions actions"
@@ -366,12 +374,19 @@ body::before{
   align-items: start;
 }
 
-.hud-panel--left{ grid-area:left; padding: 0.9rem; }
+/* CRITICAL: allow grid children to shrink (fixes rogue horizontal scroll) */
+.game-grid > *{
+  min-width: 0;
+  min-height: 0;
+}
+
+.hud-panel--left{ grid-area:left; padding: 0.9rem; overflow:auto; }
 .stage-panel{ grid-area:stage; padding: 0.9rem; }
-.hud-panel--right{ grid-area:right; padding: 0.9rem; }
+.hud-panel--right{ grid-area:right; padding: 0.9rem; overflow:auto; }
 .actions-panel{ grid-area:actions; padding: 0.9rem; }
 .log-panel{ grid-area:log; padding: 0.85rem 0.9rem; }
 
+/* Stack on narrower screens */
 @media (max-width: 1040px){
   .game-grid{
     grid-template-columns: 1fr;
@@ -382,6 +397,17 @@ body::before{
       "actions"
       "log";
   }
+
+  /* On mobile, reduce nested-scroll friction */
+  .hud-panel--left,
+  .hud-panel--right{
+    overflow: visible;
+  }
+}
+
+@media (max-width: 520px){
+  .screen{ padding: 0.75rem; }
+  .panel, .hud-top{ border-radius: 16px; }
 }
 
 .panel__title{
@@ -398,10 +424,10 @@ body::before{
 
 
 /* =========================================================
-   WORK HERE ✅ 9) STAGE (PARALLAX SCENE)
-   - This is the ONLY “scene” area you should touch right now.
-   - Safe tweak: star opacity, roof darkness, moon position, etc.
-   - To enable image assets: set --use-scene-images: 1 in :root
+   DO NOT TOUCH 🚫 9) STAGE (PARALLAX SCENE)
+   ---------------------------------------------------------
+   This entire section is copied from the known-working version.
+   Keep it unchanged to preserve sky/roof reliability.
    ========================================================= */
 
 .stage{
@@ -539,7 +565,6 @@ body::before{
   place-items:center;
   z-index: 5;
   pointer-events: none;
-
 }
 
 .creature-placeholder{
@@ -549,24 +574,16 @@ body::before{
   font-size: clamp(2rem, 5vw, 3.5rem);
   color: rgba(241,238,255,0.88);
   text-shadow:
-  0 10px 22px rgba(0,0,0,0.55),
-  var(--glow-cyan);
+    0 10px 22px rgba(0,0,0,0.55),
+    var(--glow-cyan);
 }
 
-/* =========================================================
-   WORK HERE ✅ — CREATURE SPRITE (SAFE)
-   Why: keeps sprite stable + readable on roof
-   ========================================================= */
-
+/* Creature sprite (stable + readable) */
 .creature-sprite{
   width: min(260px, 62%);
   height: auto;
   display: block;
-
-  /* Looks “sat on roof” instead of floating */
   transform: translateY(10px);
-
-  /* Readability on dark roof */
   filter: drop-shadow(0 18px 28px rgba(0,0,0,0.55));
   user-select: none;
   -webkit-user-drag: none;
@@ -628,13 +645,13 @@ body::before{
 
 
 /* =========================================================
-   DO NOT TOUCH 🚫 11) STATS + METERS
+   WORK HERE ✅ 11) STATS + METERS (COMPACT)
    ========================================================= */
 
 .stats-compact,
 .traits-compact{
   display:grid;
-  gap: 0.65rem;
+  gap: 0.5rem;
 }
 
 .stat__row{
@@ -647,11 +664,11 @@ body::before{
 .stat__value{ color: var(--muted); font-weight: 900; }
 
 .meter{
-  height: 12px;
+  height: 10px;
   border: 1px solid rgba(241,238,255,0.14);
   border-radius: 999px;
   overflow:hidden;
-  margin-top: 0.35rem;
+  margin-top: 0.25rem;
   background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(0,0,0,0.10));
   position: relative;
 }
@@ -689,7 +706,7 @@ body::before{
 
 
 /* =========================================================
-   DO NOT TOUCH 🚫 12) ACTIONS
+   DO NOT TOUCH 🚫 12) ACTIONS (RESPONSIVE)
    ========================================================= */
 
 .actions-wrap{
@@ -698,6 +715,13 @@ body::before{
   gap: 0.9rem;
   align-items:start;
 }
+
+/* Medium screens: reduce density */
+@media (max-width: 1200px){
+  .actions-wrap{ grid-template-columns: 1fr 1fr; }
+}
+
+/* Small screens: stack */
 @media (max-width: 1040px){
   .actions-wrap{ grid-template-columns: 1fr; }
 }
@@ -798,7 +822,7 @@ body::before{
 
 
 /* =========================================================
-   DO NOT TOUCH 🚫 13) TESTING + EVENT LOG
+   WORK HERE ✅ 13) TESTING + EVENT LOG (CONTROLLED SCROLL)
    ========================================================= */
 
 .tip{
@@ -865,16 +889,20 @@ body::before{
   text-shadow: var(--glow-cyan);
 }
 
+/* Log panel is the intended scroll region */
+.log-panel{
+  max-height: 200px;     /* tweak 160–240 */
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: rgba(8, 10, 24, 0.52);
+}
+
 .log__list{
   margin:0;
   padding-left: 1.2rem;
   color: var(--muted);
   font-weight: 750;
-}
-
-.log-panel{
-  max-height: 190px;
-  overflow:auto;
+  word-break: break-word;
 }
 
 .debug summary{
@@ -899,59 +927,5 @@ body::before{
 }
 
 /* =========================================================
-   MERGE PATCH ✅ (Best of both versions)
-   Put this at the END of game.css
-   - Preserves original richness
-   - Improves usability/layout/space
+   END
    ========================================================= */
-
-/* 1) Make side panels + log behave (scroll within panel, not page chaos) */
-.hud-panel--left,
-.hud-panel--right,
-.log-panel{
-  overflow: auto;
-}
-
-/* 2) Event log: keep it useful but not a screen hog */
-.log-panel{
-  max-height: 200px; /* adjust: 160–240 feels good */
-}
-
-/* Optional: if you want the log to be “less shouty” visually */
-.log-panel{
-  background: rgba(8, 10, 24, 0.52); /* slightly more transparent than panels */
-}
-
-/* 3) Make the game grid more tolerant: stop columns from squeezing content */
-.game-grid{
-  grid-template-columns: minmax(260px, 320px) minmax(0, 1fr) minmax(260px, 320px);
-}
-
-/* 4) Stats: reduce vertical bulk without changing the look */
-.stats-compact,
-.traits-compact{
-  gap: 0.5rem;
-}
-
-.meter{
-  height: 10px;     /* was 12px */
-  margin-top: 0.25rem;
-}
-
-/* 5) Make “actions” feel less cramped on medium widths */
-@media (max-width: 1200px){
-  .actions-wrap{
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-/* 6) On smaller screens: reduce padding a bit so everything fits */
-@media (max-width: 520px){
-  .screen{ padding: 0.75rem; }
-  .panel, .hud-top{ border-radius: 16px; }
-}
-
-/* 7) Quality-of-life: prevent long lists from smashing the layout */
-.log__list{
-  word-break: break-word;
-}
