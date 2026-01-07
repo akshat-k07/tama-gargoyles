@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Tama Gargoyles – Strength Game</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: sans-serif;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .instructions {
+            font-size: 1.1em;
+        }
+
+        .percentage-display {
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin-top: 16px;
+            margin-bottom: 12px;
+        }
+
+        /* Wrapper for meter + buttons */
+        .meter-wrapper {
+            position: relative;
+            width: 120px;  /* meter width + space for buttons */
+            margin: 0 auto;
+            height: 300px;
+        }
+
+        .meter-container {
+            width: 40px;
+            height: 100%;
+            border: 2px solid #333;
+            margin: 0 auto;
+            position: relative;
+            background-color: #eee;
+        }
+
+        .meter-fill {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 0%;
+            background-color: green;
+            transition: height 0.1s linear;
+        }
+
+        .control-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 60px;
+            height: 60px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: transparent;
+            color: #333;
+            border: 3px solid #333;
+            border-radius: 12px;
+            touch-action: manipulation;
+        }
+
+        #leftBtn {
+            left: -70px;
+        }
+
+        #rightBtn {
+            right: -70px;
+        }
+
+        /* Adjust button size and spacing on small screens */
+        @media (max-width: 480px) {
+            .meter-wrapper {
+                width: 100px;
+                height: 220px;
+            }
+
+            .meter-container {
+                width: 30px;
+            }
+
+            .control-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+
+            #leftBtn {
+                left: -60px;
+            }
+
+            #rightBtn {
+                right: -60px;
+            }
+        }
+
+        #status {
+            margin-top: 20px;
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Build Your Strength!</h1>
+
+<p class="instructions">
+    To pass this test you need to fill up the strength-meter!<br>
+    Press the buttons alternately until the meter is full<br>
+    Keyboard: <strong>A</strong> / <strong>D</strong><br>
+    Touch-screen: Tap buttons
+</p>
+
+<div id="percentageDisplay" class="percentage-display">
+    0%
+</div>
+
+<div class="meter-wrapper">
+    <button class="control-btn" id="leftBtn">A</button>
+
+    <div class="meter-container">
+        <div id="meterFill" class="meter-fill"></div>
+    </div>
+
+    <button class="control-btn" id="rightBtn">D</button>
+</div>
+
+<p id="status"></p>
+
+<script>
+    const MAX_STRENGTH = 100;
+    const INCREASE_AMOUNT = 3;
+    const DECREASE_RATE = 2;
+    const TICK_RATE = 100;
+    const MAX_INTERVAL = 400;
+
+    let strength = 0;
+    let lastInput = null;
+    let lastPressTime = 0;
+    let gameComplete = false;
+
+    const meterFill = document.getElementById("meterFill");
+    const statusText = document.getElementById("status");
+    const percentageDisplay = document.getElementById("percentageDisplay");
+
+    function updateMeter() {
+        meterFill.style.height = strength + "%";
+        percentageDisplay.textContent = strength + "%";
+
+        if (strength > 70) {
+            meterFill.style.backgroundColor = "red";
+        } else if (strength > 40) {
+            meterFill.style.backgroundColor = "orange";
+        } else {
+            meterFill.style.backgroundColor = "green";
+        }
+    }
+
+    function handleInput(input) {
+        if (gameComplete) return;
+        if (input === lastInput) return;
+
+        const now = Date.now();
+        if (lastPressTime !== 0 && now - lastPressTime > MAX_INTERVAL) {
+            lastInput = input;
+            lastPressTime = now;
+            return;
+        }
+
+        lastInput = input;
+        lastPressTime = now;
+
+        strength = Math.min(MAX_STRENGTH, strength + INCREASE_AMOUNT);
+        updateMeter();
+
+        if (strength >= MAX_STRENGTH) {
+            completeGame();
+        }
+    }
+
+    function completeGame() {
+        gameComplete = true;
+        strength = MAX_STRENGTH;
+        updateMeter();
+        statusText.textContent = "💪 Strength Maxed Out!";
+        // fetch("/minigame/strength/complete", { method: "POST" });
+    }
+
+    // Keyboard input
+    document.addEventListener("keydown", (event) => {
+        if (event.code === "KeyA") handleInput("LEFT");
+        else if (event.code === "KeyD") handleInput("RIGHT");
+    });
+
+    // Button input (touch + click safe)
+    document.getElementById("leftBtn").addEventListener("pointerdown", () => handleInput("LEFT"));
+    document.getElementById("rightBtn").addEventListener("pointerdown", () => handleInput("RIGHT"));
+
+    // Drain meter
+    setInterval(() => {
+        if (gameComplete) return;
+        if (strength > 0) {
+            strength = Math.max(0, strength - DECREASE_RATE);
+            updateMeter();
+        }
+    }, TICK_RATE);
+</script>
+
+</body>
+</html>
