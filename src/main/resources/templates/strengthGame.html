@@ -1,41 +1,59 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
     <title>Tama Gargoyles – Strength Game</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #f4f4f4;
+            color: #333;
             font-family: sans-serif;
-            text-align: center;
-            margin-top: 40px;
+            flex-direction: column;
+            margin: 0;
         }
+
+        h1 { margin-bottom: 10px; }
 
         .instructions {
             font-size: 1.1em;
+            text-align: center;
+            margin-bottom: 20px;
         }
 
         .percentage-display {
             font-size: 1.6rem;
             font-weight: bold;
-            margin-top: 16px;
-            margin-bottom: 12px;
+            margin-bottom: 5px;
+        }
+
+        #timerDisplay {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 15px;
         }
 
         /* Wrapper for meter + buttons */
         .meter-wrapper {
             position: relative;
-            width: 120px;  /* meter width + space for buttons */
-            margin: 0 auto;
+            width: 120px;
             height: 300px;
+            margin: 0 auto;
         }
 
         .meter-container {
             width: 40px;
             height: 100%;
-            border: 2px solid #333;
+            border: 3px solid #333;
             margin: 0 auto;
             position: relative;
-            background-color: #eee;
+            background-color: #ddd;
+            border-radius: 8px;
+            overflow: hidden;
         }
 
         .meter-fill {
@@ -44,62 +62,45 @@
             width: 100%;
             height: 0%;
             background-color: green;
-            transition: height 0.1s linear;
+            transition: height 0.1s linear, background-color 0.3s;
         }
 
         .control-btn {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            width: 60px;
-            height: 60px;
+            width: 65px;
+            height: 65px;
             font-size: 1.8rem;
             font-weight: bold;
-            background: transparent;
+            background: white;
             color: #333;
             border: 3px solid #333;
-            border-radius: 12px;
+            border-radius: 50%;
+            cursor: pointer;
             touch-action: manipulation;
+            box-shadow: 0 4px #999;
         }
 
-        #leftBtn {
-            left: -70px;
+        .control-btn:active {
+            box-shadow: 0 2px #666;
+            transform: translateY(-48%);
         }
 
-        #rightBtn {
-            right: -70px;
-        }
-
-        /* Adjust button size and spacing on small screens */
-        @media (max-width: 480px) {
-            .meter-wrapper {
-                width: 100px;
-                height: 220px;
-            }
-
-            .meter-container {
-                width: 30px;
-            }
-
-            .control-btn {
-                width: 50px;
-                height: 50px;
-                font-size: 1.5rem;
-            }
-
-            #leftBtn {
-                left: -60px;
-            }
-
-            #rightBtn {
-                right: -60px;
-            }
-        }
+        #leftBtn { left: -85px; }
+        #rightBtn { right: -85px; }
 
         #status {
-            margin-top: 20px;
+            margin-top: 25px;
             font-size: 1.3rem;
             font-weight: bold;
+            color: #d32f2f;
+        }
+
+        @media (max-width: 480px) {
+            .meter-wrapper { height: 250px; }
+            #leftBtn { left: -70px; }
+            #rightBtn { right: -70px; }
         }
     </style>
 </head>
@@ -108,15 +109,12 @@
 <h1>Build Your Strength!</h1>
 
 <p class="instructions">
-    To pass this test you need to fill up the strength-meter!<br>
-    Press the buttons alternately until the meter is full<br>
-    Keyboard: <strong>A</strong> / <strong>D</strong><br>
-    Touch-screen: Tap buttons
+    Fill the meter by pressing <strong>A</strong> and <strong>D</strong> alternately!
 </p>
 
-<div id="percentageDisplay" class="percentage-display">
-    0%
-</div>
+<div id="timerDisplay">Time: 0 secs</div>
+
+<div id="percentageDisplay" class="percentage-display">0%</div>
 
 <div class="meter-wrapper">
     <button class="control-btn" id="leftBtn">A</button>
@@ -130,10 +128,10 @@
 
 <p id="status"></p>
 
-<script>
+<script th:inline="javascript">
     const MAX_STRENGTH = 100;
-    const INCREASE_AMOUNT = 3;
-    const DECREASE_RATE = 2;
+    const INCREASE_AMOUNT = 3.5;
+    const DECREASE_RATE = 1.5;
     const TICK_RATE = 100;
     const MAX_INTERVAL = 400;
 
@@ -142,39 +140,44 @@
     let lastPressTime = 0;
     let gameComplete = false;
 
+    // Time variables
+    const startTime = Date.now();
+    const timerDisplay = document.getElementById("timerDisplay");
     const meterFill = document.getElementById("meterFill");
     const statusText = document.getElementById("status");
     const percentageDisplay = document.getElementById("percentageDisplay");
 
-    function updateMeter() {
-        meterFill.style.height = strength + "%";
-        percentageDisplay.textContent = strength + "%";
+    // Get Gargoyle ID from Thymeleaf
+    const gargoyleId = [[${gargoyleId}]];
 
-        if (strength > 70) {
-            meterFill.style.backgroundColor = "red";
-        } else if (strength > 40) {
-            meterFill.style.backgroundColor = "orange";
-        } else {
-            meterFill.style.backgroundColor = "green";
+    function updateUI() {
+        meterFill.style.height = strength + "%";
+        percentageDisplay.textContent = Math.floor(strength) + "%";
+
+        // Color Feedback
+        if (strength > 80) meterFill.style.backgroundColor = "#ff1744"; // Red
+        else if (strength > 40) meterFill.style.backgroundColor = "#ff9100"; // Orange
+        else meterFill.style.backgroundColor = "#00e676"; // Green
+
+        // Live Timer Update
+        if (!gameComplete) {
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const mins = Math.floor(elapsed / 60);
+            const secs = elapsed % 60;
+            timerDisplay.textContent = "Time: " + (mins > 0 ? mins + " min " + secs + " secs" : secs + " secs");
         }
     }
 
     function handleInput(input) {
         if (gameComplete) return;
-        if (input === lastInput) return;
+        if (input === lastInput) return; // Must alternate buttons
 
         const now = Date.now();
-        if (lastPressTime !== 0 && now - lastPressTime > MAX_INTERVAL) {
-            lastInput = input;
-            lastPressTime = now;
-            return;
-        }
-
         lastInput = input;
         lastPressTime = now;
 
         strength = Math.min(MAX_STRENGTH, strength + INCREASE_AMOUNT);
-        updateMeter();
+        updateUI();
 
         if (strength >= MAX_STRENGTH) {
             completeGame();
@@ -183,28 +186,46 @@
 
     function completeGame() {
         gameComplete = true;
+        const totalSeconds = Math.floor((Date.now() - startTime) / 1000);
+
         strength = MAX_STRENGTH;
-        updateMeter();
-        statusText.textContent = "💪 Strength Maxed Out!";
-        // fetch("/minigame/strength/complete", { method: "POST" });
+        updateUI();
+        statusText.textContent = "💪 MAXIMUM STRENGTH!";
+
+        // 1. Background Save for Stats
+        fetch("/minigame/strength/complete", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': [[${_csrf.token}]]
+            },
+            body: JSON.stringify({
+                gargoyleId: gargoyleId,
+                survivalTime: totalSeconds
+            })
+        }).then(() => {
+            // 2. Redirect to the STRENGTH result logic
+            setTimeout(() => {
+                window.location.href = "/minigame/strength/result-page?time=" + totalSeconds + "&gargoyleId=" + gargoyleId;
+            }, 1000);
+        });
     }
 
-    // Keyboard input
-    document.addEventListener("keydown", (event) => {
-        if (event.code === "KeyA") handleInput("LEFT");
-        else if (event.code === "KeyD") handleInput("RIGHT");
+    // Input Listeners
+    document.addEventListener("keydown", (e) => {
+        if (e.code === "KeyA") handleInput("LEFT");
+        if (e.code === "KeyD") handleInput("RIGHT");
     });
 
-    // Button input (touch + click safe)
     document.getElementById("leftBtn").addEventListener("pointerdown", () => handleInput("LEFT"));
     document.getElementById("rightBtn").addEventListener("pointerdown", () => handleInput("RIGHT"));
 
-    // Drain meter
+    // Gravity: Meter drains over time
     setInterval(() => {
         if (gameComplete) return;
         if (strength > 0) {
             strength = Math.max(0, strength - DECREASE_RATE);
-            updateMeter();
+            updateUI();
         }
     }, TICK_RATE);
 </script>

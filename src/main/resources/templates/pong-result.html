@@ -31,7 +31,7 @@
 </head>
 <body>
 <h1 th:with="mins=${survivalTime / 60}, secs=${survivalTime % 60}">
-    You survived
+    Time:
     <span th:if="${mins > 0}" th:text="${mins + ' min '}">0 min </span>
     <span th:text="${secs + ' secs'}">0 secs</span>!
 </h1>
