@@ -1,21 +1,109 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Rename your Gargoyle</title>
+
+    <link rel="stylesheet" th:href="@{/css/general.css}" />
+
+    <style>
+        /* Gargoyle image for rename page */
+        .creature-slot img {
+            max-height: 150px; /* 50% bigger than before */
+            width: auto;
+        }
+
+        /* Right align by default */
+        .creature-slot {
+            text-align: right;
+            margin-bottom: 0.8rem;
+        }
+
+        /* On smaller screens, shrink and center */
+        @media (max-width: 600px) {
+            .creature-slot {
+                text-align: center;
+            }
+
+            .creature-slot img {
+                max-height: 100px; /* shrink proportionally */
+            }
+        }
+    </style>
 </head>
 <body>
-<h1>Choose a new name for your gargoyle!</h1>
-<form th:action="@{/gargoyle/{id}/rename(id=${gargoyle.id})}"
-      th:object="${gargoyle}"
-      method="post">
 
-    <label for="name">Name:</label><br>
-    <input type="text" th:field="*{name}" maxlength="30" required pattern="\S(.*\S)?" title="Gargoyle name must not be empty"/><br><br>
+<!-- ======================================================
+     TOP HUD
+     ====================================================== -->
+<header class="hud-top">
+    <div class="hud-top__left">
+        <h1 class="game-title">Rename your Gargoyle</h1>
+    </div>
 
-    <button type="submit">Rename</button>
-</form>
-<br><br>
-<a href="/game">Back</a>
+    <div class="hud-top__right">
+        <div class="hud-actions">
+            <a href="/game" class="btn">
+                Back to Game
+            </a>
+        </div>
+    </div>
+</header>
+
+<!-- ======================================================
+     RENAME PANEL
+     ====================================================== -->
+<div class="panel">
+
+    <h3>Choose a new name for your Gargoyle!</h3>
+    <hr>
+
+    <!-- Gargoyle image (right aligned on desktop, centered on mobile) -->
+    <div class="creature-slot">
+        <img class="creature-sprite bob"
+             th:src="@{/images/gargoyle/gargoyle.png}"
+             alt="Your gargoyle">
+    </div>
+
+    <form th:action="@{/gargoyle/{id}/rename(id=${gargoyle.id})}"
+          th:object="${gargoyle}"
+          method="post">
+
+        <label for="name" style="font-weight:900;">Name</label>
+        <br>
+
+        <input
+                id="name"
+                type="text"
+                th:field="*{name}"
+                maxlength="30"
+                required
+                pattern="\S(.*\S)?"
+                title="Gargoyle name must not be empty"
+                style="
+              width:100%;
+              margin-top:0.4rem;
+              margin-bottom:0.8rem;
+              padding:0.6rem 0.8rem;
+              border-radius:12px;
+              border:1px solid rgba(36,214,255,0.25);
+              background:rgba(6,8,20,0.65);
+              color:var(--text);
+              font-weight:800;
+              font-size:1.2rem;
+            "
+        />
+
+        <div class="hud-actions">
+            <button type="submit" class="btn">
+                Rename
+            </button>
+        </div>
+
+    </form>
+
+</div>
+
 </body>
 </html>
