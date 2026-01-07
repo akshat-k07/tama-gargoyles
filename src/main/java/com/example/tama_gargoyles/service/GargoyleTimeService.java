@@ -28,7 +28,6 @@ public class GargoyleTimeService {
     public GargoyleTimeService(Clock clock) {
         this.clock = clock;
     }
-
     /**
      * ROCK-SOLID RULE:
      * - Call resume() BEFORE tick() when a user returns.
@@ -73,15 +72,17 @@ public class GargoyleTimeService {
         int happinessRaise = (int) (0 * HAPPINESS_RAISE_PER_MIN);
         int healthRaise = (int) (0 * HEALTH_RAISE_PER_MIN);
 
+        int BASE_HEALTH_GAIN = 1;
+        int EXTRA_HEALTH_GAIN = 3;
 
         if (game.getHunger() > 30) {
-            healthRaise += minutes * 1; // extra +1 per minute
+            healthRaise += (int) (minutes * BASE_HEALTH_GAIN); // extra +1 per minute
         }
         if (game.getHappiness() > 30) {
-            healthRaise += minutes * 1; // extra +1 per minute
+            healthRaise += (int) (minutes * BASE_HEALTH_GAIN); // extra +1 per minute
         }
         if (game.getHunger() > 60 && game.getHappiness() > 60) {
-            healthRaise += minutes * 3; // extra +3 per minute
+            healthRaise += (int) (minutes * EXTRA_HEALTH_GAIN); // extra +3 per minute
         }
 
         // the values for hunger, happiness and health take into account both the drop and the raise
@@ -89,6 +90,9 @@ public class GargoyleTimeService {
         game.setHappiness(clamp01to100(game.getHappiness() - happinessDrop + happinessRaise));
         game.setHealth(clamp01to100(game.getHealth() - healthDrop + healthRaise));
 
+        Integer updatedAge = (int) Math.floor((double) game.getActiveMinutes() / MINUTES_PER_GAME_DAY);
+
+        game.setAge(updatedAge);
         // Move time forward.
         game.setLastTickAt(now);
     }

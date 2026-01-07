@@ -1,0 +1,1 @@
+ALTER TABLE gargoyles ADD evolution_type VARCHAR(30);

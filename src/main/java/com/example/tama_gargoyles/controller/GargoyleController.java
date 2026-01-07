@@ -5,8 +5,8 @@ import com.example.tama_gargoyles.model.User;
 import com.example.tama_gargoyles.repository.GargoyleRepository;
 import com.example.tama_gargoyles.repository.UserRepository;
 import com.example.tama_gargoyles.service.CurrentUserService;
+import com.example.tama_gargoyles.service.EvolutionService;
 import com.example.tama_gargoyles.service.GargoyleTimeService;
-import jakarta.persistence.GeneratedValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,15 +14,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.Authentication;
 
 
 import java.util.*;
 
-import java.util.Date;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 
 @Controller
 public class GargoyleController {
@@ -30,8 +26,7 @@ public class GargoyleController {
     private final GargoyleRepository gargoyleRepository;
     private final CurrentUserService currentUserService;
     private final GargoyleTimeService timeService;
-
-    private static final long ADULT_AT_GAME_DAYS = 3;
+    private final EvolutionService evolutionService;
 
     public GargoyleController(
             GargoyleRepository gargoyleRepository,
@@ -41,6 +36,7 @@ public class GargoyleController {
         this.gargoyleRepository = gargoyleRepository;
         this.currentUserService = currentUserService;
         this.timeService = timeService;
+        this.evolutionService = new EvolutionService();
     }
 
     @PostMapping("/rocks-increase")
@@ -201,24 +197,23 @@ public class GargoyleController {
         // 2) Then tick (applies only active time)
         timeService.resume(g);
         timeService.tick(g);
-
-        // Promote to adult if old enough, based on how the child was treated
-        long daysOld = timeService.gameDaysOld(g);
-        boolean isOldEnough = daysOld >= 3; // tweak threshold
-
-        if (g.getType() == Gargoyle.Type.CHILD && isOldEnough) {
-            boolean treatedWell = g.getHappiness() >= 60 && g.getHunger() >= 60;
-
-            g.setType(treatedWell ? Gargoyle.Type.GOOD : Gargoyle.Type.BAD);
-        }
+        boolean evolved = evolutionService.evolveGargoyle(g);
 
         gargoyleRepository.save(g);
 
-        model.addAttribute("gargoyle", g);
-        model.addAttribute("gameDaysOld", timeService.gameDaysOld(g));
-        model.addAttribute("minutesIntoDay", timeService.minutesIntoCurrentDay(g));
+        if (evolved){
+            model.addAttribute("gargoyle", g);
+            model.addAttribute("gameDaysOld", timeService.gameDaysOld(g));
+            model.addAttribute("minutesIntoDay", timeService.minutesIntoCurrentDay(g));
 
-        return "game";
+            return "gargoyles/evolution";
+        }else{
+            model.addAttribute("gargoyle", g);
+            model.addAttribute("gameDaysOld", timeService.gameDaysOld(g));
+            model.addAttribute("minutesIntoDay", timeService.minutesIntoCurrentDay(g));
+
+            return "game";
+        }
     }
 
     @PostMapping("/gargoyles/pause")

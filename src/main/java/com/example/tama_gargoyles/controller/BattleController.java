@@ -135,6 +135,6 @@ public class BattleController {
 
     // ---- Helper: adulthood derived from vertual time ----
     private boolean isBattleEligible(Gargoyle g) {
-        return timeService.gameDaysOld(g) >= ADULT_AT_GAME_DAYS;
+        return g.getType() != Gargoyle.Type.CHILD;
     }
 }
