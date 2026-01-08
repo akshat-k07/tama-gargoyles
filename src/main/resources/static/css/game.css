@@ -540,15 +540,13 @@ body::before{
   }
 
   .stage__roof{
-    background-image: url("/images/scene/roof.png");
-    background-position: center bottom;
-    background-size: 100% auto;
-    opacity: calc(1 * var(--use-scene-images));
-
-    /* LOCK IT */
+    background: url("/images/scene/roof.png") no-repeat center bottom;
+    background-size: cover;
     animation: none;
     transform: none;
   }
+
+
 
   /* If these don’t exist yet, comment them out for now */
   /* .stage__stars{ background-image: url("/images/scene/stars.png"); } */
