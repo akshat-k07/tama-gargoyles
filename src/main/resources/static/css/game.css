@@ -578,7 +578,7 @@ body::before{
 
 /* Creature sprite (stable + readable) */
 .creature-sprite{
-  width: min(260px, 62%);
+  width: min(520px, 62%);
   height: auto;
   display: block;
   transform: translateY(10px);
