@@ -71,8 +71,9 @@
             transform: translateY(-50%);
             width: 65px;
             height: 65px;
-            font-size: 1.8rem;
+            font-size: 2.2rem;   /* slightly larger */
             font-weight: bold;
+            font-family: system-ui, sans-serif;
             background: white;
             color: #333;
             border: 3px solid #333;
@@ -109,7 +110,7 @@
 <h1>Build Your Strength!</h1>
 
 <p class="instructions">
-    Fill the meter by pressing <strong>A</strong> and <strong>D</strong> alternately!
+    Fill the meter by pressing <strong>Left Arrow</strong> and <strong>Right Arrow</strong> alternately!
 </p>
 
 <div id="timerDisplay">Time: 0 secs</div>
@@ -117,13 +118,13 @@
 <div id="percentageDisplay" class="percentage-display">0%</div>
 
 <div class="meter-wrapper">
-    <button class="control-btn" id="leftBtn">A</button>
+    <button class="control-btn" id="leftBtn">◀︎</button>
 
     <div class="meter-container">
         <div id="meterFill" class="meter-fill"></div>
     </div>
 
-    <button class="control-btn" id="rightBtn">D</button>
+    <button class="control-btn" id="rightBtn">►︎</button>
 </div>
 
 <p id="status"></p>
@@ -225,8 +226,8 @@
 
     // Input Listeners
     document.addEventListener("keydown", (e) => {
-        if (e.code === "KeyA") handleInput("LEFT");
-        if (e.code === "KeyD") handleInput("RIGHT");
+        if (e.code === "ArrowLeft") handleInput("LEFT");
+        if (e.code === "ArrowRight") handleInput("RIGHT");
     });
 
     document.getElementById("leftBtn").addEventListener("pointerdown", () => handleInput("LEFT"));
