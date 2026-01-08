@@ -595,8 +595,15 @@ body::before{
 
 
 /* =========================================================
-   CREATURE + NEST (CHILD ONLY) — CLEAN + STAGE-AWARE
+   CREATURE + NEST (CHILD ONLY) — stage-calibrated
    ========================================================= */
+
+/* Put defaults on the STAGE (so data-life overrides are guaranteed) */
+.stage{
+  --creature-w: 220px;   /* base size */
+  --creature-x: 182px;   /* your current working default */
+  --creature-y: -90px;   /* your current working default */
+}
 
 .creature-slot{
   position: absolute;
@@ -607,43 +614,65 @@ body::before{
   pointer-events: none;
 }
 
-/* bob is on wrapper so transform is "owned" by bob */
-.creature-bob{
-  position: relative;
-  z-index: 6;
-  /* stage-wide lift control (works because it’s NOT transform) */
-  top: var(--creature-lift, 0px);
+/* Life-stage tuning */
+.stage[data-life="egg"]{
+  --creature-w: 220px;   /* egg = baby size */
+  --creature-x: 182px;
+  --creature-y: -90px;
 }
 
-/* Sprite baseline */
+.stage[data-life="baby"]{
+  --creature-w: 220px;
+  --creature-x: 182px;
+  --creature-y: -90px;
+}
+
+/* CHILD SHOULD BE ON THE GROUND (no nest) */
+.stage[data-life="child"]{
+  --creature-w: 320px;   /* pick a sensible starting size, not 500 */
+  --creature-x: 0px;
+  --creature-y: 70px;    /* pushes it down onto the “ground/roof line” */
+}
+
+/* ADULT */
+.stage[data-life="adult"]{
+  --creature-w: 360px;
+  --creature-x: 0px;
+  --creature-y: 20px;    /* usually lower than baby so it feels heavier */
+}
+
+/* Debug outlines (temp)
+.stage[data-life="egg"] { outline: 2px solid red; }
+.stage[data-life="baby"] { outline: 2px solid green; }
+.stage[data-life="child"] { outline: 2px solid yellow; }
+.stage[data-life="adult"] { outline: 2px solid cyan; } */
+
+/* Creature sprite */
 .creature-sprite{
+  width: min(var(--creature-w), 70%);
   height: auto;
   display: block;
   user-select: none;
   -webkit-user-drag: none;
 
-  /* keep this relative so we can nudge with top if ever needed */
-  position: relative;
+  position: relative; /* enables top/left nudges */
+  left: var(--creature-x);
+  top:  var(--creature-y);
 
+  z-index: 6;
   filter:
     drop-shadow(0 18px 28px rgba(0,0,0,0.55))
     drop-shadow(0 0 18px rgba(155,92,255,0.18));
 }
 
-/* ---- Stage-specific sizing ---- */
-.creature--egg  { width: min(180px, 52%); }
-.creature--baby { width: min(220px, 60%); }
-.creature--child{ width: min(300px, 70%); }
-.creature--adult{ width: min(360px, 76%); }
-
-/* ---- Child nest placement ---- */
+/* Nest wrapper (CHILD only in HTML) */
 .nest-wrap{
   position: absolute;
   left: 50%;
-  bottom: 14%;               /* tweak 10–18% */
+  bottom: 1%;
   transform: translateX(-50%);
   width: min(360px, 82%);
-  z-index: 4;
+  z-index: 0;
   display: grid;
   place-items: center;
 
@@ -665,7 +694,7 @@ body::before{
   pointer-events: none;
 }
 
-/* Magical aura ring under the nest */
+/* Aura + sparkles stay on wrapper (works, because wrapper is a DIV) */
 .nest-wrap::after{
   content:"";
   position:absolute;
@@ -682,7 +711,6 @@ body::before{
   pointer-events:none;
 }
 
-/* Sparkly dust around nest (CSS-only) */
 .nest-wrap::before{
   content:"";
   position:absolute;
@@ -699,16 +727,6 @@ body::before{
   pointer-events:none;
 }
 
-/* ---- Child-only “sit in nest” lift ----
-   Because bob is on .creature-bob, this doesn't fight transform. */
-.creature--baby{
-  /* raise baby so it visually sits in nest */
-}
-.creature-slot .creature-bob{
-  --creature-lift: -24px; /* tweak -10 to -45 */
-}
-
-/* Animations */
 @keyframes nest-float{
   0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.95; }
   50%      { transform: translateX(-50%) translateY(-6px); opacity: 1; }
@@ -721,6 +739,7 @@ body::before{
   0%, 100% { transform: translateY(2px); opacity: 0.25; }
   50%      { transform: translateY(-6px); opacity: 0.45; }
 }
+
 @media (prefers-reduced-motion: reduce){
   .nest-wrap,
   .nest-wrap::before,

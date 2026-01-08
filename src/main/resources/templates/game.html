@@ -185,8 +185,13 @@
         <section class="stage-panel panel" aria-labelledby="creature-area-title">
             <h2 id="creature-area-title" class="sr-only">Creature</h2>
 
-            <div class="stage" role="img" aria-label="Gargoyle on a church roof under a starry sky">
-                <!-- Parallax layers -->
+            <div class="stage"
+                 th:attr="data-life=${lifeStage}"
+                 role="img"
+                 aria-label="Gargoyle on a church roof under a starry sky">
+
+
+            <!-- Parallax layers -->
                 <div class="stage__layer stage__sky" aria-hidden="true"></div>
                 <div class="stage__layer stage__stars" aria-hidden="true"></div>
                 <div class="stage__layer stage__moon" aria-hidden="true"></div>

@@ -238,6 +238,8 @@ public class GargoyleController {
         model.addAttribute("minutesIntoDay", timeService.minutesIntoCurrentDay(g));
 
         model.addAttribute("image_path", evolutionService.getGargoyleImagePath(g));
+        model.addAttribute("lifeStage", evolutionService.getLifeStage(g)); // 👈 Life stage for images
+
 
         // ---- Inventory counts ----
         model.addAttribute("rocksCount", user.getRocks());
