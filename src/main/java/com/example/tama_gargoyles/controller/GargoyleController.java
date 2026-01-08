@@ -332,7 +332,12 @@ public class GargoyleController {
     @GetMapping("/gargoyle/{id}/rename")
     public ModelAndView showRenameForm(@PathVariable Long id) {
         Gargoyle gargoyle = gargoyleRepository.findById(id).orElseThrow();
-        return new ModelAndView("gargoyles/renameGargoyle", "gargoyle", gargoyle);
+
+        ModelAndView model = new ModelAndView("gargoyles/renameGargoyle", "gargoyle", gargoyle);
+
+        model.addObject("image_path", evolutionService.getGargoyleImagePath(gargoyle));
+
+        return model;
     }
 
     @PostMapping("/gargoyle/{id}/rename")

@@ -614,7 +614,7 @@ body::before{
 
 /* Creature */
 .creature-sprite{
-  width: min(520px, 62%);
+  width: min(260px, 62%);
   height: auto;
   display: block;
   user-select: none;
