@@ -380,9 +380,9 @@ body::before{
   min-height: 0;
 }
 
-.hud-panel--left{ grid-area:left; padding: 0.9rem; overflow:auto; }
+.hud-panel--left{ grid-area:left; padding: 0.9rem; overflow:hidden; }
 .stage-panel{ grid-area:stage; padding: 0.9rem; }
-.hud-panel--right{ grid-area:right; padding: 0.9rem; overflow:auto; }
+.hud-panel--right{ grid-area:right; padding: 0.9rem; overflow:hidden; }
 .actions-panel{ grid-area:actions; padding: 0.9rem; }
 .log-panel{ grid-area:log; padding: 0.85rem 0.9rem; }
 
@@ -401,7 +401,7 @@ body::before{
   /* On mobile, reduce nested-scroll friction */
   .hud-panel--left,
   .hud-panel--right{
-    overflow: visible;
+    overflow: hidden;
   }
 }
 
@@ -892,7 +892,7 @@ body::before{
 /* Log panel is the intended scroll region */
 .log-panel{
   max-height: 200px;     /* tweak 160–240 */
-  overflow-y: auto;
+  overflow-y: hidden;
   overflow-x: hidden;
   background: rgba(8, 10, 24, 0.52);
 }
@@ -922,7 +922,7 @@ body::before{
   border: 1px solid rgba(241,238,255,0.10);
   border-radius: 12px;
   padding: 10px;
-  overflow:auto;
+  overflow:hidden;
   color: rgba(241,238,255,0.88);
 }
 
