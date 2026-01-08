@@ -45,6 +45,8 @@ public class EvolutionService {
 
         if (g.getAge() < 1){
             return "/images/gargoyle/egg.png";
+        }else if(g.getAge() < 2){
+            return "/images/gargoyle/baby.png";
         }else if(g.getAge() < 3){
             return "/images/gargoyle/child-without-base.png";
         }else if(g.getType() == Gargoyle.Type.BAD && Objects.equals(g.getEvolutionType(), "Strength")){
