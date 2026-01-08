@@ -661,6 +661,10 @@ a.btn {
   position: relative;
 }
 
+.showSpaces{
+  white-space: pre;
+}
+
 .meter::after{
   content:"";
   position:absolute;

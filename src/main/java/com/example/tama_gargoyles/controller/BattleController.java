@@ -171,29 +171,29 @@ public class BattleController {
                 battler.setHappiness(100);
                 rewards.add("😊 Happiness 100%");
 
-                user.setRocks(user.getRocks() + 3);
+                user.addRocks(3);
                 rewards.add("🪨 3 Rocks");
 
-                user.setBugs(user.getBugs() + 3);
+                user.addBugs(3);
                 rewards.add("🐛 3 Bugs");
 
-                user.setFruits(user.getFruits() + 3);
+                user.addFruits(3);
                 rewards.add("🍎 3 Fruit");
 
-                user.setMysteryFood(user.getMysteryFood() + 1);
+                user.addMysteryFood(1);
                 rewards.add("❓ 1 Mystery Food");
 
             } else {
                 battler.setHealth(Math.max(0, battler.getHealth() - 20));
                 rewards.add("❤️ -20% Health");
 
-                user.setRocks(user.getRocks() + 1);
+                user.addRocks(1);
                 rewards.add("🪨 1 Rock");
 
-                user.setBugs(user.getBugs() + 1);
+                user.addBugs(1);
                 rewards.add("🐛 1 Bug");
 
-                user.setFruits(user.getFruits() + 1);
+                user.addFruits(1);
                 rewards.add("🍎 1 Fruit");
             }
 
