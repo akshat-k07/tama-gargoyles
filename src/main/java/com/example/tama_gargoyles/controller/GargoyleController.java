@@ -405,4 +405,24 @@ public class GargoyleController {
         return evolutionService.canEvolve(g);
     }
 
+    @PostMapping("/testing/evolve")
+    public void evolveTesting(Authentication authentication){
+        User user = currentUserService.getCurrentUser(authentication);
+
+        var gargoyles = gargoyleRepository.findAllByUserIdOrderByIdAsc(user.getId());
+
+        Gargoyle g = gargoyles.stream()
+                .filter(x -> x.getType() == Gargoyle.Type.CHILD)
+                .findFirst()
+                .orElse(gargoyles.get(0));
+
+        g.setEvolutionType("None");
+        g.setAge(3);
+        g.setActiveMinutes(45);
+        g.setType(Gargoyle.Type.CHILD);
+
+        gargoyleRepository.save(g);
+
+    }
+
 }
