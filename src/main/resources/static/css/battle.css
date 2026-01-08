@@ -96,7 +96,7 @@ body{
   margin:0;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   color: var(--text);
-  overflow:auto;
+  overflow:hidden;
 
   /* Midnight base with subtle purple edges */
   background:
@@ -661,6 +661,10 @@ a.btn {
   position: relative;
 }
 
+.showSpaces{
+  white-space: pre;
+}
+
 .meter::after{
   content:"";
   position:absolute;
@@ -879,7 +883,7 @@ a.btn {
 
 .log-panel{
   max-height: 190px;
-  overflow:auto;
+  overflow:hidden;
 }
 
 .debug summary{
@@ -899,7 +903,7 @@ a.btn {
   border: 1px solid rgba(241,238,255,0.10);
   border-radius: 12px;
   padding: 10px;
-  overflow:auto;
+  overflow:hidden;
   color: rgba(241,238,255,0.88);
 }
 
@@ -914,7 +918,7 @@ a.btn {
 .hud-panel--left,
 .hud-panel--right,
 .log-panel{
-  overflow: auto;
+  overflow: hidden;
 }
 
 /* 2) Event log: keep it useful but not a screen hog */
