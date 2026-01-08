@@ -373,4 +373,29 @@ public class GargoyleController {
 
         return stats;
     }
+
+    @GetMapping("/game/check/evolution")
+    @ResponseBody
+    public boolean checkEvolution(Authentication authentication){
+
+        User user = currentUserService.getCurrentUser(authentication);
+
+        var gargoyles = gargoyleRepository.findAllByUserIdOrderByIdAsc(user.getId());
+
+        Gargoyle g = gargoyles.stream()
+                .filter(x -> x.getType() == Gargoyle.Type.CHILD)
+                .findFirst()
+                .orElse(gargoyles.get(0));
+
+        timeService.resume(g);
+        timeService.tick(g);
+        gargoyleRepository.save(g);
+
+        if (!g.getUser().getId().equals(user.getId())) {
+            throw new RuntimeException("Unauthorized");
+        }
+
+        return evolutionService.canEvolve(g);
+    }
+
 }

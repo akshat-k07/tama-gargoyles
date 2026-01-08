@@ -31,6 +31,16 @@ public class EvolutionService {
 
     }
 
+    public boolean canEvolve(Gargoyle g){
+        Gargoyle.Type gType = g.getType();
+        Integer age = g.getAge();
+
+        if (age >= AGE_TO_EVOLVE && gType == Gargoyle.Type.CHILD){
+            return true;
+        }
+        return false;
+    }
+
     public String calculateEvolutionType(Gargoyle g){
 
         Integer intel = g.getIntelligence();
