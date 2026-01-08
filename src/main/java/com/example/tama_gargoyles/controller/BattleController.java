@@ -179,9 +179,9 @@ public class BattleController {
 
                 user.addFruits(3);
                 rewards.add("🍎 3 Fruit");
-
-                user.addMysteryFood(1);
-                rewards.add("❓ 1 Mystery Food");
+//
+//                user.addMysteryFood(1);
+//                rewards.add("❓ 1 Mystery Food");
 
             } else {
                 battler.setHealth(Math.max(0, battler.getHealth() - 20));
