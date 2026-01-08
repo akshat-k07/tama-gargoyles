@@ -1,269 +1,242 @@
-/* src/main/resources/static/css/game.css */
-
-/* =========================================================
-   TAMA GARGOYLES — SCAFFOLD-FIRST UI (SAFE COPY-PASTE)
-   ---------------------------------------------------------
-   ✅ Works immediately with NO assets.
-   ✅ Aligned to current game.html classes:
-      .screen, .hud-top, .game-grid, .panel,
-      .stage, .stage__layer, .stage__sky, .stage__stars,
-      .stage__moon, .stage__roof, .stage__fx,
-      .creature-slot, .creature-placeholder, .creature-sprite
-
-   =========================================================
-   🚧 WORKING RULES (READ THIS)
-   ---------------------------------------------------------
-   1) ONLY edit inside sections marked:
-      "WORK HERE ✅"
-   2) DO NOT edit inside sections marked:
-      "DO NOT TOUCH 🚫" (unless we do it together)
-   3) If you want to enable image assets, you will change ONE line:
-      --use-scene-images: 0  -> 1
-   ========================================================= */
-
-
-/* =========================================================
-   WORK HERE ✅ 1) THEME VARIABLES
-   - You can tweak these safely (colours, transparency)
-   ========================================================= */
+/* Version */
 
 :root{
 
-  /* Toggle: 0 = no images (fallback gradients)
-            1 = use /images/scene/*.png if present */
-  --use-scene-images: 1;
+/* Toggle: 0 = no images (fallback gradients)
+1 = use /images/scene/*.png if present */
+--use-scene-images: 1;
 
-  /* Deep midnight base */
-  --bg-0:#05010b;
-  --bg-1:#070a1a;
-  --bg-2:#070312;
+/* Deep midnight base */
+--bg-0:#05010b;
+--bg-1:#070a1a;
+--bg-2:#070312;
 
-  /* Panels (semi-transparent to let the scene show) */
-  --panel: rgba(8, 10, 24, 0.62);
-  --panel-2: rgba(12, 14, 34, 0.68);
+/* Panels (semi-transparent to let the scene show) */
+--panel: rgba(8, 10, 24, 0.62);
+--panel-2: rgba(12, 14, 34, 0.68);
 
-  /* Text */
-  --text:#f1eeff;
-  --muted:rgba(241,238,255,0.72);
+/* Text */
+--text:#f1eeff;
+--muted:rgba(241,238,255,0.72);
 
-  /* Accents (subtle purple at edges, cyan primary) */
-  --accent:#24d6ff;      /* cyan */
-  --accent-2:#9b5cff;    /* purple */
-  --accent-3:#ff3df2;    /* pink */
-  --accent-4:#3dff9f;    /* green */
-  --accent-5:#ffe85a;    /* gold */
+/* Accents (subtle purple at edges, cyan primary) */
+--accent:#24d6ff; /* cyan */
+--accent-2:#9b5cff; /* purple */
+--accent-3:#ff3df2; /* pink */
+--accent-4:#3dff9f; /* green */
+--accent-5:#ffe85a; /* gold */
 
-  /* Lines */
-  --border: rgba(36,214,255,0.22);
+/* Lines */
+--border: rgba(36,214,255,0.22);
 
-  /* Status */
-  --ok:#3dff9f;
-  --warn:#ffe85a;
-  --danger:#ff4d6d;
+/* Status */
+--ok:#3dff9f;
+--warn:#ffe85a;
+--danger:#ff4d6d;
 
-  /* Shape & shadow */
-  --radius:18px;
-  --shadow: 0 18px 46px rgba(0,0,0,0.55);
-  --shadow-soft: 0 12px 26px rgba(0,0,0,0.40);
+/* Shape & shadow */
+--radius:18px;
+--shadow: 0 18px 46px rgba(0,0,0,0.55);
+--shadow-soft: 0 12px 26px rgba(0,0,0,0.40);
 
-  /* Focus ring */
-  --ring: 0 0 0 3px rgba(36,214,255,0.30);
+/* Focus ring */
+--ring: 0 0 0 3px rgba(36,214,255,0.30);
 
-  /* Glows */
-  --glow-cyan: 0 0 18px rgba(36,214,255,0.22);
-  --glow-purple: 0 0 18px rgba(155,92,255,0.18);
-  --glow-pink: 0 0 18px rgba(255,61,242,0.16);
-  --glow-green: 0 0 18px rgba(61,255,159,0.14);
+/* Glows */
+--glow-cyan: 0 0 18px rgba(36,214,255,0.22);
+--glow-purple: 0 0 18px rgba(155,92,255,0.18);
+--glow-pink: 0 0 18px rgba(255,61,242,0.16);
+--glow-green: 0 0 18px rgba(61,255,159,0.14);
 
-  --grid-gap: 0.9rem;
+--grid-gap: 0.9rem;
 }
 
 
 /* =========================================================
-   DO NOT TOUCH 🚫 2) GLOBAL RESETS
-   ========================================================= */
+DO NOT TOUCH 🚫 2) GLOBAL RESETS
+========================================================= */
 
 *{ box-sizing:border-box; }
 html, body{ height:100%; }
 
 
 /* =========================================================
-   WORK HERE ✅ 3) PAGE BACKGROUND
-   - Safe to tweak background colours and star density
-   ========================================================= */
+WORK HERE ✅ 3) PAGE BACKGROUND
+- Safe to tweak background colours and star density
+========================================================= */
 
 body{
-  margin:0;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  color: var(--text);
-  overflow:hidden;
+margin:0;
+font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+color: var(--text);
+overflow:hidden;
 
-  /* Midnight base with subtle purple edges */
-  background:
-    radial-gradient(1100px 650px at 15% 15%, rgba(155,92,255,0.10), transparent 60%),
-    radial-gradient(1000px 620px at 85% 20%, rgba(255,61,242,0.06), transparent 62%),
-    radial-gradient(900px 650px at 50% 110%, rgba(36,214,255,0.06), transparent 65%),
-    linear-gradient(180deg, var(--bg-0), var(--bg-1) 45%, var(--bg-2));
+/* Midnight base with subtle purple edges */
+background:
+radial-gradient(1100px 650px at 15% 15%, rgba(155,92,255,0.10), transparent 60%),
+radial-gradient(1000px 620px at 85% 20%, rgba(255,61,242,0.06), transparent 62%),
+radial-gradient(900px 650px at 50% 110%, rgba(36,214,255,0.06), transparent 65%),
+linear-gradient(180deg, var(--bg-0), var(--bg-1) 45%, var(--bg-2));
 }
 
 /* Star overlay (works with NO images) */
 body::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  opacity:0.85;
-  mix-blend-mode: screen;
+content:"";
+position:fixed;
+inset:0;
+pointer-events:none;
+opacity:0.85;
+mix-blend-mode: screen;
 
-  /* Bigger bright stars */
-  background:
-    radial-gradient(circle at 10% 18%, rgba(255,255,255,0.95) 0 1.6px, transparent 2.8px),
-    radial-gradient(circle at 22% 52%, rgba(255,255,255,0.55) 0 1.1px, transparent 2.3px),
-    radial-gradient(circle at 38% 30%, rgba(255,255,255,0.75) 0 1.3px, transparent 2.4px),
-    radial-gradient(circle at 55% 60%, rgba(255,255,255,0.55) 0 1.1px, transparent 2.3px),
-    radial-gradient(circle at 68% 22%, rgba(255,255,255,0.85) 0 1.4px, transparent 2.6px),
-    radial-gradient(circle at 80% 70%, rgba(255,255,255,0.45) 0 1.1px, transparent 2.3px),
-    radial-gradient(circle at 92% 35%, rgba(255,255,255,0.70) 0 1.1px, transparent 2.3px);
+/* Bigger bright stars */
+background:
+radial-gradient(circle at 10% 18%, rgba(255,255,255,0.95) 0 1.6px, transparent 2.8px),
+radial-gradient(circle at 22% 52%, rgba(255,255,255,0.55) 0 1.1px, transparent 2.3px),
+radial-gradient(circle at 38% 30%, rgba(255,255,255,0.75) 0 1.3px, transparent 2.4px),
+radial-gradient(circle at 55% 60%, rgba(255,255,255,0.55) 0 1.1px, transparent 2.3px),
+radial-gradient(circle at 68% 22%, rgba(255,255,255,0.85) 0 1.4px, transparent 2.6px),
+radial-gradient(circle at 80% 70%, rgba(255,255,255,0.45) 0 1.1px, transparent 2.3px),
+radial-gradient(circle at 92% 35%, rgba(255,255,255,0.70) 0 1.1px, transparent 2.3px);
 
-  filter: blur(0.15px);
-  animation: star-drift 130s linear infinite;
+filter: blur(0.15px);
+animation: star-drift 130s linear infinite;
 }
 
 @keyframes star-drift{
-  from { transform: translate3d(0,0,0); }
-  to   { transform: translate3d(-120px, 160px, 0); }
+from { transform: translate3d(0,0,0); }
+to { transform: translate3d(-120px, 160px, 0); }
 }
 
 @media (prefers-reduced-motion: reduce){
-  body::before{ animation:none; }
+body::before{ animation:none; }
 }
 
 
 /* =========================================================
-   DO NOT TOUCH 🚫 4) CONTAINER + SCANLINES
-   ========================================================= */
+DO NOT TOUCH 🚫 4) CONTAINER + SCANLINES
+========================================================= */
 
 .screen{
-  min-height:100vh;
-  display:grid;
-  gap: var(--grid-gap);
-  padding: 1rem;
-  max-width: 1320px;
-  margin: 0 auto;
-  position: relative;
-  z-index: 1;
+min-height:100vh;
+display:grid;
+gap: var(--grid-gap);
+padding: 1rem;
+max-width: 1320px;
+margin: 0 auto;
+position: relative;
+z-index: 1;
 }
 
 /* Subtle scanlines (kept on .screen so we don't clash with body::before stars) */
 .screen::after{
-  content:"";
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  background:
-    repeating-linear-gradient(
-      to bottom,
-      rgba(255,255,255,0.03),
-      rgba(255,255,255,0.03) 1px,
-      rgba(0,0,0,0) 3px,
-      rgba(0,0,0,0) 6px
-    );
-  opacity:0.12;
-  mix-blend-mode: overlay;
-  z-index: 0;
+content:"";
+position:fixed;
+inset:0;
+pointer-events:none;
+background:
+repeating-linear-gradient(
+to bottom,
+rgba(255,255,255,0.03),
+rgba(255,255,255,0.03) 1px,
+rgba(0,0,0,0) 3px,
+rgba(0,0,0,0) 6px
+);
+opacity:0.12;
+mix-blend-mode: overlay;
+z-index: 0;
 }
 
 
 /* =========================================================
-   DO NOT TOUCH 🚫 5) PANEL BASE
-   ========================================================= */
+DO NOT TOUCH 🚫 5) PANEL BASE
+========================================================= */
 
 .panel,
 .hud-top{
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(10px);
-  position: relative;
-  overflow: hidden;
-  z-index: 2;
+background: var(--panel);
+border: 1px solid var(--border);
+border-radius: var(--radius);
+box-shadow: var(--shadow);
+backdrop-filter: blur(10px);
+position: relative;
+overflow: hidden;
+z-index: 2;
 }
 
 .panel::before,
 .hud-top::before{
-  content:"";
-  position:absolute;
-  inset:-2px;
-  pointer-events:none;
-  background:
-    radial-gradient(320px 180px at 15% 25%, rgba(36,214,255,0.14), transparent 60%),
-    radial-gradient(320px 180px at 85% 35%, rgba(155,92,255,0.08), transparent 60%);
-  opacity: 0.9;
+content:"";
+position:absolute;
+inset:-2px;
+pointer-events:none;
+background:
+radial-gradient(320px 180px at 15% 25%, rgba(36,214,255,0.14), transparent 60%),
+radial-gradient(320px 180px at 85% 35%, rgba(155,92,255,0.08), transparent 60%);
+opacity: 0.9;
 }
 
 
 /* =========================================================
-   DO NOT TOUCH 🚫 6) TOP HUD
-   ========================================================= */
+DO NOT TOUCH 🚫 6) TOP HUD
+========================================================= */
 
 .hud-top{
-  padding: 0.9rem 1rem;
-  display:flex;
-  justify-content:space-between;
-  gap: 1rem;
-  align-items: center;
+padding: 0.9rem 1rem;
+display:flex;
+justify-content:space-between;
+gap: 1rem;
+align-items: center;
 }
 
 .hud-top__left{
-  display:flex;
-  flex-direction:column;
-  gap:0.35rem;
+display:flex;
+flex-direction:column;
+gap:0.35rem;
 }
 
 .hud-top__right{
-  display:flex;
-  flex-direction:column;
-  gap:0.55rem;
-  align-items:flex-end;
+display:flex;
+flex-direction:column;
+gap:0.55rem;
+align-items:flex-end;
 }
 
 .game-title{
-  margin:0;
-  font-size: 1.2rem;
-  letter-spacing: 0.3px;
-  text-shadow: var(--glow-cyan);
+margin:0;
+font-size: 1.2rem;
+letter-spacing: 0.3px;
+text-shadow: var(--glow-cyan);
 }
 
 .meta{
-  display:flex;
-  gap: 0.9rem;
-  flex-wrap: wrap;
-  color: var(--muted);
-  align-items: center;
-  font-weight: 750;
+display:flex;
+gap: 0.9rem;
+flex-wrap: wrap;
+color: var(--muted);
+align-items: center;
+font-weight: 750;
 }
 
 .hud-links{
-  display:flex;
-  gap:0.6rem;
-  justify-content:flex-end;
-  flex-wrap:wrap;
-  align-items:center;
+display:flex;
+gap:0.6rem;
+justify-content:flex-end;
+flex-wrap:wrap;
+align-items:center;
 }
 
 .hud-links a{
-  font-weight:900;
-  color: rgba(241,238,255,0.92);
-  text-decoration-thickness: 2px;
-  text-underline-offset: 3px;
-  text-shadow: var(--glow-cyan);
+font-weight:900;
+color: rgba(241,238,255,0.92);
+text-decoration-thickness: 2px;
+text-underline-offset: 3px;
+text-shadow: var(--glow-cyan);
 }
 .hud-links a:hover{ text-decoration-thickness: 3px; }
 .hud-links a:focus-visible{
-  outline:none;
-  box-shadow: var(--ring);
-  border-radius: 10px;
+outline:none;
+box-shadow: var(--ring);
+border-radius: 10px;
 }
 
 .hud-form,
@@ -271,99 +244,99 @@ body::before{
 
 
 /* =========================================================
-   DO NOT TOUCH 🚫 7) BUTTONS + CHIPS + SR ONLY
-   ========================================================= */
+DO NOT TOUCH 🚫 7) BUTTONS + CHIPS + SR ONLY
+========================================================= */
 
 .btn,
 .nav-btn{
-  border: 1px solid rgba(241,238,255,0.16);
-  border-radius: 999px;
-  padding: 0.52rem 0.9rem;
-  font-weight: 950;
-  cursor: pointer;
-  background: linear-gradient(180deg, rgba(36,214,255,0.16), rgba(12,14,34,0.65));
-  color: var(--text);
-  box-shadow: var(--shadow-soft), var(--glow-cyan);
-  transition: transform 120ms ease, filter 120ms ease, border-color 120ms ease;
+border: 1px solid rgba(241,238,255,0.16);
+border-radius: 999px;
+padding: 0.52rem 0.9rem;
+font-weight: 950;
+cursor: pointer;
+background: linear-gradient(180deg, rgba(36,214,255,0.16), rgba(12,14,34,0.65));
+color: var(--text);
+box-shadow: var(--shadow-soft), var(--glow-cyan);
+transition: transform 120ms ease, filter 120ms ease, border-color 120ms ease;
 }
 
 .btn:hover,
 .nav-btn:hover{
-  transform: translateY(-1px);
-  filter: brightness(1.07);
-  border-color: rgba(36,214,255,0.35);
+transform: translateY(-1px);
+filter: brightness(1.07);
+border-color: rgba(36,214,255,0.35);
 }
 .btn:active,
 .nav-btn:active{ transform: translateY(0); filter: brightness(0.98); }
 
 .btn:focus-visible,
 .nav-btn:focus-visible{
-  outline:none;
-  box-shadow: var(--ring);
+outline:none;
+box-shadow: var(--ring);
 }
 
 .nav-btn--primary{
-  background: linear-gradient(180deg, rgba(255,61,242,0.26), rgba(155,92,255,0.14));
-  border-color: rgba(255,61,242,0.22);
-  box-shadow: var(--shadow-soft), var(--glow-pink);
+background: linear-gradient(180deg, rgba(255,61,242,0.26), rgba(155,92,255,0.14));
+border-color: rgba(255,61,242,0.22);
+box-shadow: var(--shadow-soft), var(--glow-pink);
 }
 
 .btn--chip{ padding: 0.42rem 0.85rem; }
 
 .btn--chip-on{
-  background: linear-gradient(180deg, rgba(61,255,159,0.14), rgba(12,14,34,0.60));
-  border-color: rgba(61,255,159,0.26);
-  box-shadow: var(--shadow-soft), var(--glow-green);
+background: linear-gradient(180deg, rgba(61,255,159,0.14), rgba(12,14,34,0.60));
+border-color: rgba(61,255,159,0.26);
+box-shadow: var(--shadow-soft), var(--glow-green);
 }
 .btn--chip-off{
-  background: linear-gradient(180deg, rgba(255,61,242,0.10), rgba(12,14,34,0.60));
-  border-color: rgba(255,61,242,0.20);
-  box-shadow: var(--shadow-soft), var(--glow-pink);
+background: linear-gradient(180deg, rgba(255,61,242,0.10), rgba(12,14,34,0.60));
+border-color: rgba(255,61,242,0.20);
+box-shadow: var(--shadow-soft), var(--glow-pink);
 }
 
 .chip{
-  display:inline-flex;
-  align-items:center;
-  border: 1px solid rgba(241,238,255,0.16);
-  border-radius:999px;
-  padding: 0.22rem 0.75rem;
-  font-weight: 950;
-  background: rgba(6,8,20,0.55);
-  color: var(--text);
+display:inline-flex;
+align-items:center;
+border: 1px solid rgba(241,238,255,0.16);
+border-radius:999px;
+padding: 0.22rem 0.75rem;
+font-weight: 950;
+background: rgba(6,8,20,0.55);
+color: var(--text);
 }
 .chip--ok{ border-color: rgba(61,255,159,0.26); background: rgba(61,255,159,0.10); }
 .chip--warn{ border-color: rgba(255,232,90,0.26); background: rgba(255,232,90,0.10); }
 
 .hint{
-  margin:0.6rem 0 0;
-  color:var(--muted);
-  font-weight:800;
-  font-size:0.95rem;
+margin:0.6rem 0 0;
+color:var(--muted);
+font-weight:800;
+font-size:0.95rem;
 }
 .hint--top{ margin-top:0.5rem; }
 
 .sr-only{
-  position:absolute;
-  width:1px; height:1px;
-  padding:0; margin:-1px;
-  overflow:hidden; clip:rect(0,0,0,0);
-  border:0;
+position:absolute;
+width:1px; height:1px;
+padding:0; margin:-1px;
+overflow:hidden; clip:rect(0,0,0,0);
+border:0;
 }
 
 
 /* =========================================================
-   DO NOT TOUCH 🚫 8) GRID LAYOUT
-   ========================================================= */
+DO NOT TOUCH 🚫 8) GRID LAYOUT
+========================================================= */
 
 .game-grid{
-  display:grid;
-  gap: var(--grid-gap);
-  grid-template-columns: 320px 1fr 320px;
-  grid-template-areas:
-    "left stage right"
-    "actions actions actions"
-    "log log log";
-  align-items: start;
+display:grid;
+gap: var(--grid-gap);
+grid-template-columns: 320px 1fr 320px;
+grid-template-areas:
+"left stage right"
+"actions actions actions"
+"log log log";
+align-items: start;
 }
 
 .hud-panel--left{ grid-area:left; padding: 0.9rem; }
@@ -373,208 +346,208 @@ body::before{
 .log-panel{ grid-area:log; padding: 0.85rem 0.9rem; }
 
 @media (max-width: 1040px){
-  .game-grid{
-    grid-template-columns: 1fr;
-    grid-template-areas:
-      "stage"
-      "left"
-      "right"
-      "actions"
-      "log";
-  }
+.game-grid{
+grid-template-columns: 1fr;
+grid-template-areas:
+"stage"
+"left"
+"right"
+"actions"
+"log";
+}
 }
 
 .panel__title{
-  margin: 0 0 0.6rem;
-  font-weight: 1000;
-  letter-spacing: 0.2px;
-  text-shadow: var(--glow-cyan);
+margin: 0 0 0.6rem;
+font-weight: 1000;
+letter-spacing: 0.2px;
+text-shadow: var(--glow-cyan);
 }
 .panel__divider{
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(36,214,255,0.30), transparent);
-  margin: 0.9rem 0;
+height: 1px;
+background: linear-gradient(90deg, transparent, rgba(36,214,255,0.30), transparent);
+margin: 0.9rem 0;
 }
 
 
 /* =========================================================
-   WORK HERE ✅ 9) STAGE (PARALLAX SCENE)
-   - This is the ONLY “scene” area you should touch right now.
-   - Safe tweak: star opacity, roof darkness, moon position, etc.
-   - To enable image assets: set --use-scene-images: 1 in :root
-   ========================================================= */
+WORK HERE ✅ 9) STAGE (PARALLAX SCENE)
+- This is the ONLY “scene” area you should touch right now.
+- Safe tweak: star opacity, roof darkness, moon position, etc.
+- To enable image assets: set --use-scene-images: 1 in :root
+========================================================= */
 
 .stage{
-  position: relative;
-  min-height: 420px;
-  border-radius: calc(var(--radius) + 6px);
-  overflow: hidden;
-  border: 1px solid rgba(241,238,255,0.10);
-  background: linear-gradient(180deg, rgba(5,3,18,0.55), rgba(5,3,18,0.25));
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,0.03),
-    0 18px 50px rgba(0,0,0,0.55);
+position: relative;
+min-height: 420px;
+border-radius: calc(var(--radius) + 6px);
+overflow: hidden;
+border: 1px solid rgba(241,238,255,0.10);
+background: linear-gradient(180deg, rgba(5,3,18,0.55), rgba(5,3,18,0.25));
+box-shadow:
+inset 0 0 0 1px rgba(255,255,255,0.03),
+0 18px 50px rgba(0,0,0,0.55);
 }
 
 /* vignette/focus */
 .stage::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  background:
-    radial-gradient(closest-side at 50% 45%, rgba(255,255,255,0.08), transparent 70%),
-    radial-gradient(120% 100% at 50% 100%, rgba(0,0,0,0.35), transparent 60%);
-  opacity: 0.9;
+content:"";
+position:absolute;
+inset:0;
+pointer-events:none;
+background:
+radial-gradient(closest-side at 50% 45%, rgba(255,255,255,0.08), transparent 70%),
+radial-gradient(120% 100% at 50% 100%, rgba(0,0,0,0.35), transparent 60%);
+opacity: 0.9;
 }
 
 .stage__layer{
-  position:absolute;
-  inset:-8%;
-  pointer-events:none;
-  background-repeat: no-repeat;
-  background-position: center bottom;
-  background-size: cover;
-  transform: translate3d(0,0,0);
+position:absolute;
+inset:-8%;
+pointer-events:none;
+background-repeat: no-repeat;
+background-position: center bottom;
+background-size: cover;
+transform: translate3d(0,0,0);
 }
 
 /* SKY (fallback nebula) */
 .stage__sky{
-  opacity: 0.9;
-  animation: parallax-slow 160s linear infinite;
-  background-image:
-    radial-gradient(1200px 700px at 25% 20%, rgba(155,92,255,0.14), transparent 60%),
-    radial-gradient(900px 600px at 70% 25%, rgba(36,214,255,0.12), transparent 62%),
-    radial-gradient(1000px 700px at 50% 110%, rgba(61,255,159,0.08), transparent 65%),
-    linear-gradient(180deg, #05010b, #070a1a 45%, #070312);
+opacity: 0.9;
+animation: parallax-slow 160s linear infinite;
+background-image:
+radial-gradient(1200px 700px at 25% 20%, rgba(155,92,255,0.14), transparent 60%),
+radial-gradient(900px 600px at 70% 25%, rgba(36,214,255,0.12), transparent 62%),
+radial-gradient(1000px 700px at 50% 110%, rgba(61,255,159,0.08), transparent 65%),
+linear-gradient(180deg, #05010b, #070a1a 45%, #070312);
 }
 
 /* STARS (fallback points) */
 .stage__stars{
-  opacity: 0.85;
-  mix-blend-mode: screen;
-  animation: parallax-mid 120s linear infinite;
-  background-image:
-    radial-gradient(circle at 12% 18%, rgba(255,255,255,0.95) 0 2px, transparent 3px),
-    radial-gradient(circle at 24% 58%, rgba(255,255,255,0.55) 0 1px, transparent 2px),
-    radial-gradient(circle at 40% 30%, rgba(255,255,255,0.75) 0 2px, transparent 3px),
-    radial-gradient(circle at 62% 24%, rgba(255,255,255,0.85) 0 2px, transparent 3px),
-    radial-gradient(circle at 78% 66%, rgba(255,255,255,0.45) 0 1px, transparent 2px),
-    radial-gradient(circle at 92% 36%, rgba(255,255,255,0.70) 0 1px, transparent 2px);
+opacity: 0.85;
+mix-blend-mode: screen;
+animation: parallax-mid 120s linear infinite;
+background-image:
+radial-gradient(circle at 12% 18%, rgba(255,255,255,0.95) 0 2px, transparent 3px),
+radial-gradient(circle at 24% 58%, rgba(255,255,255,0.55) 0 1px, transparent 2px),
+radial-gradient(circle at 40% 30%, rgba(255,255,255,0.75) 0 2px, transparent 3px),
+radial-gradient(circle at 62% 24%, rgba(255,255,255,0.85) 0 2px, transparent 3px),
+radial-gradient(circle at 78% 66%, rgba(255,255,255,0.45) 0 1px, transparent 2px),
+radial-gradient(circle at 92% 36%, rgba(255,255,255,0.70) 0 1px, transparent 2px);
 }
 
 /* MOON (fallback glow) */
 .stage__moon{
-  opacity: 0.9;
-  animation: parallax-slow 220s linear infinite;
-  background-image:
-    radial-gradient(180px 180px at 78% 22%, rgba(255,255,255,0.30), transparent 60%),
-    radial-gradient(260px 220px at 78% 22%, rgba(36,214,255,0.08), transparent 65%);
+opacity: 0.9;
+animation: parallax-slow 220s linear infinite;
+background-image:
+radial-gradient(180px 180px at 78% 22%, rgba(255,255,255,0.30), transparent 60%),
+radial-gradient(260px 220px at 78% 22%, rgba(36,214,255,0.08), transparent 65%);
 }
 
 /* ROOF (fallback silhouette) */
 .stage__roof{
-  opacity: 1;
-  filter: brightness(0.85);
-  animation: parallax-fast 95s linear infinite;
-  background-image:
-    linear-gradient(180deg, transparent 0 78%, rgba(0,0,0,0.70) 78%),
-    linear-gradient(180deg, transparent 0 84%, rgba(0,0,0,0.88) 84%),
-    radial-gradient(22px 11px at 12% 80%, rgba(0,0,0,0.0) 50%, rgba(0,0,0,0.86) 55%),
-    radial-gradient(26px 13px at 26% 82%, rgba(0,0,0,0.0) 50%, rgba(0,0,0,0.86) 55%),
-    radial-gradient(24px 12px at 44% 81%, rgba(0,0,0,0.0) 50%, rgba(0,0,0,0.88) 55%),
-    radial-gradient(28px 14px at 60% 83%, rgba(0,0,0,0.0) 50%, rgba(0,0,0,0.90) 55%),
-    radial-gradient(24px 12px at 76% 81%, rgba(0,0,0,0.0) 50%, rgba(0,0,0,0.88) 55%),
-    radial-gradient(26px 13px at 90% 82%, rgba(0,0,0,0.0) 50%, rgba(0,0,0,0.88) 55%);
+opacity: 1;
+filter: brightness(0.85);
+animation: parallax-fast 95s linear infinite;
+background-image:
+linear-gradient(180deg, transparent 0 78%, rgba(0,0,0,0.70) 78%),
+linear-gradient(180deg, transparent 0 84%, rgba(0,0,0,0.88) 84%),
+radial-gradient(22px 11px at 12% 80%, rgba(0,0,0,0.0) 50%, rgba(0,0,0,0.86) 55%),
+radial-gradient(26px 13px at 26% 82%, rgba(0,0,0,0.0) 50%, rgba(0,0,0,0.86) 55%),
+radial-gradient(24px 12px at 44% 81%, rgba(0,0,0,0.0) 50%, rgba(0,0,0,0.88) 55%),
+radial-gradient(28px 14px at 60% 83%, rgba(0,0,0,0.0) 50%, rgba(0,0,0,0.90) 55%),
+radial-gradient(24px 12px at 76% 81%, rgba(0,0,0,0.0) 50%, rgba(0,0,0,0.88) 55%),
+radial-gradient(26px 13px at 90% 82%, rgba(0,0,0,0.0) 50%, rgba(0,0,0,0.88) 55%);
 }
 
 /* FX (subtle twinkles) */
 .stage__fx{
-  opacity: 0.16;
-  mix-blend-mode: screen;
-  animation: parallax-fast 80s linear infinite;
-  background-image:
-    radial-gradient(circle at 18% 66%, rgba(36,214,255,0.32) 0 1px, transparent 3px),
-    radial-gradient(circle at 46% 56%, rgba(255,61,242,0.22) 0 1px, transparent 3px),
-    radial-gradient(circle at 74% 60%, rgba(61,255,159,0.22) 0 1px, transparent 3px);
+opacity: 0.16;
+mix-blend-mode: screen;
+animation: parallax-fast 80s linear infinite;
+background-image:
+radial-gradient(circle at 18% 66%, rgba(36,214,255,0.32) 0 1px, transparent 3px),
+radial-gradient(circle at 46% 56%, rgba(255,61,242,0.22) 0 1px, transparent 3px),
+radial-gradient(circle at 74% 60%, rgba(61,255,159,0.22) 0 1px, transparent 3px);
 }
 
 /* Anchor buttons should not look like links */
 a.btn {
-    text-decoration: none;
+text-decoration: none;
 }
 
 /* ✅ IMAGE SWITCH (simple + reliable)
-   Put images in: /static/images/scene/
-   Served at:     /images/scene/
+Put images in: /static/images/scene/
+Served at: /images/scene/
 */
 @supports (background-image: url("/images/scene/sky.png")){
-  .stage__sky{
-    background-image:
-      linear-gradient(180deg, rgba(5,1,11,0.35), rgba(7,10,26,0.25)),
-      url("/images/scene/sky.png");
-    background-position: center top;
-    background-size: cover;
-    opacity: calc(1 * var(--use-scene-images));
-  }
+.stage__sky{
+background-image:
+linear-gradient(180deg, rgba(5,1,11,0.35), rgba(7,10,26,0.25)),
+url("/images/scene/sky.png");
+background-position: center top;
+background-size: cover;
+opacity: calc(1 * var(--use-scene-images));
+}
 
-  .stage__roof{
-    background-image: url("/images/scene/roof.png");
-    background-position: center bottom;
-    background-size: cover;
-    opacity: calc(1 * var(--use-scene-images));
+.stage__roof{
+background-image: url("/images/scene/roof.png");
+background-position: center bottom;
+background-size: cover;
+opacity: calc(1 * var(--use-scene-images));
 
-    /* LOCK IT */
-    animation: none;
-    transform: none;
-  }
+/* LOCK IT */
+animation: none;
+transform: none;
+}
 
-  /* If these don’t exist yet, comment them out for now */
-  /* .stage__stars{ background-image: url("/images/scene/stars.png"); } */
-  /* .stage__moon { background-image: url("/images/scene/moon.png"); } */
-  /* .stage__fx   { background-image: url("/images/scene/fx.png"); } */
+/* If these don’t exist yet, comment them out for now */
+/* .stage__stars{ background-image: url("/images/scene/stars.png"); } */
+/* .stage__moon { background-image: url("/images/scene/moon.png"); } */
+/* .stage__fx { background-image: url("/images/scene/fx.png"); } */
 }
 
 
 /* Creature sits above roof */
 .creature-slot{
-  position:absolute;
-  inset:0;
-  display:grid;
-  place-items:center;
-  z-index: 5;
-  pointer-events: none;
+position:absolute;
+inset:0;
+display:grid;
+place-items:center;
+z-index: 5;
+pointer-events: none;
 
 }
 
 .creature-placeholder{
-  font-weight: 1100;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  color: rgba(241,238,255,0.88);
-  text-shadow:
-  0 10px 22px rgba(0,0,0,0.55),
-  var(--glow-cyan);
+font-weight: 1100;
+letter-spacing: 2px;
+text-transform: uppercase;
+font-size: clamp(2rem, 5vw, 3.5rem);
+color: rgba(241,238,255,0.88);
+text-shadow:
+0 10px 22px rgba(0,0,0,0.55),
+var(--glow-cyan);
 }
 
 /* =========================================================
-   WORK HERE ✅ — CREATURE SPRITE (SAFE)
-   Why: keeps sprite stable + readable on roof
-   ========================================================= */
+WORK HERE ✅ — CREATURE SPRITE (SAFE)
+Why: keeps sprite stable + readable on roof
+========================================================= */
 
 .creature-sprite{
-  width: min(260px, 62%);
-  height: auto;
-  display: block;
+width: min(260px, 62%);
+height: auto;
+display: block;
 
-  /* Looks “sat on roof” instead of floating */
-  transform: translateY(10px);
+/* Looks “sat on roof” instead of floating */
+transform: translateY(10px);
 
-  /* Readability on dark roof */
-  filter: drop-shadow(0 18px 28px rgba(0,0,0,0.55));
-  user-select: none;
-  -webkit-user-drag: none;
+/* Readability on dark roof */
+filter: drop-shadow(0 18px 28px rgba(0,0,0,0.55));
+user-select: none;
+-webkit-user-drag: none;
 }
 
 
@@ -582,206 +555,218 @@ a.btn {
 .overlay{ z-index: 10; }
 
 .overlay{
-  position:absolute;
-  bottom: 0.8rem;
-  font-weight: 950;
-  color: rgba(241,238,255,0.92);
-  background: rgba(6,8,20,0.70);
-  border: 1px solid rgba(241,238,255,0.14);
-  border-radius: 999px;
-  padding: 0.28rem 0.75rem;
-  box-shadow: 0 10px 18px rgba(0,0,0,0.35), var(--glow-cyan);
+position:absolute;
+bottom: 0.8rem;
+font-weight: 950;
+color: rgba(241,238,255,0.92);
+background: rgba(6,8,20,0.70);
+border: 1px solid rgba(241,238,255,0.14);
+border-radius: 999px;
+padding: 0.28rem 0.75rem;
+box-shadow: 0 10px 18px rgba(0,0,0,0.35), var(--glow-cyan);
 }
 .overlay--left{ left: 0.8rem; }
 .overlay--right{ right: 0.8rem; }
 
 /* Parallax animations */
 @keyframes parallax-slow{
-  from { transform: translate3d(0,0,0); }
-  to   { transform: translate3d(-40px, 18px, 0); }
+from { transform: translate3d(0,0,0); }
+to { transform: translate3d(-40px, 18px, 0); }
 }
 @keyframes parallax-mid{
-  from { transform: translate3d(0,0,0); }
-  to   { transform: translate3d(-70px, 32px, 0); }
+from { transform: translate3d(0,0,0); }
+to { transform: translate3d(-70px, 32px, 0); }
 }
 @keyframes parallax-fast{
-  from { transform: translate3d(0,0,0); }
-  to   { transform: translate3d(-120px, 50px, 0); }
+from { transform: translate3d(0,0,0); }
+to { transform: translate3d(-120px, 50px, 0); }
 }
 
 @media (prefers-reduced-motion: reduce){
-  .stage__sky, .stage__stars, .stage__moon, .stage__roof, .stage__fx{ animation:none; }
+.stage__sky, .stage__stars, .stage__moon, .stage__roof, .stage__fx{ animation:none; }
 }
 
 
 /* =========================================================
-   DO NOT TOUCH 🚫 10) BOB ANIMATION
-   ========================================================= */
+DO NOT TOUCH 🚫 10) BOB ANIMATION
+========================================================= */
 
 .bob{
-  animation: bob 1.8s ease-in-out infinite;
-  transform-origin: 50% 70%;
-  will-change: transform;
+animation: bob 1.8s ease-in-out infinite;
+transform-origin: 50% 70%;
+will-change: transform;
 }
 @keyframes bob{
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-8px); }
+0%, 100% { transform: translateY(0); }
+50% { transform: translateY(-8px); }
 }
 @media (prefers-reduced-motion: reduce){
-  .bob{ animation:none; }
+.bob{ animation:none; }
 }
 
 
 /* =========================================================
-   DO NOT TOUCH 🚫 11) STATS + METERS
-   ========================================================= */
+DO NOT TOUCH 🚫 11) STATS + METERS
+========================================================= */
 
 .stats-compact,
 .traits-compact{
-  display:grid;
-  gap: 0.65rem;
+display:grid;
+gap: 0.65rem;
 }
 
 .stat__row{
-  display:flex;
-  justify-content:space-between;
-  align-items: baseline;
-  gap: 1rem;
+display:flex;
+justify-content:space-between;
+align-items: baseline;
+gap: 1rem;
 }
 .stat__label{ font-weight: 1000; }
 .stat__value{ color: var(--muted); font-weight: 900; }
 
 .meter{
-  height: 12px;
-  border: 1px solid rgba(241,238,255,0.14);
-  border-radius: 999px;
-  overflow:hidden;
-  margin-top: 0.35rem;
-  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(0,0,0,0.10));
-  position: relative;
+height: 12px;
+border: 1px solid rgba(241,238,255,0.14);
+border-radius: 999px;
+overflow:hidden;
+margin-top: 0.35rem;
+background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(0,0,0,0.10));
+position: relative;
 }
 
 .showSpaces{
-  white-space: pre;
+white-space: pre;
 }
 
 .meter::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:
-    repeating-linear-gradient(
-      to right,
-      rgba(255,255,255,0.10),
-      rgba(255,255,255,0.10) 1px,
-      rgba(0,0,0,0) 10px,
-      rgba(0,0,0,0) 18px
-    );
-  opacity: 0.18;
-  pointer-events:none;
+content:"";
+position:absolute;
+inset:0;
+background:
+repeating-linear-gradient(
+to right,
+rgba(255,255,255,0.10),
+rgba(255,255,255,0.10) 1px,
+rgba(0,0,0,0) 10px,
+rgba(0,0,0,0) 18px
+);
+opacity: 0.18;
+pointer-events:none;
 }
 
 .meter__fill{
-  height:100%;
-  background: linear-gradient(90deg, rgba(36,214,255,0.92), rgba(61,255,159,0.70));
-  box-shadow: var(--glow-cyan);
+height:100%;
+background: linear-gradient(90deg, rgba(36,214,255,0.92), rgba(61,255,159,0.70));
+box-shadow: var(--glow-cyan);
 }
 
 .meter--warn .meter__fill{
-  background: linear-gradient(90deg, rgba(255,232,90,0.92), rgba(255,61,242,0.55));
-  box-shadow: 0 0 14px rgba(255,232,90,0.18);
+background: linear-gradient(90deg, rgba(255,232,90,0.92), rgba(255,61,242,0.55));
+box-shadow: 0 0 14px rgba(255,232,90,0.18);
 }
 .meter--danger .meter__fill{
-  background: linear-gradient(90deg, rgba(255,77,109,0.92), rgba(255,61,242,0.50));
-  box-shadow: 0 0 14px rgba(255,77,109,0.20);
+background: linear-gradient(90deg, rgba(255,77,109,0.92), rgba(255,61,242,0.50));
+box-shadow: 0 0 14px rgba(255,77,109,0.20);
 }
 
 
 /* =========================================================
-   DO NOT TOUCH 🚫 12) ACTIONS
-   ========================================================= */
+DO NOT TOUCH 🚫 12) ACTIONS
+========================================================= */
 
 .actions-wrap{
-  display:grid;
-  grid-template-columns: 1fr 1fr minmax(240px, 340px);
-  gap: 0.9rem;
-  align-items:start;
+display:grid;
+grid-template-columns: 1fr 1fr minmax(240px, 340px);
+gap: 0.9rem;
+align-items:start;
 }
-@media (max-width: 1040px){
-  .actions-wrap{ grid-template-columns: 1fr; }
+@media (max-width: 1040px) {
+.actions-wrap {
+grid-template-columns: 1fr;
+justify-items: center;
 }
 
-.actions__group{
-  border-radius: 16px;
-  padding: 0.8rem;
-  border: 1px solid rgba(241,238,255,0.12);
-  background: linear-gradient(180deg, rgba(6,8,20,0.35), rgba(6,8,20,0.0));
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
+.actions__group {
+width: 100%;
+max-width: 340px;
+}
+}
+
+.actions__icons {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(64px, 1fr));
+gap: 0.6rem;
+align-items: start;
+width: 100%;
+max-width: 100%;
 }
 
 .actions__group--feed{
-  border-color: rgba(61,255,159,0.22);
-  background: linear-gradient(180deg, rgba(61,255,159,0.08), rgba(6,8,20,0.0));
+border-color: rgba(61,255,159,0.22);
+background: linear-gradient(180deg, rgba(61,255,159,0.08), rgba(6,8,20,0.0));
 }
 .actions__group--play{
-  border-color: rgba(36,214,255,0.22);
-  background: linear-gradient(180deg, rgba(36,214,255,0.08), rgba(6,8,20,0.0));
+border-color: rgba(36,214,255,0.22);
+background: linear-gradient(180deg, rgba(36,214,255,0.08), rgba(6,8,20,0.0));
 }
 .actions__group--side{
-  border-color: rgba(255,232,90,0.18);
-  background: linear-gradient(180deg, rgba(255,232,90,0.06), rgba(6,8,20,0.0));
+border-color: rgba(255,232,90,0.18);
+background: linear-gradient(180deg, rgba(255,232,90,0.06), rgba(6,8,20,0.0));
 }
 
 .actions__group h3{
-  margin:0 0 0.2rem;
-  color: rgba(241,238,255,0.92);
-  font-weight: 1100;
-  text-shadow: var(--glow-cyan);
+margin:0 0 0.2rem;
+color: rgba(241,238,255,0.92);
+font-weight: 1100;
+text-shadow: var(--glow-cyan);
 }
 
 .actions__sub{
-  margin:0 0 0.7rem;
-  color: var(--muted);
-  font-weight: 800;
+margin:0 0 0.7rem;
+color: var(--muted);
+font-weight: 800;
 }
 
-.actions__icons{
-  display:grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0.6rem;
-  align-items:start;
+.actions__icons {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(64px, 1fr));
+gap: 0.6rem;
+align-items: start;
 }
-@media (max-width: 520px){
-  .actions__icons{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+@media (max-width: 520px) {
+.actions__icons {
+grid-template-columns: repeat(auto-fit, minmax(56px, 1fr));
+}
 }
 
 .actions__icons form{
-  margin:0;
-  display:grid;
-  gap:0.3rem;
-  justify-items:center;
+margin:0;
+display:grid;
+gap:0.3rem;
+justify-items:center;
 }
 
 .icon-btn{
-  width:100%;
-  min-height:64px;
-  border: 1px solid rgba(241,238,255,0.14);
-  border-radius: 18px;
-  background: rgba(6,8,20,0.55);
-  cursor:pointer;
-  box-shadow: var(--shadow-soft);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  transition: transform 120ms ease, filter 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
-  color: var(--text);
+width:100%;
+min-height:64px;
+border: 1px solid rgba(241,238,255,0.14);
+border-radius: 18px;
+background: rgba(6,8,20,0.55);
+cursor:pointer;
+box-shadow: var(--shadow-soft);
+display:flex;
+align-items:center;
+justify-content:center;
+transition: transform 120ms ease, filter 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+color: var(--text);
 }
 
 .icon-btn:hover{
-  transform: translateY(-2px);
-  filter: brightness(1.07);
-  border-color: rgba(36,214,255,0.22);
-  box-shadow: 0 20px 34px rgba(0,0,0,0.50);
+transform: translateY(-2px);
+filter: brightness(1.07);
+border-color: rgba(36,214,255,0.22);
+box-shadow: 0 20px 34px rgba(0,0,0,0.50);
 }
 
 .icon-btn:active{ transform: translateY(0); filter: brightness(0.98); }
@@ -793,174 +778,223 @@ a.btn {
 .icon-btn--play{ border-style:solid; }
 
 .icon-btn--mystery{
-  background: radial-gradient(220px 80px at 50% 0%, rgba(155,92,255,0.18), rgba(6,8,20,0.55));
-  box-shadow: var(--shadow-soft), var(--glow-purple);
-  border-color: rgba(155,92,255,0.22);
+background: radial-gradient(220px 80px at 50% 0%, rgba(155,92,255,0.18), rgba(6,8,20,0.55));
+box-shadow: var(--shadow-soft), var(--glow-purple);
+border-color: rgba(155,92,255,0.22);
 }
 
 .icon-label{
-  font-size:0.86rem;
-  font-weight: 900;
-  color: var(--muted);
-  text-align:center;
+font-size:0.86rem;
+font-weight: 900;
+color: var(--muted);
+text-align:center;
+}
+/* =========================================================
+BATTLE MODE — CENTER ATTACK BUTTONS
+========================================================= */
+
+.actions-panel .actions__icons{
+display:flex;
+justify-content:center;
+gap: 1rem;
 }
 
+.actions-panel .actions__icons form{
+width: auto;
+}
+/* Bigger battle buttons */
+.actions-panel .icon-btn{
+min-width: 110px;
+min-height: 84px;
+}
 
+.actions-panel .icon-btn .icon{
+font-size: 2.1rem;
+}
+
+.actions-panel .icon-label{
+font-size: 0.95rem;
+}
 /* =========================================================
-   DO NOT TOUCH 🚫 13) TESTING + EVENT LOG
-   ========================================================= */
+DO NOT TOUCH 🚫 13) TESTING + EVENT LOG
+========================================================= */
 
 .tip{
-  color: var(--muted);
-  font-weight: 800;
-  line-height: 1.45;
-  margin: 0 0 0.8rem;
+color: var(--muted);
+font-weight: 800;
+line-height: 1.45;
+margin: 0 0 0.8rem;
 }
 
 .testing-panel{
-  margin-top: 0.9rem;
-  padding-top: 0.9rem;
-  border-top: 1px dashed rgba(36,214,255,0.22);
+margin-top: 0.9rem;
+padding-top: 0.9rem;
+border-top: 1px dashed rgba(36,214,255,0.22);
 }
 
 .testing-title{
-  margin: 0 0 0.25rem;
-  color: rgba(241,238,255,0.92);
-  text-shadow: var(--glow-cyan);
+margin: 0 0 0.25rem;
+color: rgba(241,238,255,0.92);
+text-shadow: var(--glow-cyan);
 }
 .testing-sub{
-  margin: 0 0 0.6rem;
-  color: var(--muted);
-  font-weight: 750;
+margin: 0 0 0.6rem;
+color: var(--muted);
+font-weight: 750;
 }
 
 .testing-actions,
 .testing-buttons{
-  display:grid;
-  gap: 0.55rem;
+display:grid;
+gap: 0.55rem;
 }
 
 .btn--danger{
-  border-color: rgba(255,77,109,0.34);
-  background: linear-gradient(180deg, rgba(255,77,109,0.18), rgba(12,14,34,0.65));
-  color: rgba(241,238,255,0.92);
-  box-shadow: var(--shadow-soft), 0 0 14px rgba(255,77,109,0.16);
+border-color: rgba(255,77,109,0.34);
+background: linear-gradient(180deg, rgba(255,77,109,0.18), rgba(12,14,34,0.65));
+color: rgba(241,238,255,0.92);
+box-shadow: var(--shadow-soft), 0 0 14px rgba(255,77,109,0.16);
 }
 .btn--wide{ width:100%; }
 
 .testing-divider{
-  border: 0;
-  border-top: 1px dashed rgba(36,214,255,0.22);
-  margin: 0.85rem 0;
+border: 0;
+border-top: 1px dashed rgba(36,214,255,0.22);
+margin: 0.85rem 0;
 }
 
 .tester-stats__title{
-  margin: 0 0 0.4rem;
-  color: rgba(241,238,255,0.92);
-  text-shadow: var(--glow-cyan);
+margin: 0 0 0.4rem;
+color: rgba(241,238,255,0.92);
+text-shadow: var(--glow-cyan);
 }
 
 .tester-stats__list{
-  margin:0;
-  padding-left: 1.1rem;
-  color: var(--muted);
-  font-weight: 750;
+margin:0;
+padding-left: 1.1rem;
+color: var(--muted);
+font-weight: 750;
 }
 .tester-stats__list li{ margin: 0.25rem 0; }
 
 .log-panel h3{
-  margin: 0 0 0.55rem;
-  font-weight: 1100;
-  text-shadow: var(--glow-cyan);
+margin: 0 0 0.55rem;
+font-weight: 1100;
+text-shadow: var(--glow-cyan);
 }
 
 .log__list{
-  margin:0;
-  padding-left: 1.2rem;
-  color: var(--muted);
-  font-weight: 750;
+margin:0;
+padding-left: 1.2rem;
+color: var(--muted);
+font-weight: 750;
 }
 
 .log-panel{
-  max-height: 190px;
-  overflow:hidden;
+max-height: 190px;
+overflow:hidden;
 }
 
 .debug summary{
-  font-weight: 950;
-  cursor:pointer;
-  color: rgba(241,238,255,0.92);
-  text-shadow: var(--glow-cyan);
+font-weight: 950;
+cursor:pointer;
+color: rgba(241,238,255,0.92);
+text-shadow: var(--glow-cyan);
 }
 .debug summary:focus-visible{
-  outline:none;
-  box-shadow: var(--ring);
-  border-radius:10px;
+outline:none;
+box-shadow: var(--ring);
+border-radius:10px;
 }
 
 .debug pre{
-  background: rgba(5,3,18,0.45);
-  border: 1px solid rgba(241,238,255,0.10);
-  border-radius: 12px;
-  padding: 10px;
-  overflow:hidden;
-  color: rgba(241,238,255,0.88);
+background: rgba(5,3,18,0.45);
+border: 1px solid rgba(241,238,255,0.10);
+border-radius: 12px;
+padding: 10px;
+overflow:hidden;
+color: rgba(241,238,255,0.88);
 }
 
 /* =========================================================
-   MERGE PATCH ✅ (Best of both versions)
-   Put this at the END of game.css
-   - Preserves original richness
-   - Improves usability/layout/space
-   ========================================================= */
+MERGE PATCH ✅ (Best of both versions)
+Put this at the END of game.css
+- Preserves original richness
+- Improves usability/layout/space
+========================================================= */
 
 /* 1) Make side panels + log behave (scroll within panel, not page chaos) */
 .hud-panel--left,
 .hud-panel--right,
 .log-panel{
-  overflow: hidden;
+overflow: hidden;
 }
 
 /* 2) Event log: keep it useful but not a screen hog */
 .log-panel{
-  max-height: 200px; /* adjust: 160–240 feels good */
+max-height: 200px; /* adjust: 160–240 feels good */
 }
 
 /* Optional: if you want the log to be “less shouty” visually */
 .log-panel{
-  background: rgba(8, 10, 24, 0.52); /* slightly more transparent than panels */
+background: rgba(8, 10, 24, 0.52); /* slightly more transparent than panels */
 }
 
 /* 3) Make the game grid more tolerant: stop columns from squeezing content */
 .game-grid{
-  grid-template-columns: minmax(260px, 320px) minmax(0, 1fr) minmax(260px, 320px);
+grid-template-columns: minmax(260px, 320px) minmax(0, 1fr) minmax(260px, 320px);
 }
 
 /* 4) Stats: reduce vertical bulk without changing the look */
 .stats-compact,
 .traits-compact{
-  gap: 0.5rem;
+gap: 0.5rem;
 }
 
 .meter{
-  height: 10px;     /* was 12px */
-  margin-top: 0.25rem;
+height: 10px; /* was 12px */
+margin-top: 0.25rem;
 }
 
 /* 5) Make “actions” feel less cramped on medium widths */
 @media (max-width: 1200px){
-  .actions-wrap{
-    grid-template-columns: 1fr 1fr;
-  }
+.actions-wrap{
+grid-template-columns: 1fr 1fr;
+}
 }
 
 /* 6) On smaller screens: reduce padding a bit so everything fits */
 @media (max-width: 520px){
-  .screen{ padding: 0.75rem; }
-  .panel, .hud-top{ border-radius: 16px; }
+.screen{ padding: 0.75rem; }
+.panel, .hud-top{ border-radius: 16px; }
 }
 
 /* 7) Quality-of-life: prevent long lists from smashing the layout */
 .log__list{
-  word-break: break-word;
+word-break: break-word;
+}
+
+/* =========================================================
+MOBILE FIX — ALLOW VERTICAL SCROLL IN BATTLE
+========================================================= */
+
+@media (max-width: 1040px){
+body{
+overflow-y: auto;
+overflow-x: hidden;
+}
+}
+/* =========================================================
+MOBILE — CENTER STACKED PANELS
+========================================================= */
+
+@media (max-width: 1040px){
+.game-grid{
+justify-items: center;
+}
+
+.game-grid > .panel{
+width: 100%;
+max-width: 520px;
+}
 }
