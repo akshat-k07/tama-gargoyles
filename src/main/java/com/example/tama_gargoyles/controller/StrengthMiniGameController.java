@@ -63,15 +63,13 @@ public class StrengthMiniGameController {
         }
         else if (completionTime <= 10) {
             // Updated code to match the message: 3 Rocks, 2 Fruits, 1 Bug
-            rewardMessage = "Great workout! You earned 3 Rocks and 2 Fruit and 1 bug!";
-            user.addRocks(3);
-            user.addFruits(2);
+            rewardMessage = "Great workout! You earned 2 Rocks 1 bug!";
+            user.addRocks(2);
             user.addBugs(1);
         }
         else if (completionTime <= 16) {
-            rewardMessage = "Great workout! You earned 2 Rocks and 1 Fruit!";
+            rewardMessage = "Great workout! You earned 2 Rocks!";
             user.addRocks(2);
-            user.addFruits(1);
         }
         else {
             rewardMessage = "Nice job! You earned 1 Rock for your effort.";
@@ -80,6 +78,7 @@ public class StrengthMiniGameController {
 
         // Boost Happiness
         g.setHappiness(Math.min(100, g.getHappiness() + 20));
+        g.setHunger(Math.max(g.getHunger() - 10, 0));
 
         // Save both entities to the database
         gargoyleRepository.save(g);
