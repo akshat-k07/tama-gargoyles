@@ -1,4 +1,4 @@
-<!-- src/main/resources/templates/game.html -->
+'<!-- src/main/resources/templates/game.html -->
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -192,8 +192,15 @@
                 <div class="stage__layer stage__moon" aria-hidden="true"></div>
                 <div class="stage__layer stage__roof" aria-hidden="true"></div>
 
-                <!-- Creature (PNG placeholder) -->
+                <!-- Creature + Nest -->
                 <div class="creature-slot">
+
+                    <!-- Nest (CHILD only) -->
+                    <div class="nest-wrap" th:if="${gargoyle.type.name() == 'CHILD'}" aria-hidden="true">
+                        <img class="nest-sprite" th:src="@{/images/scene/nest.png}" alt="">
+                    </div>
+
+                    <!-- Creature -->
                     <img class="creature-sprite bob"
                          th:src="@{/images/gargoyle/baby.png}"
                          alt="Your gargoyle">
@@ -212,6 +219,7 @@
                 <!-- subtle FX layer -->
                 <div class="stage__layer stage__fx" aria-hidden="true"></div>
             </div>
+
         </section>
 
         <!-- RIGHT HUD: TIP + TESTING -->
@@ -550,4 +558,4 @@
 </script>
 <script th:src="@{/js/inventory-live.js}"></script>
 </body>
-</html>
+</html>'
