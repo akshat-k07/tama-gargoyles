@@ -68,7 +68,7 @@ public class GargoyleController {
             gargoyle.setSpeed(Math.max(0, Math.min(gargoyle.getSpeed() + speedDelta, 100)));
             gargoyle.setIntelligence(Math.max(0, Math.min(gargoyle.getIntelligence() + intelligenceDelta, 100)));
             gargoyle.setHunger(Math.max(0, Math.min(gargoyle.getHunger() + hungerDelta, 100)));
-            user.setRocks(user.getRocks()-1);
+            user.addRocks(-1);
             userRepository.save(user);
             gargoyleRepository.save(gargoyle);
         }
@@ -85,7 +85,7 @@ public class GargoyleController {
             gargoyle.setSpeed(Math.max(0, Math.min(gargoyle.getSpeed() + speedDelta, 100)));
             gargoyle.setIntelligence(Math.max(0, Math.min(gargoyle.getIntelligence() + intelligenceDelta, 100)));
             gargoyle.setHunger(Math.max(0, Math.min(gargoyle.getHunger() + hungerDelta, 100)));
-            user.setBugs(user.getBugs()-1);
+            user.addBugs(-1);
             userRepository.save(user);
             gargoyleRepository.save(gargoyle);
         }
@@ -102,7 +102,7 @@ public class GargoyleController {
             gargoyle.setSpeed(Math.max(0, Math.min(gargoyle.getSpeed() + speedDelta, 100)));
             gargoyle.setIntelligence(Math.max(0, Math.min(gargoyle.getIntelligence() + intelligenceDelta, 100)));
             gargoyle.setHunger(Math.max(0, Math.min(gargoyle.getHunger() + hungerDelta, 100)));
-            user.setFruits(user.getFruits()-1);
+            user.addFruits(-1);
             userRepository.save(user);
             gargoyleRepository.save(gargoyle);
         }
@@ -131,7 +131,7 @@ public class GargoyleController {
                 gargoyle.setStrength((Math.min(100, Math.max(gargoyle.getStrength() - randomNum.nextInt(1, 7), 0))));
             }
             gargoyle.setHunger(100);
-            user.setMysteryFood(Math.max(user.getMysteryFood()-1, 0));
+            user.addMysteryFood(-1);
             userRepository.save(user);
             gargoyleRepository.save(gargoyle);
         }

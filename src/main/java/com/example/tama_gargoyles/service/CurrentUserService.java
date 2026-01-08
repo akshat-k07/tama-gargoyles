@@ -43,6 +43,7 @@ public class CurrentUserService {
             u.setEmail(email);
             u.setRocks(0);
             u.setBugs(0);
+            u.setFruits(0);
             u.setMysteryFood(0);
 
             String username = pickUsername(attrs, email);

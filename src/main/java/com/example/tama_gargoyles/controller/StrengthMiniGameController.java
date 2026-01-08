@@ -9,7 +9,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/minigame/strength")
@@ -57,23 +59,23 @@ public class StrengthMiniGameController {
         // --- REWARD LOGIC ---
         if (completionTime <= 4) {
             rewardMessage = "Incredible Speed! You earned a rare mystery food!";
-            user.setMysteryFood(user.getMysteryFood() + 1);
+            user.addMysteryFood(1);
         }
         else if (completionTime <= 10) {
             // Updated code to match the message: 3 Rocks, 2 Fruits, 1 Bug
             rewardMessage = "Great workout! You earned 3 Rocks and 2 Fruit and 1 bug!";
-            user.setRocks(user.getRocks() + 3);
-            user.setFruits(user.getFruits() + 2);
-            user.setBugs(user.getBugs() + 1);
+            user.addRocks(3);
+            user.addFruits(2);
+            user.addBugs(1);
         }
         else if (completionTime <= 16) {
             rewardMessage = "Great workout! You earned 2 Rocks and 1 Fruit!";
-            user.setRocks(user.getRocks() + 2);
-            user.setFruits(user.getFruits() + 1);
+            user.addRocks(2);
+            user.addFruits(1);
         }
         else {
             rewardMessage = "Nice job! You earned 1 Rock for your effort.";
-            user.setRocks(user.getRocks() + 1);
+            user.addRocks(1);
         }
 
         // Boost Happiness

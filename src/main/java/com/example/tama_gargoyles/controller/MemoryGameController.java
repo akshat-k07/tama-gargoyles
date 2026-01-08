@@ -107,25 +107,25 @@ public class MemoryGameController {
         // Tier 1: 0 - 20 seconds
         if (time <= 20) {
             rewardMessage = "Incredible Focus! You earned a rare Mystery Food!";
-            user.setMysteryFood(user.getMysteryFood() + 1);
+            user.addMysteryFood(1);
         }
         // Tier 2: 21 - 30 seconds
         else if (time <= 30) {
             rewardMessage = "Great Memory! You earned 3 Fruits, 2 Rocks and 1 Bug!";
-            user.setFruits(user.getFruits() + 3);
-            user.setRocks(user.getRocks() + 2);
-            user.setBugs(user.getBugs() + 1);
+            user.addFruits(3);
+            user.addRocks(2);
+            user.addBugs(1);
         }
         // Tier 3: 31 - 40 seconds
         else if (time <= 40) {
             rewardMessage = "Well done! You earned 2 Fruits and 1 Rock!";
-            user.setFruits(user.getFruits() + 2);
-            user.setRocks(user.getRocks() + 1);
+            user.addFruits(2);
+            user.addRocks(1);
         }
         // Tier 4: Over 40 seconds
         else {
             rewardMessage = "Nice effort! You earned 1 Fruit for your effort.";
-            user.setFruits(user.getFruits() + 1);
+            user.addFruits(1);
         }
 
         // Always boost happiness
