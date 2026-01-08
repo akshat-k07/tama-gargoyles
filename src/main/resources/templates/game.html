@@ -471,12 +471,23 @@
 
       pollInFlight = true;
       try {
-        const res = await fetch(window.location.href, {
-          headers: { "X-Requested-With": "fetch" }
-        });
-        if (!res.ok) throw new Error("poll GET failed");
-        const html = await res.text();
-        extractAndPatch(html);
+
+        const res2 = await fetch('http://localhost:8080/game/check/evolution')
+        const result = await res2.text()
+
+        if (result == "true"){
+            window.location.href = 'http://localhost:8080/game'
+        }else{
+            console.log(result)
+            const res = await fetch(window.location.href, {
+              headers: { "X-Requested-With": "fetch" }
+            });
+            if (!res.ok) throw new Error("poll GET failed");
+            const html = await res.text();
+            extractAndPatch(html);
+        }
+
+
       } catch (e) {
         // skip
       } finally {
