@@ -33,7 +33,7 @@
                 </span>
 
                 <span th:if="${gargoyle.type.name() != 'CHILD'}">
-                    <strong>Outcome:</strong>
+                    <strong>Type:</strong>
                     <span th:text="${gargoyle.type.name()}">GOOD</span>
                 </span>
             </div>
@@ -195,13 +195,13 @@
                 <!-- Creature (PNG placeholder) -->
                 <div class="creature-slot">
                     <img class="creature-sprite bob"
-                         th:src="@{/images/gargoyle/gargoyle.png}"
+                         th:src="@{/images/gargoyle/baby.png}"
                          alt="Your gargoyle">
                 </div>
 
                 <!-- Overlays -->
                 <p class="overlay overlay--left" th:if="${gargoyle.hunger < 50}">
-                    ⚠ Hungry soon
+                    ⚠ Neglected
                 </p>
 
                 <p class="overlay overlay--right"

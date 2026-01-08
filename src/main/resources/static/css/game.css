@@ -542,7 +542,7 @@ body::before{
   .stage__roof{
     background-image: url("/images/scene/roof.png");
     background-position: center bottom;
-    background-size: cover;
+    background-size: 100% auto;
     opacity: calc(1 * var(--use-scene-images));
 
     /* LOCK IT */
