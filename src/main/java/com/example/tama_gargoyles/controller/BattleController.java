@@ -8,6 +8,7 @@ import com.example.tama_gargoyles.repository.GargoyleRepository;
 import com.example.tama_gargoyles.repository.UserRepository;
 import com.example.tama_gargoyles.service.BattleService;
 import com.example.tama_gargoyles.service.CurrentUserService;
+import com.example.tama_gargoyles.service.EvolutionService;
 import com.example.tama_gargoyles.service.GargoyleTimeService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,6 +31,7 @@ public class BattleController {
     private final BattleService battleService;
     private final GargoyleTimeService timeService;
     private final UserRepository userRepository;
+    private final EvolutionService evolutionService;
 
     public BattleController(CurrentUserService currentUserService,
                             GargoyleRepository gargoyleRepository,
@@ -41,6 +43,7 @@ public class BattleController {
         this.battleService = battleService;
         this.timeService = timeService;
         this.userRepository = userRepository;
+        this.evolutionService = new EvolutionService();
     }
 
     @ModelAttribute("battleState")
@@ -89,6 +92,8 @@ public class BattleController {
         model.addAttribute("gargoyle", battler);
         model.addAttribute("state", state);
         model.addAttribute("winnerText", state.winnerText());
+
+        model.addAttribute("image_path", evolutionService.getGargoyleImagePath(battler));
 
         model.addAttribute("gameDaysOld", timeService.gameDaysOld(battler));
         model.addAttribute("adultAtDays", ADULT_AT_GAME_DAYS);

@@ -237,6 +237,8 @@ public class GargoyleController {
         model.addAttribute("gameDaysOld", timeService.gameDaysOld(g));
         model.addAttribute("minutesIntoDay", timeService.minutesIntoCurrentDay(g));
 
+        model.addAttribute("image_path", evolutionService.getGargoyleImagePath(g));
+
         // ---- Inventory counts ----
         model.addAttribute("rocksCount", user.getRocks());
         model.addAttribute("bugsCount", user.getBugs());

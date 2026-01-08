@@ -41,6 +41,30 @@ public class EvolutionService {
         return false;
     }
 
+    public String getGargoyleImagePath(Gargoyle g){
+
+        if (g.getAge() < 1){
+            return "/images/gargoyle/egg.png";
+        }else if(g.getAge() < 3){
+            return "/images/gargoyle/child-without-base.png";
+        }else if(g.getType() == Gargoyle.Type.BAD && Objects.equals(g.getEvolutionType(), "Strength")){
+            return "/images/gargoyle/Bad-Strength-The-Breaker.png";
+        }else if(g.getType() == Gargoyle.Type.GOOD && Objects.equals(g.getEvolutionType(), "Strength")){
+            return "/images/gargoyle/Good-Strength-The-Sentinel.png";
+        }else if(g.getType() == Gargoyle.Type.BAD && Objects.equals(g.getEvolutionType(), "Intelligence")){
+            return "/images/gargoyle/Bad-Brains-The-Architect.png";
+        }else if(g.getType() == Gargoyle.Type.GOOD && Objects.equals(g.getEvolutionType(), "Intelligence")){
+            return "/images/gargoyle/Good-Brains-The-Sage.png";
+        }else if(g.getType() == Gargoyle.Type.BAD && Objects.equals(g.getEvolutionType(), "Speed")){
+            return "/images/gargoyle/Bad-Speed-The-Feral-Flash.png";
+        }else if(g.getType() == Gargoyle.Type.GOOD && Objects.equals(g.getEvolutionType(), "Speed")){
+            return "/images/gargoyle/Good-Speed-The-Skyrunner.png";
+        }else{
+            return "/images/gargoyle/adult-with-base.png";
+        }
+
+    }
+
     public String calculateEvolutionType(Gargoyle g){
 
         Integer intel = g.getIntelligence();
