@@ -225,8 +225,8 @@
         if (gameComplete) return;
         if (strength > 0) {
             strength = Math.max(0, strength - DECREASE_RATE);
-            updateUI();
         }
+        updateUI();
     }, TICK_RATE);
 </script>
 
