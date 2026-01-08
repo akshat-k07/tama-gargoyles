@@ -176,22 +176,6 @@ public class BattleController {
                 battler.setHappiness(100);
                 rewards.add("😊 Happiness 100%");
 
-                user.addRocks(3);
-                rewards.add("🪨 3 Rocks");
-
-                user.addBugs(3);
-                rewards.add("🐛 3 Bugs");
-
-                user.addFruits(3);
-                rewards.add("🍎 3 Fruit");
-//
-//                user.addMysteryFood(1);
-//                rewards.add("❓ 1 Mystery Food");
-
-            } else {
-                battler.setHealth(Math.max(0, battler.getHealth() - 20));
-                rewards.add("❤️ -20% Health");
-
                 user.addRocks(1);
                 rewards.add("🪨 1 Rock");
 
@@ -200,6 +184,19 @@ public class BattleController {
 
                 user.addFruits(1);
                 rewards.add("🍎 1 Fruit");
+
+                rewards.add("\uD83C\uDF56 -10% Hunger");
+
+                battler.setHunger(Math.max(battler.getHunger() - 10, 0));
+//
+//                user.addMysteryFood(1);
+//                rewards.add("❓ 1 Mystery Food");
+
+            } else {
+                battler.setHealth(Math.max(0, battler.getHealth() - 20));
+                battler.setHunger(Math.max(battler.getHunger() - 30, 0));
+                rewards.add("❤️ -20% Health");
+                rewards.add("\uD83C\uDF56 -30% Hunger");
             }
 
             gargoyleRepository.save(battler);

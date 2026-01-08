@@ -111,16 +111,14 @@ public class MemoryGameController {
         }
         // Tier 2: 21 - 30 seconds
         else if (time <= 30) {
-            rewardMessage = "Great Memory! You earned 3 Fruits, 2 Rocks and 1 Bug!";
-            user.addFruits(3);
-            user.addRocks(2);
+            rewardMessage = "Great Memory! You earned 2 Fruits and 1 Bug!";
+            user.addFruits(2);
             user.addBugs(1);
         }
         // Tier 3: 31 - 40 seconds
         else if (time <= 40) {
-            rewardMessage = "Well done! You earned 2 Fruits and 1 Rock!";
+            rewardMessage = "Well done! You earned 2 Fruits";
             user.addFruits(2);
-            user.addRocks(1);
         }
         // Tier 4: Over 40 seconds
         else {
@@ -130,6 +128,7 @@ public class MemoryGameController {
 
         // Always boost happiness
         gargoyle.setHappiness(Math.min(100, gargoyle.getHappiness() + 20));
+        gargoyle.setHunger(Math.max(gargoyle.getHunger() - 10, 0));
 
         // Save both the inventory and the gargoyle stats
         userRepository.save(user);

@@ -65,14 +65,12 @@ public class PongController {
             user.addMysteryFood(1);
         }
         else if (survivalTime >= 80) {
-            rewardMessage = "Incredible! You earned 3 Bugs, 2 Fruits, and 1 Rock!";
-            user.addBugs(3);
-            user.addFruits(2);
+            rewardMessage = "Incredible! You earned 2 Bugs and 1 Rock!";
+            user.addBugs(2);
             user.addRocks(1);
         } else if (survivalTime >= 35) {
-            rewardMessage = "Great job! You earned 2 Bugs and a Fruit!";
+            rewardMessage = "Great job! You earned 2 Bugs!";
             user.addBugs(2);
-            user.addFruits(1);
         } else {
             rewardMessage = "Not bad! You earned a bug.";
             user.addBugs(1);
@@ -80,6 +78,7 @@ public class PongController {
 
         Gargoyle gargoyle = gargoyleRepository.findById(gargoyleId).get();
         gargoyle.setHappiness(Math.min(100, gargoyle.getHappiness() + 20));
+        g.setHunger(Math.max(g.getHunger() - 10, 0));
 
         // Save the User inventory changes
         gargoyleRepository.save(gargoyle);

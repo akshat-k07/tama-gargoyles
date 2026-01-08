@@ -549,42 +549,184 @@ body::before{
 
 
   /* If these don’t exist yet, comment them out for now */
-  /* .stage__stars{ background-image: url("/images/scene/stars.png"); } */
+  /* .stage__stars{ background-image: url("/images/scene/stars.png"); }
+
+  @supports (background-image: url("/images/scene/sky.png")){
+    .stage__sky{
+      background-image:
+        linear-gradient(180deg, rgba(5,1,11,0.35), rgba(7,10,26,0.25)),
+        url("/images/scene/sky.png");
+      background-position: center top;
+      background-size: cover;
+      opacity: calc(1 * var(--use-scene-images));
+    }
+
+    /* ✅ ADD / UNCOMMENT THIS */
+    .stage__stars{
+      background-image: url("/images/scene/stars.png");
+      background-position: center top;
+      background-repeat: repeat;      /* important for small star tiles */
+      background-size: 420px auto;    /* tweak 300–800 depending on taste */
+      opacity: 0.75;                  /* tune */
+      mix-blend-mode: screen;         /* keeps black “invisible” */
+
+    /* Gentle twinkle */
+      animation:
+        parallax-mid 120s linear infinite,
+        stars-twinkle 6.5s ease-in-out infinite;
+      will-change: transform, opacity, filter;
+    }
+
+    @keyframes stars-twinkle{
+      0%, 100% { opacity: 0.65; filter: brightness(1.0); }
+      50%      { opacity: 0.85; filter: brightness(1.15); }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .stage__stars{ animation: none; }
+    }
+
+
+
+
   /* .stage__moon { background-image: url("/images/scene/moon.png"); } */
   /* .stage__fx   { background-image: url("/images/scene/fx.png"); } */
 }
 
 
-/* Creature sits above roof */
+/* =========================================================
+   CREATURE + NEST (CHILD ONLY) — CLEAN + ALIGNED
+   Paste this where your current creature/nest section is.
+   ========================================================= */
+
+/* Container that centers the creature stack */
 .creature-slot{
-  position:absolute;
-  inset:0;
-  display:grid;
-  place-items:center;
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
   z-index: 5;
   pointer-events: none;
+
+  /* lifts whole stack a bit so it sits on the roof nicely */
+  padding-bottom: 40px; /* tweak 20–70 */
 }
 
-.creature-placeholder{
-  font-weight: 1100;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  color: rgba(241,238,255,0.88);
-  text-shadow:
-    0 10px 22px rgba(0,0,0,0.55),
-    var(--glow-cyan);
-}
-
-/* Creature sprite (stable + readable) */
+/* Creature */
 .creature-sprite{
   width: min(520px, 62%);
   height: auto;
   display: block;
-  transform: translateY(10px);
-  filter: drop-shadow(0 18px 28px rgba(0,0,0,0.55));
   user-select: none;
   -webkit-user-drag: none;
+
+  position: relative;
+  z-index: 6; /* above nest */
+
+  /* IMPORTANT: don't set transform here (bob animation uses transform) */
+  filter:
+    drop-shadow(0 18px 28px rgba(0,0,0,0.55))
+    drop-shadow(0 0 18px rgba(155,92,255,0.18));
+}
+
+/* Nest wrapper (child only) — we position THIS, not the img */
+.nest-wrap{
+  position: absolute;
+  left: 50%;
+
+  /* Put nest under the baby, not behind its head */
+  bottom: 1%;            /* tweak 2–10% */
+  transform: translateX(-50%);
+
+  width: min(320px, 74%); /* tweak 260–380px or % */
+  display: grid;
+  place-items: center;
+
+  z-index: 4;            /* behind creature */
+  pointer-events: none;
+
+  animation: nest-float 6.2s ease-in-out infinite;
+  will-change: transform, opacity, filter;
+
+  filter:
+    drop-shadow(0 24px 28px rgba(0,0,0,0.55))
+    drop-shadow(0 0 26px rgba(36,214,255,0.14));
+}
+
+/* Nest image */
+.nest-sprite{
+  width: 100%;
+  height: auto;
+  display: block;
+  opacity: 0.98;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+
+/* Aura ring UNDER the nest */
+.nest-wrap::after{
+  content:"";
+  position:absolute;
+  left: 50%;
+  bottom: -10%;
+  width: 72%;
+  height: 22%;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: radial-gradient(closest-side, rgba(155,92,255,0.38), transparent 72%);
+  filter: blur(10px);
+  opacity: 0.75;
+  animation: aura-pulse 3.8s ease-in-out infinite;
+  pointer-events:none;
+}
+
+/* Sparkle dust around the nest */
+.nest-wrap::before{
+  content:"";
+  position:absolute;
+  inset: -22% -26%;
+  background:
+    radial-gradient(circle at 18% 62%, rgba(255,255,255,0.55) 0 1px, transparent 3px),
+    radial-gradient(circle at 34% 48%, rgba(36,214,255,0.45) 0 1px, transparent 3px),
+    radial-gradient(circle at 56% 58%, rgba(255,61,242,0.35) 0 1px, transparent 3px),
+    radial-gradient(circle at 72% 42%, rgba(155,92,255,0.40) 0 1px, transparent 3px),
+    radial-gradient(circle at 80% 64%, rgba(255,255,255,0.40) 0 1px, transparent 3px);
+  opacity: 0.35;
+  filter: blur(0.2px);
+  animation: spark-drift 6.8s ease-in-out infinite;
+  pointer-events:none;
+}
+
+/* Optional: tiny "magic lift" WITHOUT fighting bob
+   (we use margin, not transform) */
+.stage .creature-slot .creature-sprite{
+  top: -55px; /* tweak raise creature height*/
+  margin-bottom: 5px; /* tweak 0–24 */
+}
+
+/* Animations */
+@keyframes nest-float{
+  0%, 100% { transform: translateX(-50%) translateY(0);    opacity: 0.95; }
+  50%      { transform: translateX(-50%) translateY(-6px); opacity: 1; }
+}
+
+@keyframes aura-pulse{
+  0%, 100% { transform: translateX(-50%) scale(1);    opacity: 0.60; }
+  50%      { transform: translateX(-50%) scale(1.10); opacity: 0.88; }
+}
+
+@keyframes spark-drift{
+  0%, 100% { transform: translateY(2px);  opacity: 0.22; }
+  50%      { transform: translateY(-7px); opacity: 0.45; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .nest-wrap,
+  .nest-wrap::before,
+  .nest-wrap::after{
+    animation:none;
+  }
 }
 
 
