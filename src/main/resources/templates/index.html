@@ -58,12 +58,13 @@
      GAME RULES / CONTENT
      ====================================================== -->
 
+<main id="game-rules">
 <div class="panel">
 
-    <h2>🎮 Game Rules</h2>
+    <h2><span aria-hidden="true">🎮</span> Game Rules</h2>
     <hr>
 
-    <h3>🥚 Starting the Game</h3>
+    <h3><span aria-hidden="true">🥚</span> Starting the Game</h3>
     <ul>
         <li>When you start, you receive an egg</li>
         <li>The egg hatches and you name your Tama-Gargoyle</li>
@@ -72,92 +73,120 @@
 
     <hr>
 
-    <h3>⏱️ Time & Needs</h3>
+    <h3><span aria-hidden="true">⏱️</span> Time & Needs</h3>
     <ul>
-        <li>As time passes, your Tama-Gargoyle:</li>
-        <ul>
-            <li>Gets hungrier</li>
-            <li>Loses happiness</li>
-        </ul>
-        <li>If hunger stays too low:</li>
-        <ul>
-            <li>Happiness decreases faster</li>
-        </ul>
-        <li>If happiness and hunger are neglected:</li>
-        <ul>
-            <li>Health will decrease</li>
-        </ul>
-        <li>If health reaches 0:</li>
-        <ul>
-            <li>💀 Your Tama-Gargoyle dies</li>
-        </ul>
+        <li>
+            As time passes, your Tama-Gargoyle:
+            <ul>
+                <li>Gets hungrier</li>
+                <li>Loses happiness</li>
+            </ul>
+        </li>
+        <li>
+            If hunger stays too low:
+            <ul>
+                <li>Happiness decreases faster</li>
+            </ul>
+        </li>
+        <li>
+            If happiness and hunger are neglected:
+            <ul>
+                <li>Health will decrease</li>
+            </ul>
+        </li>
+        <li>
+            If health reaches 0:
+            <ul>
+                <li>
+                    <span role="img" aria-label="Skull">💀</span>
+                    Your Tama-Gargoyle dies
+                </li>
+            </ul>
+        </li>
     </ul>
+
 
     <hr>
 
-    <h3>🍎 Feeding</h3>
+    <h3><span aria-hidden="true">🍎</span> Feeding</h3>
 
     <p>You have limited food.</p>
     
     <p>The food you give your Tama-Gargoyle affects how it evolves:</p>
 
     <table>
+        <caption>Food types and their effects on your Tama-Gargoyle</caption>
+        <thead>
         <tr>
-            <th>Food</th>
-            <th>Effect</th>
+            <th scope="col">Food</th>
+            <th scope="col">Effect</th>
         </tr>
+        </thead>
+        <tbody>
         <tr>
-            <td>🪨 Rocks</td>
+            <td><span aria-hidden="true">🪨</span> Rocks</td>
             <td>Increases Strength, lowers Speed & Intelligence</td>
         </tr>
         <tr>
-            <td>🐛 Bugs</td>
+            <td><span aria-hidden="true">🐛</span> Bugs</td>
             <td>Increases Speed, lowers Strength & Intelligence</td>
         </tr>
         <tr>
-            <td>🍎 Fruit</td>
+            <td><span aria-hidden="true">🍎</span> Fruit</td>
             <td>Increases Intelligence, lowers Strength & Speed</td>
         </tr>
         <tr>
-            <td>❓ Mystery Food</td>
+            <td><span aria-hidden="true">❓</span> Mystery Food</td>
             <td>Random effects — good or bad</td>
         </tr>
+        </tbody>
     </table>
 
     
 
     <hr>
 
-    <h3>🎲 Playing Games</h3>
+    <h3><span aria-hidden="true">🎲</span> Playing Games</h3>
     <ul>
-        <li>Playing increases skills:</li>
-        <ul>
-            <li>💪 Strength games → Strength</li>
-            <li>⚡ Speed games → Speed</li>
-            <li>🧠 Intelligence games → Intelligence</li>
-        </ul>
-        <li>If you don’t play enough, your gargoyle may grow up bad</li>
+        <li>
+            <span role="img" aria-label="Strength">💪</span>
+            Strength games → Strength
+        </li>
+        <li>
+            <span role="img" aria-label="Speed">⚡</span>
+            Speed games → Speed
+        </li>
+        <li>
+            <span role="img" aria-label="Intelligence">🧠</span>
+            Intelligence games → Intelligence
+        </li>
+
     </ul>
+
 
     <hr>
 
-    <h3>🧬 Growth & Evolution</h3>
+    <h3><span aria-hidden="true">🧬</span> Growth & Evolution</h3>
     <ul>
         <li>With good care, your Tama-Gargoyle grows into an adult</li>
         <li>Its strongest stat influences its evolution type</li>
-        <li>Adults can be:</li>
-        <ul>
-            <li>Good (obedient)</li>
-            <li>Bad (may disobey… sometimes helpfully!)</li>
-        </ul>
+        <li>
+            Adults can be:
+            <ul>
+                <li>Good (obedient)</li>
+                <li>Bad (may disobey… sometimes helpfully!)</li>
+            </ul>
+        </li>
     </ul>
+
 
     <hr>
 
-    <h3>⚔️ Battle Mode</h3>
+    <h3><span aria-hidden="true">⚔️</span> Battle Mode</h3>
     <ul>
         <li>Adult gargoyles may battle opponents with unknown stats</li>
         <li>Battles are turn-based, card-style</li>
+        <li>First to three wins!</li>
     </ul>
 
     <p>Battle Rules (Rock-Paper-Scissors Logic):</p>
@@ -167,20 +196,28 @@
         <li>🧠 Intelligence beats 💪 Strength</li>
     </ul>
 
-    <p>If both players choose the same type:</p>
-    <ul>
-        <li>The higher stat wins</li>
-    </ul>
+<!--    <p>If both players choose the same type:</p>-->
+<!--    <ul>-->
+<!--        <li>The higher stat wins</li>-->
+<!--    </ul>-->
 
     <p>Battle Outcomes:</p>
     <ul>
-        <li>Win → 🎁 10 random special foods</li>
-        <li>Lose → ❤️ Health drops by 20%, receive 2 special foods</li>
+        <li>
+            Win →
+            <span role="img" aria-label="Gift">🎁</span>
+            9 special foods
+        </li>
+        <li>
+            Lose →
+            <span role="img" aria-label="Heart">❤️</span>
+            Health drops by 20%, receive 3 special foods
+        </li>
     </ul>
 
-    Good Luck!
+    <p>Good luck!</p>
 
 </div>
-
+</main>
 </body>
 </html>

@@ -40,6 +40,11 @@
    2) GLOBAL
    ========================================================= */
 
+caption {
+  position:absolute;
+  left:-9999px;
+}
+
 *{ box-sizing:border-box; }
 
 html, body{
