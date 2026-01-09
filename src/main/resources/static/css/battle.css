@@ -1,36 +1,11 @@
-/* src/main/resources/static/css/game.css */
-
-/* =========================================================
-   TAMA GARGOYLES — SCAFFOLD-FIRST UI (SAFE COPY-PASTE)
-   ---------------------------------------------------------
-   ✅ Works immediately with NO assets.
-   ✅ Aligned to current game.html classes:
-      .screen, .hud-top, .game-grid, .panel,
-      .stage, .stage__layer, .stage__sky, .stage__stars,
-      .stage__moon, .stage__roof, .stage__fx,
-      .creature-slot, .creature-placeholder, .creature-sprite
-
-   =========================================================
-   🚧 WORKING RULES (READ THIS)
-   ---------------------------------------------------------
-   1) ONLY edit inside sections marked:
-      "WORK HERE ✅"
-   2) DO NOT edit inside sections marked:
-      "DO NOT TOUCH 🚫" (unless we do it together)
-   3) If you want to enable image assets, you will change ONE line:
-      --use-scene-images: 0  -> 1
-   ========================================================= */
-
+/* Phase 2 Version */
 
 /* =========================================================
    WORK HERE ✅ 1) THEME VARIABLES
-   - You can tweak these safely (colours, transparency)
    ========================================================= */
 
 :root{
-
-  /* Toggle: 0 = no images (fallback gradients)
-            1 = use /images/scene/*.png if present */
+  /* Toggle: 0 = gradients only, 1 = use /images/scene/*.png if present */
   --use-scene-images: 1;
 
   /* Deep midnight base */
@@ -38,7 +13,7 @@
   --bg-1:#070a1a;
   --bg-2:#070312;
 
-  /* Panels (semi-transparent to let the scene show) */
+  /* Panels */
   --panel: rgba(8, 10, 24, 0.62);
   --panel-2: rgba(12, 14, 34, 0.68);
 
@@ -46,7 +21,7 @@
   --text:#f1eeff;
   --muted:rgba(241,238,255,0.72);
 
-  /* Accents (subtle purple at edges, cyan primary) */
+  /* Accents */
   --accent:#24d6ff;      /* cyan */
   --accent-2:#9b5cff;    /* purple */
   --accent-3:#ff3df2;    /* pink */
@@ -89,16 +64,18 @@ html, body{ height:100%; }
 
 /* =========================================================
    WORK HERE ✅ 3) PAGE BACKGROUND
-   - Safe to tweak background colours and star density
    ========================================================= */
 
 body{
   margin:0;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   color: var(--text);
-  overflow:hidden;
 
-  /* Midnight base with subtle purple edges */
+  /* IMPORTANT:
+     We let the page scroll naturally. Panels handle internal scroll. */
+  overflow-x: hidden;
+  overflow-y: auto;
+
   background:
     radial-gradient(1100px 650px at 15% 15%, rgba(155,92,255,0.10), transparent 60%),
     radial-gradient(1000px 620px at 85% 20%, rgba(255,61,242,0.06), transparent 62%),
@@ -115,7 +92,6 @@ body::before{
   opacity:0.85;
   mix-blend-mode: screen;
 
-  /* Bigger bright stars */
   background:
     radial-gradient(circle at 10% 18%, rgba(255,255,255,0.95) 0 1.6px, transparent 2.8px),
     radial-gradient(circle at 22% 52%, rgba(255,255,255,0.55) 0 1.1px, transparent 2.3px),
@@ -140,7 +116,7 @@ body::before{
 
 
 /* =========================================================
-   DO NOT TOUCH 🚫 4) CONTAINER + SCANLINES
+   DO NOT TOUCH 🚫 4) APP CONTAINER + SCANLINES
    ========================================================= */
 
 .screen{
@@ -148,13 +124,20 @@ body::before{
   display:grid;
   gap: var(--grid-gap);
   padding: 1rem;
+
+  /* IMPORTANT: keep centred, but never exceed viewport */
+  width: 100%;
   max-width: 1320px;
   margin: 0 auto;
+
   position: relative;
   z-index: 1;
+
+  /* Prevent tiny overflows becoming page-level sideways scrollbars */
+  overflow-x: hidden;
 }
 
-/* Subtle scanlines (kept on .screen so we don't clash with body::before stars) */
+/* Scanlines overlay */
 .screen::after{
   content:"";
   position:fixed;
@@ -252,14 +235,13 @@ body::before{
   align-items:center;
 }
 
-.hud-links a{
-  font-weight:900;
-  color: rgba(241,238,255,0.92);
-  text-decoration-thickness: 2px;
-  text-underline-offset: 3px;
+.hud-links a {
+  font-weight: 900;
+  color: rgba(241, 238, 255, 0.92);
+  text-decoration: none;
   text-shadow: var(--glow-cyan);
 }
-.hud-links a:hover{ text-decoration-thickness: 3px; }
+/* .hud-links a:hover{ text-decoration-thickness: 3px; } */
 .hud-links a:focus-visible{
   outline:none;
   box-shadow: var(--ring);
@@ -276,6 +258,7 @@ body::before{
 
 .btn,
 .nav-btn{
+  text-decoration: none; /* Add this line */
   border: 1px solid rgba(241,238,255,0.16);
   border-radius: 999px;
   padding: 0.52rem 0.9rem;
@@ -352,13 +335,16 @@ body::before{
 
 
 /* =========================================================
-   DO NOT TOUCH 🚫 8) GRID LAYOUT
+   WORK HERE ✅ 8) GRID LAYOUT (RESPONSIVE + NO OVERFLOW)
    ========================================================= */
 
 .game-grid{
   display:grid;
   gap: var(--grid-gap);
-  grid-template-columns: 320px 1fr 320px;
+
+  /* Tolerant columns (prevents squeeze/overflow) */
+  grid-template-columns: minmax(260px, 320px) minmax(0, 1fr) minmax(260px, 320px);
+
   grid-template-areas:
     "left stage right"
     "actions actions actions"
@@ -366,12 +352,19 @@ body::before{
   align-items: start;
 }
 
-.hud-panel--left{ grid-area:left; padding: 0.9rem; }
+/* CRITICAL: allow grid children to shrink (fixes rogue horizontal scroll) */
+.game-grid > *{
+  min-width: 0;
+  min-height: 0;
+}
+
+.hud-panel--left{ grid-area:left; padding: 0.9rem; overflow:hidden; }
 .stage-panel{ grid-area:stage; padding: 0.9rem; }
-.hud-panel--right{ grid-area:right; padding: 0.9rem; }
+.hud-panel--right{ grid-area:right; padding: 0.9rem; overflow:hidden; }
 .actions-panel{ grid-area:actions; padding: 0.9rem; }
 .log-panel{ grid-area:log; padding: 0.85rem 0.9rem; }
 
+/* Stack on narrower screens */
 @media (max-width: 1040px){
   .game-grid{
     grid-template-columns: 1fr;
@@ -382,6 +375,17 @@ body::before{
       "actions"
       "log";
   }
+
+  /* On mobile, reduce nested-scroll friction */
+  .hud-panel--left,
+  .hud-panel--right{
+    overflow: hidden;
+  }
+}
+
+@media (max-width: 520px){
+  .screen{ padding: 0.75rem; }
+  .panel, .hud-top{ border-radius: 16px; }
 }
 
 .panel__title{
@@ -398,10 +402,10 @@ body::before{
 
 
 /* =========================================================
-   WORK HERE ✅ 9) STAGE (PARALLAX SCENE)
-   - This is the ONLY “scene” area you should touch right now.
-   - Safe tweak: star opacity, roof darkness, moon position, etc.
-   - To enable image assets: set --use-scene-images: 1 in :root
+   DO NOT TOUCH 🚫 9) STAGE (PARALLAX SCENE)
+   ---------------------------------------------------------
+   This entire section is copied from the known-working version.
+   Keep it unchanged to preserve sky/roof reliability.
    ========================================================= */
 
 .stage{
@@ -499,11 +503,6 @@ body::before{
     radial-gradient(circle at 74% 60%, rgba(61,255,159,0.22) 0 1px, transparent 3px);
 }
 
-/* Anchor buttons should not look like links */
-a.btn {
-    text-decoration: none;
-}
-
 /* ✅ IMAGE SWITCH (simple + reliable)
    Put images in: /static/images/scene/
    Served at:     /images/scene/
@@ -519,62 +518,192 @@ a.btn {
   }
 
   .stage__roof{
-    background-image: url("/images/scene/roof.png");
-    background-position: center bottom;
+    background: url("/images/scene/roof.png") no-repeat center bottom;
     background-size: cover;
-    opacity: calc(1 * var(--use-scene-images));
-
-    /* LOCK IT */
     animation: none;
     transform: none;
   }
 
+
+
   /* If these don’t exist yet, comment them out for now */
-  /* .stage__stars{ background-image: url("/images/scene/stars.png"); } */
+  /* .stage__stars{ background-image: url("/images/scene/stars.png"); }
+
+  @supports (background-image: url("/images/scene/sky.png")){
+    .stage__sky{
+      background-image:
+        linear-gradient(180deg, rgba(5,1,11,0.35), rgba(7,10,26,0.25)),
+        url("/images/scene/sky.png");
+      background-position: center top;
+      background-size: cover;
+      opacity: calc(1 * var(--use-scene-images));
+    }
+
+    /* ✅ ADD / UNCOMMENT THIS */
+    .stage__stars{
+      background-image: url("/images/scene/stars.png");
+      background-position: center top;
+      background-repeat: repeat;      /* important for small star tiles */
+      background-size: 420px auto;    /* tweak 300–800 depending on taste */
+      opacity: 0.75;                  /* tune */
+      mix-blend-mode: screen;         /* keeps black “invisible” */
+
+    /* Gentle twinkle */
+      animation:
+        parallax-mid 120s linear infinite,
+        stars-twinkle 6.5s ease-in-out infinite;
+      will-change: transform, opacity, filter;
+    }
+
+    @keyframes stars-twinkle{
+      0%, 100% { opacity: 0.65; filter: brightness(1.0); }
+      50%      { opacity: 0.85; filter: brightness(1.15); }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .stage__stars{ animation: none; }
+    }
+
+
+
+
   /* .stage__moon { background-image: url("/images/scene/moon.png"); } */
   /* .stage__fx   { background-image: url("/images/scene/fx.png"); } */
 }
 
+/* =========================================================
+   CREATURE + NEST (CHILD ONLY) — CLEAN + ALIGNED
+   Paste this where your current creature/nest section is.
+   ========================================================= */
 
-/* Creature sits above roof */
+/* Container that centers the creature stack */
 .creature-slot{
-  position:absolute;
-  inset:0;
-  display:grid;
-  place-items:center;
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
   z-index: 5;
   pointer-events: none;
 
+  /* lifts whole stack a bit so it sits on the roof nicely */
+  padding-bottom: 40px; /* tweak 20–70 */
 }
 
-.creature-placeholder{
-  font-weight: 1100;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  color: rgba(241,238,255,0.88);
-  text-shadow:
-  0 10px 22px rgba(0,0,0,0.55),
-  var(--glow-cyan);
-}
-
-/* =========================================================
-   WORK HERE ✅ — CREATURE SPRITE (SAFE)
-   Why: keeps sprite stable + readable on roof
-   ========================================================= */
-
+/* Creature */
 .creature-sprite{
   width: min(260px, 62%);
   height: auto;
   display: block;
-
-  /* Looks “sat on roof” instead of floating */
-  transform: translateY(10px);
-
-  /* Readability on dark roof */
-  filter: drop-shadow(0 18px 28px rgba(0,0,0,0.55));
   user-select: none;
   -webkit-user-drag: none;
+
+  position: relative;
+  z-index: 6; /* above nest */
+
+  /* IMPORTANT: don't set transform here (bob animation uses transform) */
+  filter:
+    drop-shadow(0 18px 28px rgba(0,0,0,0.55))
+    drop-shadow(0 0 18px rgba(155,92,255,0.18));
+}
+
+/* Nest wrapper (child only) — we position THIS, not the img */
+.nest-wrap{
+  position: absolute;
+  left: 50%;
+
+  /* Put nest under the baby, not behind its head */
+  bottom: 1%;            /* tweak 2–10% */
+  transform: translateX(-50%);
+
+  width: min(320px, 74%); /* tweak 260–380px or % */
+  display: grid;
+  place-items: center;
+
+  z-index: 4;            /* behind creature */
+  pointer-events: none;
+
+  animation: nest-float 6.2s ease-in-out infinite;
+  will-change: transform, opacity, filter;
+
+  filter:
+    drop-shadow(0 24px 28px rgba(0,0,0,0.55))
+    drop-shadow(0 0 26px rgba(36,214,255,0.14));
+}
+
+/* Nest image */
+.nest-sprite{
+  width: 100%;
+  height: auto;
+  display: block;
+  opacity: 0.98;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+
+/* Aura ring UNDER the nest */
+.nest-wrap::after{
+  content:"";
+  position:absolute;
+  left: 50%;
+  bottom: -10%;
+  width: 72%;
+  height: 22%;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: radial-gradient(closest-side, rgba(155,92,255,0.38), transparent 72%);
+  filter: blur(10px);
+  opacity: 0.75;
+  animation: aura-pulse 3.8s ease-in-out infinite;
+  pointer-events:none;
+}
+
+/* Sparkle dust around the nest */
+.nest-wrap::before{
+  content:"";
+  position:absolute;
+  inset: -22% -26%;
+  background:
+    radial-gradient(circle at 18% 62%, rgba(255,255,255,0.55) 0 1px, transparent 3px),
+    radial-gradient(circle at 34% 48%, rgba(36,214,255,0.45) 0 1px, transparent 3px),
+    radial-gradient(circle at 56% 58%, rgba(255,61,242,0.35) 0 1px, transparent 3px),
+    radial-gradient(circle at 72% 42%, rgba(155,92,255,0.40) 0 1px, transparent 3px),
+    radial-gradient(circle at 80% 64%, rgba(255,255,255,0.40) 0 1px, transparent 3px);
+  opacity: 0.35;
+  filter: blur(0.2px);
+  animation: spark-drift 6.8s ease-in-out infinite;
+  pointer-events:none;
+}
+
+/* Optional: tiny "magic lift" WITHOUT fighting bob
+   (we use margin, not transform) */
+.stage .creature-slot .creature-sprite{
+  top: -55px; /* tweak raise creature height*/
+  margin-bottom: 5px; /* tweak 0–24 */
+}
+
+/* Animations */
+@keyframes nest-float{
+  0%, 100% { transform: translateX(-50%) translateY(0);    opacity: 0.95; }
+  50%      { transform: translateX(-50%) translateY(-6px); opacity: 1; }
+}
+
+@keyframes aura-pulse{
+  0%, 100% { transform: translateX(-50%) scale(1);    opacity: 0.60; }
+  50%      { transform: translateX(-50%) scale(1.10); opacity: 0.88; }
+}
+
+@keyframes spark-drift{
+  0%, 100% { transform: translateY(2px);  opacity: 0.22; }
+  50%      { transform: translateY(-7px); opacity: 0.45; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .nest-wrap,
+  .nest-wrap::before,
+  .nest-wrap::after{
+    animation:none;
+  }
 }
 
 
@@ -615,31 +744,13 @@ a.btn {
 
 
 /* =========================================================
-   DO NOT TOUCH 🚫 10) BOB ANIMATION
-   ========================================================= */
-
-.bob{
-  animation: bob 1.8s ease-in-out infinite;
-  transform-origin: 50% 70%;
-  will-change: transform;
-}
-@keyframes bob{
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-8px); }
-}
-@media (prefers-reduced-motion: reduce){
-  .bob{ animation:none; }
-}
-
-
-/* =========================================================
-   DO NOT TOUCH 🚫 11) STATS + METERS
+   WORK HERE ✅ 11) STATS + METERS (COMPACT)
    ========================================================= */
 
 .stats-compact,
 .traits-compact{
   display:grid;
-  gap: 0.65rem;
+  gap: 0.5rem;
 }
 
 .stat__row{
@@ -652,17 +763,13 @@ a.btn {
 .stat__value{ color: var(--muted); font-weight: 900; }
 
 .meter{
-  height: 12px;
+  height: 10px;
   border: 1px solid rgba(241,238,255,0.14);
   border-radius: 999px;
   overflow:hidden;
-  margin-top: 0.35rem;
+  margin-top: 0.25rem;
   background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(0,0,0,0.10));
   position: relative;
-}
-
-.showSpaces{
-  white-space: pre;
 }
 
 .meter::after{
@@ -698,7 +805,7 @@ a.btn {
 
 
 /* =========================================================
-   DO NOT TOUCH 🚫 12) ACTIONS
+   DO NOT TOUCH 🚫 12) ACTIONS (RESPONSIVE)
    ========================================================= */
 
 .actions-wrap{
@@ -707,6 +814,13 @@ a.btn {
   gap: 0.9rem;
   align-items:start;
 }
+
+/* Medium screens: reduce density */
+@media (max-width: 1200px){
+  .actions-wrap{ grid-template-columns: 1fr 1fr; }
+}
+
+/* Small screens: stack */
 @media (max-width: 1040px){
   .actions-wrap{ grid-template-columns: 1fr; }
 }
@@ -804,10 +918,38 @@ a.btn {
   color: var(--muted);
   text-align:center;
 }
+/* =========================================================
+BATTLE MODE — CENTER ATTACK BUTTONS
+========================================================= */
 
+.actions-panel .actions__icons{
+display:flex;
+justify-content:center;
+gap: 1rem;
+}
+
+.actions-panel .actions__icons form{
+width: auto;
+}
+/* Bigger battle buttons & Huge Emojis */
+.actions-panel .icon-btn{
+  /* Increased dimensions slightly to fit giant emojis */
+  min-width: 120px;
+  min-height: 100px;
+  /* Reduced padding so the emoji fills the space */
+  padding: 0.25rem;
+  /* The new giant size (was trying to be 2.1rem before) */
+  font-size: 3.2rem;
+}
+
+
+
+.actions-panel .icon-label{
+font-size: 0.95rem;
+}
 
 /* =========================================================
-   DO NOT TOUCH 🚫 13) TESTING + EVENT LOG
+   WORK HERE ✅ 13) TESTING + EVENT LOG (CONTROLLED SCROLL)
    ========================================================= */
 
 .tip{
@@ -874,16 +1016,20 @@ a.btn {
   text-shadow: var(--glow-cyan);
 }
 
+/* Log panel is the intended scroll region */
+.log-panel{
+  max-height: 200px;     /* tweak 160–240 */
+  overflow-y: hidden;
+  overflow-x: hidden;
+  background: rgba(8, 10, 24, 0.52);
+}
+
 .log__list{
   margin:0;
   padding-left: 1.2rem;
   color: var(--muted);
   font-weight: 750;
-}
-
-.log-panel{
-  max-height: 190px;
-  overflow:hidden;
+  word-break: break-word;
 }
 
 .debug summary{
@@ -906,61 +1052,8 @@ a.btn {
   overflow:hidden;
   color: rgba(241,238,255,0.88);
 }
-
 /* =========================================================
-   MERGE PATCH ✅ (Best of both versions)
-   Put this at the END of game.css
-   - Preserves original richness
-   - Improves usability/layout/space
+   END OF CSS FROM GAME.CSS BUILD: game.css 2026-01-07-STABLE
    ========================================================= */
 
-/* 1) Make side panels + log behave (scroll within panel, not page chaos) */
-.hud-panel--left,
-.hud-panel--right,
-.log-panel{
-  overflow: hidden;
-}
 
-/* 2) Event log: keep it useful but not a screen hog */
-.log-panel{
-  max-height: 200px; /* adjust: 160–240 feels good */
-}
-
-/* Optional: if you want the log to be “less shouty” visually */
-.log-panel{
-  background: rgba(8, 10, 24, 0.52); /* slightly more transparent than panels */
-}
-
-/* 3) Make the game grid more tolerant: stop columns from squeezing content */
-.game-grid{
-  grid-template-columns: minmax(260px, 320px) minmax(0, 1fr) minmax(260px, 320px);
-}
-
-/* 4) Stats: reduce vertical bulk without changing the look */
-.stats-compact,
-.traits-compact{
-  gap: 0.5rem;
-}
-
-.meter{
-  height: 10px;     /* was 12px */
-  margin-top: 0.25rem;
-}
-
-/* 5) Make “actions” feel less cramped on medium widths */
-@media (max-width: 1200px){
-  .actions-wrap{
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-/* 6) On smaller screens: reduce padding a bit so everything fits */
-@media (max-width: 520px){
-  .screen{ padding: 0.75rem; }
-  .panel, .hud-top{ border-radius: 16px; }
-}
-
-/* 7) Quality-of-life: prevent long lists from smashing the layout */
-.log__list{
-  word-break: break-word;
-}

@@ -134,14 +134,17 @@
     document.getElementById("leftBtn").addEventListener("pointerdown", () => handleInput("LEFT"));
     document.getElementById("rightBtn").addEventListener("pointerdown", () => handleInput("RIGHT"));
 
+<!--    // This code below will increase the force of gravity, and make the game harder-->
+<!--    // Comment it out to make the game easier-->
+
 <!--    // Gravity: Meter drains over time-->
-<!--    setInterval(() => {-->
-<!--        if (gameComplete) return;-->
-<!--        if (strength > 0) {-->
-<!--            strength = Math.max(0, strength - DECREASE_RATE);-->
-<!--            updateUI();-->
-<!--        }-->
-<!--    }, TICK_RATE);-->
+    setInterval(() => {
+        if (gameComplete) return;
+        if (strength > 0) {
+            strength = Math.max(0, strength - DECREASE_RATE);
+            updateUI();
+        }
+    }, TICK_RATE);
 
     document.getElementById("cancelBtn").addEventListener("click", () => {
     window.location.href = "/game";

@@ -66,6 +66,20 @@
              alt="Your gargoyle">
     </div>
 
+    <div th:if="${error}"
+         style="
+        background: rgba(255,80,80,0.15);
+        border: 1px solid rgba(255,80,80,0.4);
+        padding: 0.8rem 1rem;
+        border-radius: 12px;
+        margin-bottom: 1rem;
+        font-weight: 800;
+        color: #ffb3b3;
+     ">
+        <span th:text="${error}"></span>
+    </div>
+
+
     <form th:action="@{/gargoyle/{id}/rename(id=${gargoyle.id})}"
           th:object="${gargoyle}"
           method="post">

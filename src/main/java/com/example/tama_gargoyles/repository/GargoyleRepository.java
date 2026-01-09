@@ -11,4 +11,8 @@ public interface GargoyleRepository extends CrudRepository<Gargoyle, Long> {
 
     // Optional: nice MVP helper if you want to pick CHILD first
     List<Gargoyle> findAllByUserIdOrderByIdAsc(Long userId);
+
+    boolean existsByNameIgnoreCase(String name);
+
+
 }

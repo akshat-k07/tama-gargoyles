@@ -361,19 +361,48 @@ public class GargoyleController {
     }
 
     @PostMapping("/gargoyle/{id}/rename")
-    public RedirectView renameGargoyle(@PathVariable Long id, @RequestParam String name) {
+    public ModelAndView renameGargoyle(
+            @PathVariable Long id,
+            @RequestParam String name
+    ) {
         Gargoyle gargoyle = gargoyleRepository.findById(id).orElseThrow();
 
-        if (name.isBlank() || name.length() > 30) {
-            return new RedirectView("/game/");
+        ModelAndView model = new ModelAndView("gargoyles/renameGargoyle");
+        model.addObject("gargoyle", gargoyle);
+        model.addObject("image_path",
+                evolutionService.getGargoyleImagePath(gargoyle));
+
+        // Basic validation
+        if (name == null || name.isBlank() || name.length() > 30) {
+            model.addObject("error",
+                    "Name must be between 1 and 30 characters.");
+            return model;
+        }
+
+        // Check for duplicate name (ignore current gargoyle)
+        if (gargoyleRepository.existsByNameIgnoreCase(name)
+                && !name.equalsIgnoreCase(gargoyle.getName())) {
+
+            model.addObject("error",
+                    "That name is already taken. Please choose another.");
+            return model;
         }
 
         gargoyle.setName(name);
-        Gargoyle saved = gargoyleRepository.save(gargoyle);
 
-        // ✅ goes to /game/{id}, which now correctly populates image_path + lifeStage
-        return new RedirectView("/game/" + saved.getId());
+        // Final safety net in case of race conditions
+        try {
+            gargoyleRepository.save(gargoyle);
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            model.addObject("error",
+                    "That name was just taken. Please try another.");
+            return model;
+        }
+
+        return new ModelAndView("redirect:/game/" + gargoyle.getId());
     }
+
+
 
     @GetMapping("/game/stats/{id}")
     @ResponseBody
@@ -426,4 +455,5 @@ public class GargoyleController {
 
         return evolutionService.canEvolve(g);
     }
+
 }
