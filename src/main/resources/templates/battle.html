@@ -39,7 +39,7 @@
             </div>
 
             <nav class="hud-links">
-                <a th:href="@{/game}">← Back to Game</a>
+                <a th:href="@{/game}" class="btn">Back to Game</a>
             </nav>
         </div>
     </header>
@@ -50,7 +50,7 @@
         <!-- LEFT: RULES -->
         <section class="panel hud-panel hud-panel--left">
             <h2 class="panel__title">Rules</h2>
-
+            <h3>First to 3 wins</h3>
             <ul class="log__list">
                 <li><strong>SLAM</strong> beats <strong>DASH</strong></li>
                 <li><strong>DASH</strong> beats <strong>SNEAK</strong></li>
@@ -141,12 +141,12 @@
 
             </div>
 
-            <form th:action="@{/battle/reset}" method="post" style="margin-top:1rem;">
-                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                <button class="btn btn--danger btn--wide" type="submit">
-                    Reset Battle
-                </button>
-            </form>
+<!--            <form th:action="@{/battle/reset}" method="post" style="margin-top:1rem;">-->
+<!--                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>-->
+<!--                <button class="btn btn&#45;&#45;danger btn&#45;&#45;wide" type="submit">-->
+<!--                    Reset Battle-->
+<!--                </button>-->
+<!--            </form>-->
         </section>
 
         <!-- LOG -->
