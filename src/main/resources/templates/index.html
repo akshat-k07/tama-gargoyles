@@ -7,7 +7,8 @@
 
     <link rel="stylesheet" th:href="@{/css/general.css}" />
 </head>
-<body>
+<body th:attr="data-track=@{/audio/music/home.mp3}">
+
 
 <!-- ======================================================
      TOP HUD (MATCHES GAME PAGE)
@@ -38,6 +39,13 @@
             </div>
 
             <div class="hud-actions">
+
+                <!-- MUSIC CONTROL -->
+                <button class="btn" id="music-toggle" type="button" onclick="tgToggleMusic()">
+                    ▶ Music
+                </button>
+
+
                 <button class="btn"
                         onclick="window.location.href='/game'">
                     Go to Game
@@ -112,7 +120,7 @@
     <p>When it is hungry you need to feed your Tama Gargoyle, but you have limited food.</p>
 
     <p>If it is not hungry, you won't be able to feed it.</p>
-    
+
     <p>The food you give your Tama Gargoyle affects how it evolves:</p>
 
     <table>
@@ -143,7 +151,7 @@
         </tbody>
     </table>
 
-    
+
 
     <hr>
 
@@ -222,6 +230,28 @@
     <p>Good luck!</p>
 
 </div>
+<audio id="bg-music" loop preload="auto"></audio>
+<script th:src="@{/js/music.js}"></script>
+
+
+
+<script>
+    const audio = () => document.getElementById("bg-music");
+    const track = () => document.body.dataset.track;
+
+    document.getElementById("music-play").addEventListener("click", () => {
+      localStorage.setItem("musicOn", "1");
+      if (track() && audio().src !== track()) audio().src = track();
+      audio().play();
+    });
+
+    document.getElementById("music-stop").addEventListener("click", () => {
+      localStorage.setItem("musicOn", "0");
+      audio().pause();
+    });
+</script>
+
+
 </main>
 </body>
 </html>
